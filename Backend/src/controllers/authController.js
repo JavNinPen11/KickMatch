@@ -1,7 +1,6 @@
-import users from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-
+import users from "../models/userModel.js";
 
 const register = async (req, res) => {
     const{username, password} = req.body
@@ -28,19 +27,22 @@ const login = async (req, res) => {
     if(!user){
         return res.status(404).json({message:"Usuario inexistente"}) 
     }
+
     const validPassword = await bcrypt.compare(password, user.password)
+
     if(!validPassword){
         return res.status(400).json({message:"Contraseña incorrecta"})
     }
+
     const token = jwt.sign({id:user.id, username: user.username},
         process.env.JWT_SECRET,
         {expiresIn: "1h"}
     )
+    
     res.json({message:"Login esitoso!!!", token})
 }
 
 export{
     register,
-    login,
-    users
+    login
 }  
