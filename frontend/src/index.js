@@ -7,7 +7,10 @@ import reportWebVitals from './reportWebVitals';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <h1>BIENVENIDOS A KICKMATCH!!!</h1>    
+    <div>
+      <h1>BIENVENIDOS A KICKMATCH!!!</h1>
+      <p>PAGINA EN CONSTRUCCIÓN<br></br>proximamente....</p>
+    </div>
   </React.StrictMode>
 );
 
