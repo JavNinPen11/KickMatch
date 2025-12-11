@@ -1,7 +1,7 @@
-const bcrypt = require("bcrypt")
-const jwt = require("jsonwebtoken")
+import users from "../models/userModel.js";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
-const users = []
 
 const register = async (req, res) => {
     const{username, password} = req.body
@@ -11,7 +11,7 @@ const register = async (req, res) => {
         return res.status(400).json({message:"Usuario ya existente"})
     }
 
-    const hashedPassword = await bcrypt.hash(password,10)
+    const hashedPassword =  bcrypt.hashSync(password,10)
 
     const newUser = {
         id: users.length + 1,
@@ -39,4 +39,8 @@ const login = async (req, res) => {
     res.json({message:"Login esitoso!!!", token})
 }
 
-module.exports = { register, login, users};
+export{
+    register,
+    login,
+    users
+}  
