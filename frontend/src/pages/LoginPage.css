@@ -1,6 +1,9 @@
 body{
     background-color: lightgray;
 }
+.contenedor{
+    text-align: center;
+}
 h1{
     text-align: center;
 }
@@ -14,6 +17,7 @@ h1{
     background-color: gray;
     border-radius: 2vh;
     box-shadow: -10px 10px 20px;
+    margin-bottom: 5vh;
 }
 .message{
     text-align: center;

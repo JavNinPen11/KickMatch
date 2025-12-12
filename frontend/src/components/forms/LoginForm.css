@@ -12,11 +12,6 @@ p{
     align-items: center;
     margin-bottom: 1vh;
 }
-.form-group label{
-    width: 10vh;
-    text-align: right;
-    margin-right: 1vw;
-}
 .form-group input{
     width: 15vh;
     height: 2vh;

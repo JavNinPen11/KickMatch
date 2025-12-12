@@ -15,12 +15,10 @@ export const LoginForm = ({onLogin}) => {
     <form className='Login' onSubmit={handleSubmit}>
         <p>Inicia Sesión</p>
         <div className='form-group'>
-            <label>Usuario</label>
-            <input type='text' id='txtUsername' onChange={e => setUsername(e.target.value)}></input>
+            <input placeholder='Usuario' type='text' autoComplete='off' id='txtUsername' required onChange={e => setUsername(e.target.value)}></input>
         </div>
         <div className='form-group'>
-            <label>Contraseña</label>
-            <input type='text' id='txtPassword'onChange={e => setPassword(e.target.value)}></input>
+            <input placeholder='Contraseña' type='password'autoComplete='off' id='txtPassword'required onChange={e => setPassword(e.target.value)}></input>
         </div>
         <button className='submit'>Login</button>
     </form>

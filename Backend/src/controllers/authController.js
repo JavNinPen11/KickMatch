@@ -25,13 +25,13 @@ const login = async (req, res) => {
     const{username, password} = req.body
     const user = users.find(u => u.username === username)
     if(!user){
-        return res.status(404).json({message:"Usuario inexistente"}) 
+        return res.status(404).json({ok:false, message:"Usuario inexistente"}) 
     }
 
     const validPassword = await bcrypt.compare(password, user.password)
 
     if(!validPassword){
-        return res.status(400).json({message:"Contraseña incorrecta"})
+        return res.status(400).json({ok:false ,message:"Contraseña incorrecta"})
     }
 
     const token = jwt.sign({id:user.id, username: user.username},
@@ -39,7 +39,7 @@ const login = async (req, res) => {
         {expiresIn: "1h"}
     )
     
-    res.json({message:"Login esitoso!!!", token})
+    res.json({ok:true, message:"Login esitoso!!!", token})
 }
 
 export{
