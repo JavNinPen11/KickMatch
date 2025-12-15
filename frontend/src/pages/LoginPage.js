@@ -29,7 +29,7 @@ function Login (){
     }
     return (
         <main className="contenedor">
-            <h1>Bienvenido al login</h1>
+            <h1>Bienvenido al Login</h1>
             <div className="loginForm">
                 <LoginForm onLogin={handleLogin}/>
                 <p className="message">{message}</p>

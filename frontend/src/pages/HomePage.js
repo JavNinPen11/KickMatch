@@ -6,7 +6,7 @@ function Dashboard() {
     return (
         <main>
             <Nav/>
-            <h1>Bienvenido al dashboard</h1>
+            <h1>Bienvenido al Inicio</h1>
         </main>
     )
 }
