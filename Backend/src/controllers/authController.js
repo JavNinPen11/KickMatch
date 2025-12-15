@@ -1,8 +1,10 @@
-import jwt from "jsonwebtoken";
+
 import bcrypt from "bcrypt";
 import users from "../models/userModel.js";
+import { getToken } from "./getToken.js";
 
 const register = async (req, res) => {
+
     const{username, password} = req.body
 
     const existingUser = users.find(u => u.username === username)
@@ -18,7 +20,9 @@ const register = async (req, res) => {
         password: hashedPassword
     }
     users.push(newUser)
-    res.status(201).json({message:"Usuario creado", user:{id:newUser.id, username: newUser.username}})
+    const token = getToken(newUser.id, newUser.username)
+
+    res.status(201).json({message:"Usuario creado", /*user:{id:newUser.id, username: newUser.username}*/ok:true, token})
 
 }
 const login = async (req, res) => {
@@ -34,10 +38,12 @@ const login = async (req, res) => {
         return res.status(400).json({ok:false ,message:"Contraseña incorrecta"})
     }
 
-    const token = jwt.sign({id:user.id, username: user.username},
-        process.env.JWT_SECRET,
-        {expiresIn: "1h"}
-    )
+    // const token = jwt.sign({id:user.id, username: user.username},
+    //     process.env.JWT_SECRET,
+    //     {expiresIn: "1h"}
+    // )
+    
+    const token = getToken(user.id, user.user)
     
     res.json({ok:true, message:"Login esitoso!!!", token})
 }
