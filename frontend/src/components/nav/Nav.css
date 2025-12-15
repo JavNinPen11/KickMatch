@@ -1,0 +1,20 @@
+nav {
+    background-color: purple;
+    width: 100dvw;
+    height: 10dvh;
+}
+
+.link {
+    color: white;
+    text-decoration: none;
+    height: max-content;
+    margin-top: 5vh;
+    cursor: pointer;
+}
+
+
+
+.contenedor {
+    display: flex;
+    justify-content: space-around;
+}

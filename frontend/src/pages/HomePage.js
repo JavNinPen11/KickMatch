@@ -1,13 +1,12 @@
 import "./HomePage.css"
-import { Link } from "react-router-dom"
+import {Nav} from "../components/nav/Nav"
 
 function Dashboard() {
+
     return (
         <main>
+            <Nav/>
             <h1>Bienvenido al dashboard</h1>
-            <Link to="/login">Iniciar Sesión</Link>
-            <Link to="/register">Registrarse</Link>
-            <Link to="/dashboard">Dashboard</Link>
         </main>
     )
 }

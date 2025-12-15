@@ -18,9 +18,10 @@ export function AuthProvider ({children}){
     const logout = () =>{
         localStorage.removeItem("token")
         setUser(null)
+        alert("Sesion cerrada con exito")
     }
     return(
-        <AuthContext.Provider value={{user, setUser, login, logout}}>
+        <AuthContext.Provider value={{user, login, logout}}>
             {children}
         </AuthContext.Provider>
     )
