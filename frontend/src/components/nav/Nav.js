@@ -5,6 +5,7 @@ import { AuthContext } from '../../context/authContext'
 
 export const Nav = () => {
     const { user, logout } = useContext(AuthContext)
+
     return (
         <nav className="navMenu">
             {
@@ -12,7 +13,7 @@ export const Nav = () => {
                     <div className="contenedor">
                         <Link className="link" to="/">Home</Link>
                         <Link className="link" to="/dashboard">Dashboard</Link>
-                        <a className="link" onClick={logout}>
+                        <a className="link" onClick = {logout}>
                             Cerrar Sesión
                         </a>
                     </div>

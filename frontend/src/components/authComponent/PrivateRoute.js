@@ -4,8 +4,8 @@ import { AuthContext } from "../../context/authContext";
 
 function PrivateRoute ({children}){
     const {user} = useContext(AuthContext)
-    
-    return user ? children : <Navigate to="/login"/>
+    if(!user) {alert("Debe iniciar sesión antes de acceder a páginas protegidas") }
+    return user ? children : <Navigate to="/"/>
 }
 
 export default PrivateRoute

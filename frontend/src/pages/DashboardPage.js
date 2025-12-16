@@ -11,8 +11,7 @@ export const DashboardPage = () => {
   return (
     <main>
       <Nav/>
-        <Link to="/">Inicio</Link>
-        <button onClick={logout}>Cerrar Sesión</button>
+      <h1>Bienvenido al DashboardPage</h1>
     </main>
   )
 }

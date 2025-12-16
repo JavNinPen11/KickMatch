@@ -4,25 +4,31 @@ export const AuthContext = createContext()
 
 export function AuthProvider ({children}){
     const [user, setUser] = useState(null)
+    const [loading, setLoading] = useState(true)
+
 
     useEffect(() =>{
-        const token = localStorage.getItem("token")
-        if(token){
-            setUser({token})
+        const savedUser = localStorage.getItem("user")
+
+        if(savedUser){
+            setUser(JSON.parse(savedUser))
         }
+        setLoading(false)
+        
     }, [])
     const login = (userData, token) =>{
-        localStorage.setItem("token", token)
-        setUser(userData)
+        const userToSave = {...userData, token}
+        localStorage.setItem("user", JSON.stringify(userToSave))
+        setUser(userToSave)
     }
     const logout = () =>{
-        localStorage.removeItem("token")
+        localStorage.removeItem("user")
         setUser(null)
         alert("Sesion cerrada con exito")
     }
     return(
         <AuthContext.Provider value={{user, login, logout}}>
-            {children}
+            {!loading && children}
         </AuthContext.Provider>
     )
 }
