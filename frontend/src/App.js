@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { AuthProvider } from "./context/authContext";
 import PrivateRoute from "./components/authComponent/PrivateRoute";
+import "./App.css"
 
 
 function App() {

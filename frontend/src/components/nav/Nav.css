@@ -1,5 +1,5 @@
 nav {
-    background-color: purple;
+    background-color: #F2BB2D;
     width: 100dvw;
     height: 10dvh;
 }
@@ -9,12 +9,20 @@ nav {
     text-decoration: none;
     height: max-content;
     margin-top: 3.5vh;
+    font-weight: 900;
     cursor: pointer;
 }
-
-
-
+.sesionName{
+    margin-top: 2.85vh;
+    font-family: "Oswald";
+    margin-left: 1vh;
+    font-weight: 900;
+}
+.navSpace{
+    display: flex;
+}
 .contenedor {
     display: flex;
     justify-content: space-around;
+    width: 90vw;
 }
