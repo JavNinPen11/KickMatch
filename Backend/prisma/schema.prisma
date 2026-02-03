@@ -10,12 +10,53 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
+
+// Enum para el estado de los partidos
+enum EstadoPartido {
+  abierto
+  completo
+  cancelado
+  finalizado
+}
+
+model Rol {
+  id          Int     @id @default(autoincrement()) @map("id_rol")
+  nombre      String  @db.VarChar(50)
+  descripcion String? @db.Text
+
+  usuarios User[] @relation("RolUsuario")
+}
+
 model User {
-  id Int @id @default(autoincrement())
-  email String @unique
-  username String @unique
-  password String
-  createdAt DateTime @default(now())
+  id       Int      @id @default(autoincrement()) @map("id_usuario")
+  nombre   String   @db.VarChar(100) @default("Sin nombre")
+  email    String   @unique @db.VarChar(150)
+  password String   @db.VarChar(255)
+  rolId    Int?     @map("rol_id")
+  rol      Rol?     @relation("RolUsuario", fields: [rolId], references: [id])
+  creadoEn DateTime @default(now()) @map("creado_en")
+
+  partidosCreados Partido[] @relation("CreadorPartido")
+}
+
+model Equipo {
+  id     Int     @id @default(autoincrement()) @map("id_equipo")
+  nombre String  @db.VarChar(100)
+  logo   String? @db.VarChar(255)
+  color  String? @db.VarChar(20)
+}
+
+model Partido {
+  id           Int           @id @default(autoincrement()) @map("id_partido")
+  titulo       String?       @db.VarChar(100)
+  fecha        DateTime
+  hora         DateTime      @db.Time
+  ubicacion    String?       @db.VarChar(255)
+  maxJugadores Int?
+  estado       EstadoPartido @default(abierto)
+  creadorId    Int           @map("creador_id")
+  creador      User          @relation("CreadorPartido", fields: [creadorId], references: [id])
+  creadoEn     DateTime      @default(now()) @map("creado_en")
 }
