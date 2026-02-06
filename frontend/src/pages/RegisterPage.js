@@ -3,7 +3,7 @@ import {RegisterForm} from "../components/forms/RegisterForm.js"
 import { useContext, useState } from "react"
 import { registerRequest } from "../api/authService.js"
 import { AuthContext } from "../context/authContext.js"
-import "./RegisterPage.css"
+import style from "./RegisterPage.module.scss"
 function Register (){
     const [message, setMessage] = useState("")
     const {login} = useContext(AuthContext)
@@ -29,9 +29,9 @@ function Register (){
     return( 
     <main className="contenedor">
         <h1>Bienvenido al Registro</h1>
-        <div className="registerForm">
+        <div className={style.registerForm}>
             <RegisterForm onRegister={handleRegister}/>
-            {message && <p className="message"></p>}
+            {message && <p className={style.message}></p>}
         </div>
         <Link to="/">Ir al Inicio</Link>
     </main>

@@ -1,6 +1,6 @@
 import { LoginForm } from "../components/forms/LoginForm"
 import { loginRequest } from "../api/authService"
-import "./LoginPage.css"
+import style from"./LoginPage.module.scss"
 import { useState, useContext } from "react"
 import {Link, useNavigate} from "react-router-dom"
 import { AuthContext } from "../context/authContext"
@@ -28,11 +28,11 @@ function Login (){
         }
     }
     return (
-        <main className="contenedor">
+        <main className={style.contenedor}>
             <h1>Bienvenido al Login</h1>
-            <div className="loginForm">
+            <div className={style.loginForm}>
                 <LoginForm onLogin={handleLogin}/>
-                <p className="message">{message}</p>
+                <p className={style.message}>{message}</p>
             </div>
             <Link to="/">Ir al Inicio</Link>
         </main>
