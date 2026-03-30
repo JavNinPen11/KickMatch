@@ -1,6 +1,7 @@
 const API_URL = process.env.REACT_APP_BACKEND_URL
 
 export async function getMatchesRequest() {
+    // De momento esta API queda preparada, pero el backend de partidos aún no está conectado.
     if (!API_URL) {
         throw new Error("Backend de partidos no configurado")
     }
@@ -16,6 +17,7 @@ export async function getMatchesRequest() {
 }
 
 export async function createMatchRequest(matchData) {
+    // Cuando exista /matches real, este método ya queda listo para usarlo.
     if (!API_URL) {
         throw new Error("Backend de partidos no configurado")
     }

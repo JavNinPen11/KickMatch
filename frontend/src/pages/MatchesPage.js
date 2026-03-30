@@ -29,6 +29,7 @@ export default function MatchesPage() {
     const [message, setMessage] = useState("Mostrando partidos locales mientras terminamos el backend.")
 
     useEffect(() => {
+        // Intenta cargar datos reales y, si no existen, mantiene los mocks locales.
         const loadMatches = async () => {
             try {
                 const response = await getMatchesRequest()
@@ -47,6 +48,7 @@ export default function MatchesPage() {
     }, [])
 
     const handleCreateMatch = async (newMatch) => {
+        // Se genera un id local para poder pintar el nuevo partido al instante.
         const matchToAdd = {
             id: Date.now(),
             ...newMatch,
