@@ -1,71 +1,116 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Nav } from "../components/nav/Nav";
 import { CreateMatchForm } from "../components/forms/CreateMatchForm";
 import { MatchCard } from "../components/matches/MatchCard";
-import { getMatchesRequest, createMatchRequest } from "../api/matchService";
+import { AuthContext } from "../context/authContext";
+import {
+    createMatchRequest,
+    getLocalMatches,
+    getMatchesRequest,
+    normalizeMatch,
+    saveLocalMatches,
+} from "../api/matchService";
 import "./MatchesPage.css"
 
-const mockMatches = [
-    {
-        id: 1,
-        fecha: "2026-04-02",
-        hora: "19:30",
-        ubicacion: "Polideportivo Norte",
-        maxJugadores: 10,
-        estado: "abierto",
-    },
-    {
-        id: 2,
-        fecha: "2026-04-04",
-        hora: "21:00",
-        ubicacion: "Pista Central",
-        maxJugadores: 14,
-        estado: "completo",
-    },
-]
+function getCurrentMatchUser(user) {
+    if (!user) {
+        return { id: "guest-user", nombre: "Invitado" }
+    }
+
+    return {
+        id: user.id ?? user.username ?? "guest-user",
+        nombre: user.nombre ?? user.username ?? "Invitado",
+    }
+}
 
 export default function MatchesPage() {
-    const [matches, setMatches] = useState(mockMatches)
+    const { user } = useContext(AuthContext)
+    const currentUser = getCurrentMatchUser(user)
+    const [matches, setMatches] = useState([])
     const [message, setMessage] = useState("Mostrando partidos locales mientras terminamos el backend.")
 
     useEffect(() => {
-        // Intenta cargar datos reales y, si no existen, mantiene los mocks locales.
+        // Intenta cargar datos reales y, si no existen, mantiene la fuente local compartida.
         const loadMatches = async () => {
+            const localMatches = getLocalMatches()
+            setMatches(localMatches)
+
             try {
                 const response = await getMatchesRequest()
                 const data = Array.isArray(response?.data) ? response.data : response
 
                 if (Array.isArray(data) && data.length > 0) {
-                    setMatches(data)
+                    const normalizedMatches = data.map(normalizeMatch)
+                    setMatches(normalizedMatches)
+                    saveLocalMatches(normalizedMatches)
                     setMessage("Partidos cargados desde el servidor.")
+                    return
                 }
             } catch (error) {
-                setMessage("Mostrando partidos locales mientras terminamos el backend.")
+                // Seguimos con localStorage para poder avanzar en frontend.
             }
+
+            setMessage("Mostrando partidos locales mientras terminamos el backend.")
         }
 
         loadMatches()
     }, [])
 
+    const persistMatches = (nextMatches) => {
+        setMatches(nextMatches)
+        saveLocalMatches(nextMatches)
+    }
+
     const handleCreateMatch = async (newMatch) => {
-        // Se genera un id local para poder pintar el nuevo partido al instante.
-        const matchToAdd = {
+        const matchToAdd = normalizeMatch({
             id: Date.now(),
             ...newMatch,
-            estado: newMatch.estado || "abierto",
-        }
+            jugadoresApuntados: 0,
+            participantes: [],
+            creador: currentUser,
+            estado: "ABIERTO",
+        })
 
         try {
             const response = await createMatchRequest(matchToAdd)
-            const createdMatch = response?.data || response
-
-            setMatches((prev) => [createdMatch, ...prev])
+            const createdMatch = normalizeMatch(response?.data || response)
+            const nextMatches = [createdMatch, ...matches]
+            persistMatches(nextMatches)
             setMessage("Partido creado correctamente.")
         } catch (error) {
-            // Fallback local para seguir construyendo la UI sin backend.
-            setMatches((prev) => [matchToAdd, ...prev])
+            const nextMatches = [matchToAdd, ...matches]
+            persistMatches(nextMatches)
             setMessage("Partido añadido en local. El backend de partidos aún no está conectado.")
         }
+    }
+
+    const handleJoinMatch = (matchId) => {
+        // La inscripción sigue siendo local hasta que exista persistencia real.
+        const nextMatches = matches.map((match) => {
+            const alreadyJoined = match.participantes.some(
+                (participant) => String(participant.id) === String(currentUser.id)
+            )
+            const isOwner = String(match.creador.id) === String(currentUser.id)
+            const isComplete = match.jugadoresApuntados >= match.maxJugadores
+
+            if (String(match.id) !== String(matchId) || alreadyJoined || isOwner || isComplete) {
+                return match
+            }
+
+            const participantes = [
+                ...match.participantes,
+                { id: currentUser.id, nombre: currentUser.nombre },
+            ]
+            const jugadoresApuntados = participantes.length
+
+            return normalizeMatch({
+                ...match,
+                participantes,
+                jugadoresApuntados,
+            })
+        })
+
+        persistMatches(nextMatches)
     }
 
     return (
@@ -87,7 +132,12 @@ export default function MatchesPage() {
                     <h2>Listado de partidos</h2>
                     <div className="matchesList">
                         {matches.map((match) => (
-                            <MatchCard key={match.id} match={match} />
+                            <MatchCard
+                                key={match.id}
+                                match={match}
+                                currentUser={currentUser}
+                                onJoin={handleJoinMatch}
+                            />
                         ))}
                     </div>
                 </section>
