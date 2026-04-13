@@ -12,7 +12,7 @@ function Register (){
     const handleRegister = async ({email, username, password}) => {
         try{            
             const response = await registerRequest(email,username,password)
-            
+
             if(response.token){
                 login({username}, response.token)
                 navigate("/dashboard")
@@ -31,7 +31,7 @@ function Register (){
         <h1>Bienvenido al Registro</h1>
         <div className={style.registerForm}>
             <RegisterForm onRegister={handleRegister}/>
-            {message && <p className={style.message}>Registrado</p>}
+            {message && <p className={style.message}>{message}</p>}
         </div>
         <Link to="/">Ir al Inicio</Link>
     </main>
