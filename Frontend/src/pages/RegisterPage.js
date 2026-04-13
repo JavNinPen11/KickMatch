@@ -31,7 +31,7 @@ function Register (){
         <h1>Bienvenido al Registro</h1>
         <div className={style.registerForm}>
             <RegisterForm onRegister={handleRegister}/>
-            {message && <p className={style.message}></p>}
+            {message && <p className={style.message}>Registrado</p>}
         </div>
         <Link to="/">Ir al Inicio</Link>
     </main>
