@@ -1,6 +1,5 @@
 "use strict";
 import bcrypt from "bcrypt";
-import users from "../models/userModel.js";
 import { getToken } from "./getToken.js";
 import { prisma } from "../../lib/db.js"
 
@@ -19,13 +18,14 @@ const register = async (req, res) => {
                 username
             }
         })
+        
 
-        const token = getToken(user.id, user.email, user.username)
+        const token = getToken(user.id_usuario, user.email, user.username)
 
         return res.status(201).json({
             message: "Usuario creado correctamente",
             user: {
-                id: user.id,
+                id: user.id_usuario,
                 email: user.email,
                 username: user.username
             },
@@ -76,11 +76,13 @@ const login = async (req, res) => {
         if (!validPassword) {
             return res.status(400).json({ ok: false, message: "Contraseña incorrecta" })
         }
-        const token = getToken(user.id, user.email, user.username)
+        const token = getToken(user.id_usuario, user.email, user.username)
 
         res.json({ok:true, message:"Login Exitoso!!!", username:user.username, token})
     }
     catch (error) {
+        console.log(error);
+        
         return res.status(500).json({ message: "Error interno del servidor" })
     }
 }
