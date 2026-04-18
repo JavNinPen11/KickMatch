@@ -1,42 +1,41 @@
-import "./Nav.css"
-import { useContext, useState } from "react"
-import { Link } from "react-router-dom"
-import { AuthContext } from "../../context/authContext"
-import { useEffect } from "react"
+import "./Nav.css";
+import { useContext } from "react";
+import { Link } from "react-router-dom";
+import { AuthContext } from "../../context/authContext";
 
-export const Nav = () => {
-    const { user, logout } = useContext(AuthContext)
-    const [userName, setUserName] = useState()
+export const Nav = ({ variant = "default" }) => {
+    const { user, logout } = useContext(AuthContext);
+    const isAuthenticatedView = Boolean(user);
+    const userName = user?.nombre ?? user?.username ?? "Usuario";
 
-    useEffect(() => {
-        const savedUser = localStorage.getItem("user")
-        if (savedUser) {
-            setUserName(JSON.parse(savedUser).username)
-        }
-    }, [])
-
+    // Navbar publica / privada
     return (
-        <nav className="navMenu">
-            {user ? (
-                <div className="navSpace">
-                    <span className="sesionName">Sesión de: {userName}</span>
-                    <div className="contenedor">
-                        <Link className="link" to="/">Home</Link>
-                        <Link className="link" to="/matches">Partidos</Link>
-                        <Link className="link" to="/dashboard">Dashboard</Link>
-                        <a className="link" onClick={logout}>
-                            Cerrar Sesión
-                        </a>
-                    </div>
+        <nav className={`navMenu ${variant === "landing" ? "navMenuLanding" : ""}`}>
+            <div className="contenedor contenedorNav">
+                <Link className="brandLink" to="/">KickMatch</Link>
+
+                <div className="navLinks">
+                    {isAuthenticatedView ? (
+                        <>
+                            <span className="sesionName">Sesion de: {userName}</span>
+                            <Link className="link" to="/">Home</Link>
+                            <Link className="link" to="/matches">Partidos</Link>
+                            <Link className="link" to="/my-matches">Mis partidos</Link>
+                            <Link className="link" to="/dashboard">Dashboard</Link>
+                            <button className="link navLogoutButton" type="button" onClick={logout}>
+                                Cerrar sesion
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <Link className="link" to="/">Home</Link>
+                            <Link className="link" to="/matches">Partidos</Link>
+                            <Link className="link" to="/login">Iniciar sesion</Link>
+                            <Link className="link linkHighlight" to="/register">Registrarse</Link>
+                        </>
+                    )}
                 </div>
-            ) : (
-                <div className="contenedor">
-                    <Link className="link" to="/">Home</Link>
-                    <Link className="link" to="/matches">Partidos</Link>
-                    <Link className="link" to="/login">Iniciar Sesión</Link>
-                    <Link className="link" to="/register">Registrarse</Link>
-                </div>
-            )}
+            </div>
         </nav>
-    )
-}
+    );
+};

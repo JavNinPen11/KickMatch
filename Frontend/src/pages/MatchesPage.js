@@ -3,6 +3,7 @@ import { Nav } from "../components/nav/Nav";
 import { CreateMatchForm } from "../components/forms/CreateMatchForm";
 import { MatchCard } from "../components/matches/MatchCard";
 import { AuthContext } from "../context/authContext";
+import { getCurrentMatchUser } from "../utils/userMatches";
 import {
     createMatchRequest,
     getLocalMatches,
@@ -10,27 +11,17 @@ import {
     normalizeMatch,
     saveLocalMatches,
 } from "../api/matchService";
-import "./MatchesPage.css"
-
-function getCurrentMatchUser(user) {
-    if (!user) {
-        return { id: "guest-user", nombre: "Invitado" }
-    }
-
-    return {
-        id: user.id ?? user.username ?? "guest-user",
-        nombre: user.nombre ?? user.username ?? "Invitado",
-    }
-}
+import "./css/MatchesPage.css"
 
 export default function MatchesPage() {
     const { user } = useContext(AuthContext)
     const currentUser = getCurrentMatchUser(user)
     const [matches, setMatches] = useState([])
-    const [message, setMessage] = useState("Mostrando partidos locales mientras terminamos el backend.")
+    const [message, setMessage] = useState("Mostrando partidos guardados en local.")
+    const [isFormOpen, setIsFormOpen] = useState(false)
 
     useEffect(() => {
-        // Intenta cargar datos reales y, si no existen, mantiene la fuente local compartida.
+        // Si falta por conectar, se usan los datos guardados en local.
         const loadMatches = async () => {
             const localMatches = getLocalMatches()
             setMatches(localMatches)
@@ -47,10 +38,10 @@ export default function MatchesPage() {
                     return
                 }
             } catch (error) {
-                // Seguimos con localStorage para poder avanzar en frontend.
+                // De momento se mantiene la información guardada en local.
             }
 
-            setMessage("Mostrando partidos locales mientras terminamos el backend.")
+            setMessage("Mostrando partidos guardados en local.")
         }
 
         loadMatches()
@@ -77,15 +68,17 @@ export default function MatchesPage() {
             const nextMatches = [createdMatch, ...matches]
             persistMatches(nextMatches)
             setMessage("Partido creado correctamente.")
+            setIsFormOpen(false)
         } catch (error) {
             const nextMatches = [matchToAdd, ...matches]
             persistMatches(nextMatches)
-            setMessage("Partido añadido en local. El backend de partidos aún no está conectado.")
+            setMessage("Partido guardado en local. Pendiente de conectar.")
+            setIsFormOpen(false)
         }
     }
 
     const handleJoinMatch = (matchId) => {
-        // La inscripción sigue siendo local hasta que exista persistencia real.
+        // La inscripción se guarda en local.
         const nextMatches = matches.map((match) => {
             const alreadyJoined = match.participantes.some(
                 (participant) => String(participant.id) === String(currentUser.id)
@@ -113,6 +106,7 @@ export default function MatchesPage() {
         persistMatches(nextMatches)
     }
 
+    // Layout de partidos: panel sticky a la izquierda y listado a la derecha
     return (
         <main className="matchesPage">
             <Nav />
@@ -122,13 +116,33 @@ export default function MatchesPage() {
                 <p>{message}</p>
             </section>
 
-            <section className="matchesLayout">
-                <aside className="createMatchPanel">
-                    <h2>Crear partido</h2>
-                    <CreateMatchForm onCreateMatch={handleCreateMatch} />
+            <section className={`matchesLayout ${isFormOpen ? "matchesLayoutOpen" : ""}`}>
+                <aside className="matchesSide">
+                    <div className={`createMatchPanel ${isFormOpen ? "createMatchPanelOpen" : ""}`}>
+                    <div className="createMatchHeader">
+                        <h2>Crear partido</h2>
+                        <button
+                            className="toggleCreateButton"
+                            type="button"
+                            onClick={() => setIsFormOpen((prev) => !prev)}
+                        >
+                            {isFormOpen ? "Cerrar formulario" : "Abrir formulario"}
+                        </button>
+                    </div>
+
+                    {isFormOpen ? (
+                        <div className="createMatchFormWrap">
+                            <CreateMatchForm onCreateMatch={handleCreateMatch} />
+                        </div>
+                    ) : (
+                        <p className="createMatchHint">
+                            Abre el panel para preparar un nuevo partido sin salir del listado.
+                        </p>
+                    )}
+                    </div>
                 </aside>
 
-                <section className="matchesListSection">
+                <section className={`matchesListSection ${isFormOpen ? "matchesListMuted" : ""}`}>
                     <h2>Listado de partidos</h2>
                     <div className="matchesList">
                         {matches.map((match) => (

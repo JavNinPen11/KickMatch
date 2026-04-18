@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { formatMatchDate } from "../../api/matchService";
+import { formatMatchDate, getMatchDisplayName } from "../../api/matchService";
 import "./MatchCard.css"
 
 export function MatchCard({ match, currentUser, onJoin }) {
@@ -22,7 +22,7 @@ export function MatchCard({ match, currentUser, onJoin }) {
     return (
         <article className="matchCard">
             <div className="matchCardHeader">
-                <h3>Partido</h3>
+                <h3>{getMatchDisplayName(match.fecha)}</h3>
                 <span className="matchStatus">{match.estado || "ABIERTO"}</span>
             </div>
 

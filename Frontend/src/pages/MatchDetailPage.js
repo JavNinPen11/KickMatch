@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { Nav } from "../components/nav/Nav";
 import { AuthContext } from "../context/authContext";
 import { formatMatchDate, getLocalMatchById } from "../api/matchService";
-import "./MatchDetailPage.css"
+import "./css/MatchDetailPage.css"
 
 function getCurrentMatchUser(user) {
     if (!user) {
@@ -32,7 +32,7 @@ export default function MatchDetailPage() {
                 <Nav />
                 <section className="matchDetailShell">
                     <h1>Partido no encontrado</h1>
-                    <p>No hemos podido cargar este partido con los datos locales actuales.</p>
+                    <p>No hemos podido cargar este partido con la información guardada en local.</p>
                 </section>
             </main>
         )
