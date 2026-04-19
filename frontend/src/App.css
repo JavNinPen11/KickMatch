@@ -1,0 +1,23 @@
+@font-face {
+    font-family: "Inter";
+    src: url(assets/fonts/Inter/Inter-VariableFont_opsz\,wght.ttf) format("truetype");
+    font-weight: 100 900;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Oswald";
+    src: url(assets/fonts/Oswald/Oswald-VariableFont_wght.ttf) format("truetype");
+    font-weight: 200 700;
+    font-style: normal;
+}
+body{
+    color: white;
+    background-color: black;
+    font-family: "Inter", sans-serif;
+}
+h1, h2, h3, .title, .score, .ranking {
+    font-family: "Oswald";
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
