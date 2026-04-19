@@ -48,21 +48,6 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     const { username, password } = req.body
 
-    // const user = users.find(u => u.username === username)
-    // if (!user) {
-    //     return res.status(404).json({ ok: false, message: "Usuario inexistente" })
-    // }
-
-    // const validPassword = await bcrypt.compare(password, user.password)
-
-    // if (!validPassword) {
-    //     return res.status(400).json({ ok: false, message: "Contraseña incorrecta" })
-    // }
-
-    // const token = getToken(user.id, user.user)
-
-    // res.json({ ok: true, message: "Login esitoso!!!", token })
-
     try {
         const user = await prisma.user.findUnique({
             where: {
