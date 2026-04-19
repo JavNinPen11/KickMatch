@@ -1,0 +1,277 @@
+.dashPage {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top right, rgba(242, 187, 45, 0.16), transparent 24%),
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.04), transparent 20%),
+        #050505;
+}
+
+.dashWrap {
+    width: min(1180px, 92vw);
+    margin: 0 auto;
+    padding: 28px 0 72px;
+}
+
+.dashHero,
+.dashStats,
+.dashGrid,
+.dashCol {
+    display: grid;
+    gap: 20px;
+}
+
+.dashHero {
+    grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+    align-items: stretch;
+}
+
+.dashMain {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+    gap: 24px;
+    align-items: start;
+}
+
+.dashCard {
+    border: 1px solid rgba(242, 187, 45, 0.18);
+    border-radius: 24px;
+    background: linear-gradient(180deg, rgba(23, 23, 23, 0.96), rgba(11, 11, 11, 0.96));
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+    padding: 28px;
+}
+
+.dashTag {
+    display: inline-flex;
+    width: fit-content;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background-color: rgba(242, 187, 45, 0.12);
+    border: 1px solid rgba(242, 187, 45, 0.28);
+    color: #f2bb2d;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.dashHead {
+    max-width: 720px;
+    margin-bottom: 24px;
+}
+
+.dashHead h2,
+.dashCard h1,
+.dashCard h2,
+.dashTitle {
+    margin: 16px 0 12px;
+}
+
+.dashCard p,
+.dashHead p,
+.dashItem p,
+.dashNote {
+    margin: 0;
+    color: #d2d2d2;
+    line-height: 1.65;
+}
+
+.dashBtns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 24px;
+}
+
+.dashBtn {
+    min-height: 46px;
+    padding: 0 20px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    text-decoration: none;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.dashBtnMain {
+    background-color: #f2bb2d;
+    color: #111;
+    border-color: #f2bb2d;
+}
+
+.dashBtnMain:hover {
+    background-color: #f6c54b;
+    border-color: #f6c54b;
+}
+
+.dashBtnAlt {
+    background-color: transparent;
+    color: #f2bb2d;
+    border-color: rgba(242, 187, 45, 0.5);
+}
+
+.dashBtnAlt:hover {
+    background-color: rgba(242, 187, 45, 0.08);
+    border-color: #f2bb2d;
+}
+
+.dashSide {
+    display: grid;
+    gap: 16px;
+}
+
+.dashRow {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.dashTile,
+.dashInfo,
+.dashItem,
+.dashMeta p {
+    padding: 16px;
+    border-radius: 18px;
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.dashTile span,
+.dashLabel,
+.dashMeta strong,
+.dashInfo strong,
+.dashItemTitle {
+    display: block;
+}
+
+.dashTile span,
+.dashLabel,
+.dashTime {
+    margin-bottom: 8px;
+    color: #bdbdbd;
+    font-size: 0.86rem;
+}
+
+.dashValue,
+.dashTile strong {
+    color: #fff;
+    font-size: 1.8rem;
+    font-family: "Oswald";
+    letter-spacing: 0.04em;
+}
+
+.dashSection {
+    margin-top: 32px;
+}
+
+.dashStats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.dashStat {
+    padding: 24px;
+}
+
+.dashGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dashMatch {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.dashTop {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.dashTop h3,
+.dashTitle,
+.dashItemTitle {
+    margin: 0;
+}
+
+.dashStatus {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background-color: #f2bb2d;
+    color: #111;
+    font-size: 0.86rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.dashMeta {
+    display: grid;
+    gap: 10px;
+}
+
+.dashList {
+    display: grid;
+    gap: 14px;
+}
+
+.dashItem {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.dashTime {
+    color: #f2bb2d;
+    white-space: nowrap;
+    font-weight: 700;
+}
+
+.dashInfo strong {
+    margin-bottom: 6px;
+    color: #f2bb2d;
+}
+
+.dashNote {
+    margin-top: 18px;
+    color: #f2bb2d;
+}
+
+@media (max-width: 1024px) {
+    .dashHero,
+    .dashMain,
+    .dashStats,
+    .dashGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashWrap {
+        padding: 20px 0 56px;
+    }
+
+    .dashCard {
+        padding: 22px;
+        border-radius: 20px;
+    }
+
+    .dashRow {
+        grid-template-columns: 1fr;
+    }
+
+    .dashBtn {
+        width: 100%;
+    }
+
+    .dashTop,
+    .dashItem {
+        flex-direction: column;
+    }
+}

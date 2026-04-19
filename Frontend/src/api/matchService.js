@@ -130,6 +130,40 @@ export function formatMatchDate(fecha) {
     return "Fecha no disponible"
 }
 
+export function getMatchDisplayName(fecha) {
+    if (!isValidMatchDate(fecha)) {
+        return "Partido"
+    }
+
+    const [year, month, day] = fecha.split("-").map(Number)
+    const matchDate = new Date(year, month - 1, day)
+    const weekdays = [
+        "domingo",
+        "lunes",
+        "martes",
+        "miércoles",
+        "jueves",
+        "viernes",
+        "sábado",
+    ]
+    const months = [
+        "enero",
+        "febrero",
+        "marzo",
+        "abril",
+        "mayo",
+        "junio",
+        "julio",
+        "agosto",
+        "septiembre",
+        "octubre",
+        "noviembre",
+        "diciembre",
+    ]
+
+    return `Partido el ${weekdays[matchDate.getDay()]} ${day} de ${months[month - 1]} de ${year}`
+}
+
 export function normalizeMatch(match) {
     const maxJugadores = Math.min(Math.max(Number(match.maxJugadores) || 0, 2), 20)
     const participantes = Array.isArray(match.participantes) ? match.participantes : []
@@ -189,7 +223,7 @@ export function getLocalMatchById(matchId) {
 }
 
 export async function getMatchesRequest() {
-    // De momento esta API queda preparada, pero el backend de partidos aún no está conectado.
+    // Pendiente de conectar.
     if (!API_URL) {
         throw new Error("Backend de partidos no configurado")
     }
@@ -205,7 +239,7 @@ export async function getMatchesRequest() {
 }
 
 export async function createMatchRequest(matchData) {
-    // Cuando exista /matches real, este método ya queda listo para usarlo.
+    // Pendiente de conectar.
     if (!API_URL) {
         throw new Error("Backend de partidos no configurado")
     }

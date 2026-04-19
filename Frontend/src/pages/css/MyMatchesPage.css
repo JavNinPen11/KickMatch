@@ -1,0 +1,174 @@
+.myPage {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top right, rgba(242, 187, 45, 0.16), transparent 24%),
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.04), transparent 20%),
+        #050505;
+}
+
+.myWrap {
+    width: min(1180px, 92vw);
+    margin: 0 auto;
+    padding: 28px 0 72px;
+}
+
+.myHero,
+.myStats,
+.myGrid {
+    display: grid;
+    gap: 20px;
+}
+
+.myHero {
+    grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+    align-items: stretch;
+}
+
+.myCard,
+.myEmpty {
+    border: 1px solid rgba(242, 187, 45, 0.18);
+    border-radius: 24px;
+    background: linear-gradient(180deg, rgba(23, 23, 23, 0.96), rgba(11, 11, 11, 0.96));
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+    padding: 28px;
+}
+
+.mySide {
+    display: grid;
+    gap: 18px;
+}
+
+.myTag {
+    display: inline-flex;
+    width: fit-content;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background-color: rgba(242, 187, 45, 0.12);
+    border: 1px solid rgba(242, 187, 45, 0.28);
+    color: #f2bb2d;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.myHead {
+    max-width: 720px;
+    margin-bottom: 24px;
+}
+
+.myHead h2,
+.myCard h1,
+.myCard h2,
+.myEmpty h3 {
+    margin: 16px 0 12px;
+}
+
+.myCard p,
+.myEmpty p {
+    margin: 0;
+    color: #d2d2d2;
+    line-height: 1.65;
+}
+
+.myBtns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 24px;
+}
+
+.myBtn {
+    min-height: 46px;
+    padding: 0 20px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    text-decoration: none;
+    font-weight: 700;
+    transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.myBtnMain {
+    background-color: #f2bb2d;
+    color: #111;
+    border-color: #f2bb2d;
+}
+
+.myBtnMain:hover {
+    background-color: #f6c54b;
+    border-color: #f6c54b;
+}
+
+.myBtnAlt {
+    background-color: transparent;
+    color: #f2bb2d;
+    border-color: rgba(242, 187, 45, 0.5);
+}
+
+.myBtnAlt:hover {
+    background-color: rgba(242, 187, 45, 0.08);
+    border-color: #f2bb2d;
+}
+
+.myStats {
+    grid-template-columns: 1fr;
+}
+
+.myStat {
+    padding: 16px;
+    border-radius: 18px;
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.myStat span {
+    display: block;
+    margin-bottom: 8px;
+    color: #bdbdbd;
+    font-size: 0.86rem;
+}
+
+.myStat strong {
+    font-family: "Oswald";
+    font-size: 1.7rem;
+    letter-spacing: 0.04em;
+}
+
+.mySection {
+    margin-top: 32px;
+}
+
+.myGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.myEmpty {
+    display: grid;
+    gap: 14px;
+    justify-items: start;
+}
+
+@media (max-width: 1024px) {
+    .myHero,
+    .myGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .myWrap {
+        padding: 20px 0 56px;
+    }
+
+    .myCard,
+    .myEmpty {
+        padding: 22px;
+        border-radius: 20px;
+    }
+
+    .myBtn {
+        width: 100%;
+    }
+}

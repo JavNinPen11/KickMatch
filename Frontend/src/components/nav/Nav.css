@@ -1,28 +1,109 @@
-nav {
-    background-color: #F2BB2D;
-    width: 100dvw;
-    height: 10dvh;
+.navMenu {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    width: 100%;
+    padding: 18px 4vw;
+    background-color: #f2bb2d;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.contenedor,
+.contenedorNav,
+.navLinks {
+    display: flex;
+    align-items: center;
+}
+
+.contenedor,
+.contenedorNav {
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.contenedor {
+    width: min(1180px, 100%);
+    margin: 0 auto;
+}
+
+.navLinks {
+    gap: 14px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.brandLink {
+    color: #111;
+    text-decoration: none;
+    font-family: "Oswald";
+    font-size: 1.9rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
 }
 
 .link {
-    color: white;
+    color: #111;
     text-decoration: none;
-    height: max-content;
-    margin-top: 3.5vh;
-    font-weight: 900;
+    min-height: 42px;
+    padding: 0 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-weight: 800;
     cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
-.sesionName{
-    margin-top: 2.85vh;
+
+.link:hover {
+    background-color: rgba(17, 17, 17, 0.08);
+}
+
+.linkHighlight {
+    background-color: #111;
+    color: #f2bb2d;
+}
+
+.linkHighlight:hover {
+    background-color: #202020;
+    color: #f6c54b;
+}
+
+.sesionName {
+    color: #111;
     font-family: "Oswald";
-    margin-left: 1vh;
-    font-weight: 900;
+    font-weight: 700;
+    padding: 0 8px;
+    text-transform: uppercase;
 }
-.navSpace{
-    display: flex;
+
+.navLogoutButton {
+    border: none;
+    background-color: transparent;
+    font-family: inherit;
+    font-size: 1rem;
 }
-.contenedor {
-    display: flex;
-    justify-content: space-around;
-    width: 90vw;
+
+@media (max-width: 768px) {
+    .navMenu {
+        padding: 16px 4vw;
+    }
+
+    .contenedorNav,
+    .contenedor {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .navLinks {
+        justify-content: stretch;
+    }
+
+    .brandLink,
+    .link,
+    .sesionName {
+        text-align: center;
+        justify-content: center;
+    }
 }

@@ -1,0 +1,244 @@
+.homePage {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top right, rgba(242, 187, 45, 0.16), transparent 26%),
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.05), transparent 18%),
+        #050505;
+}
+
+.homeContent {
+    width: min(1180px, 92vw);
+    margin: 0 auto;
+    padding: 32px 0 72px;
+}
+
+.homeHero {
+    display: block;
+    margin-top: 28px;
+}
+
+.homeHeroContent,
+.homeMatchCard,
+.homeStepCard,
+.homeCtaSection {
+    border: 1px solid rgba(242, 187, 45, 0.18);
+    border-radius: 24px;
+    background: linear-gradient(180deg, rgba(23, 23, 23, 0.96), rgba(11, 11, 11, 0.96));
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+}
+
+.homeHeroContent {
+    padding: 52px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.homeEyebrow,
+.homeSectionEyebrow {
+    display: inline-flex;
+    width: fit-content;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background-color: rgba(242, 187, 45, 0.12);
+    border: 1px solid rgba(242, 187, 45, 0.28);
+    color: #f2bb2d;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.homeHeroContent h1 {
+    margin: 18px 0 16px;
+    font-size: clamp(2.6rem, 5vw, 4.5rem);
+    line-height: 0.98;
+}
+
+.homeHeroContent p,
+.homeSectionHeading p,
+.homeStepCard p,
+.homeCtaContent p,
+.homeCreateMessage {
+    margin: 0;
+    color: #d2d2d2;
+    line-height: 1.65;
+}
+
+.homeHeroActions,
+.homeCardActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.homeHeroActions {
+    margin-top: 28px;
+}
+
+.homeButton {
+    min-height: 46px;
+    padding: 0 20px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-weight: 700;
+    transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.homeButtonPrimary {
+    background-color: #f2bb2d;
+    color: #111;
+    border: 1px solid #f2bb2d;
+}
+
+.homeButtonPrimary:hover {
+    background-color: #f6c54b;
+    border-color: #f6c54b;
+}
+
+.homeButtonSecondary {
+    color: #f2bb2d;
+    border: 1px solid rgba(242, 187, 45, 0.5);
+    background-color: transparent;
+}
+
+.homeButtonSecondary:hover {
+    background-color: rgba(242, 187, 45, 0.08);
+    border-color: #f2bb2d;
+}
+
+.homeMatchCardHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.homeMatchCardHeader h3,
+.homeSectionHeading h2,
+.homeCtaContent h2 {
+    margin: 12px 0 0;
+}
+
+.homeMatchDetails p {
+    padding: 14px 16px;
+    border-radius: 16px;
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.homeStatus {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background-color: #f2bb2d;
+    color: #111;
+    font-size: 0.86rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.homeSection {
+    margin-top: 32px;
+}
+
+.homeSectionHeading {
+    max-width: 720px;
+    margin-bottom: 24px;
+}
+
+.homeMatchesGrid,
+.homeStepsGrid {
+    display: grid;
+    gap: 20px;
+}
+
+.homeMatchesGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.homeMatchCard,
+.homeStepCard {
+    padding: 24px;
+}
+
+.homeMatchDetails {
+    display: grid;
+    gap: 10px;
+    margin: 18px 0 20px;
+}
+
+.homeMatchDetails p {
+    margin: 0;
+}
+
+.homeCardActions {
+    margin-top: auto;
+}
+
+.homeStepsGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.homeStepNumber {
+    display: inline-flex;
+    margin-bottom: 18px;
+    color: #f2bb2d;
+    font-family: "Oswald";
+    font-size: 1.6rem;
+    letter-spacing: 0.08em;
+}
+
+.homeStepCard h3 {
+    margin: 0 0 10px;
+}
+
+.homeCtaSection {
+    margin-top: 32px;
+    padding: 36px;
+}
+
+.homeCtaContent {
+    max-width: 680px;
+}
+
+.homeCtaContent h2 {
+    margin-bottom: 14px;
+}
+
+@media (max-width: 1024px) {
+    .homeMatchesGrid,
+    .homeStepsGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .homeContent {
+        padding-top: 20px;
+        padding-bottom: 56px;
+    }
+
+    .homeHeroContent,
+    .homeMatchCard,
+    .homeStepCard,
+    .homeCtaSection {
+        padding: 22px;
+        border-radius: 20px;
+    }
+
+    .homeHeroContent h1 {
+        font-size: clamp(2.2rem, 10vw, 3.2rem);
+    }
+
+    .homeButton,
+    .homeCardActions .homeButton,
+    .homeHeroActions .homeButton {
+        width: 100%;
+    }
+}
