@@ -1,5 +1,4 @@
 const API_URL = process.env.REACT_APP_BACKEND_URL
-const MATCHES_STORAGE_KEY = "kickmatch_matches"
 
 function toDateOnly(dateValue) {
     const date = new Date(dateValue)
@@ -38,77 +37,6 @@ export function isValidMatchDate(fecha) {
     const maxDate = toDateOnly(new Date(getMaxMatchDateString()))
 
     return selectedDate >= minDate && selectedDate <= maxDate
-}
-
-const seedMatches = [
-    {
-        id: 1,
-        fecha: "2026-04-02",
-        hora: "19:30",
-        ubicacion: "Polideportivo Norte",
-        maxJugadores: 10,
-        jugadoresApuntados: 4,
-        participantes: [
-            { id: "maria", nombre: "maria" },
-            { id: "carlos", nombre: "carlos" },
-            { id: "sara", nombre: "sara" },
-            { id: "lucas", nombre: "lucas" },
-        ],
-        creador: { id: "peufeliz", nombre: "peufeliz" },
-        duracion: 60,
-        estado: "ABIERTO",
-    },
-    {
-        id: 2,
-        fecha: "2026-04-04",
-        hora: "21:00",
-        ubicacion: "Pista Central",
-        maxJugadores: 14,
-        jugadoresApuntados: 14,
-        participantes: [
-            { id: "nadia", nombre: "nadia" },
-            { id: "adrian", nombre: "adrian" },
-            { id: "isma", nombre: "isma" },
-            { id: "paula", nombre: "paula" },
-            { id: "mario", nombre: "mario" },
-            { id: "lucia", nombre: "lucia" },
-            { id: "javi", nombre: "javi" },
-            { id: "ines", nombre: "ines" },
-            { id: "dani", nombre: "dani" },
-            { id: "carmen", nombre: "carmen" },
-            { id: "raul", nombre: "raul" },
-            { id: "alba", nombre: "alba" },
-            { id: "alex", nombre: "alex" },
-            { id: "nora", nombre: "nora" },
-        ],
-        creador: { id: "organizador-central", nombre: "organizador_central" },
-        duracion: null,
-        estado: "COMPLETO",
-    },
-]
-
-function upgradeLegacyMatch(match) {
-    const hasGeneratedPlayers = Array.isArray(match.participantes) && match.participantes.some(
-        (participant) => /^Jugador \d+$/i.test(participant.nombre)
-    )
-
-    if (!hasGeneratedPlayers) {
-        return match
-    }
-
-    const replacementMatch = seedMatches.find(
-        (seedMatch) => String(seedMatch.id) === String(match.id)
-    )
-
-    if (!replacementMatch) {
-        return match
-    }
-
-    return {
-        ...match,
-        participantes: replacementMatch.participantes,
-        jugadoresApuntados: replacementMatch.participantes.length,
-    }
 }
 
 export function formatMatchDate(fecha) {
@@ -188,43 +116,9 @@ export function normalizeMatch(match) {
         estado: jugadoresApuntados >= maxJugadores ? "COMPLETO" : "ABIERTO",
     }
 }
-
-export function getLocalMatches() {
-    const storedMatches = localStorage.getItem(MATCHES_STORAGE_KEY)
-
-    if (!storedMatches) {
-        const normalizedSeed = seedMatches.map(normalizeMatch)
-        saveLocalMatches(normalizedSeed)
-        return normalizedSeed
-    }
-
-    try {
-        const parsedMatches = JSON.parse(storedMatches)
-        const upgradedMatches = parsedMatches.map(upgradeLegacyMatch)
-        const normalizedMatches = upgradedMatches.map(normalizeMatch)
-        saveLocalMatches(normalizedMatches)
-        return normalizedMatches
-    } catch (error) {
-        const normalizedSeed = seedMatches.map(normalizeMatch)
-        saveLocalMatches(normalizedSeed)
-        return normalizedSeed
-    }
-}
-
-export function saveLocalMatches(matches) {
-    localStorage.setItem(
-        MATCHES_STORAGE_KEY,
-        JSON.stringify(matches.map(normalizeMatch))
-    )
-}
-
-export function getLocalMatchById(matchId) {
-    return getLocalMatches().find((match) => String(match.id) === String(matchId)) ?? null
-}
-
+//hayq conectar la api aqui 
 export async function getMatchesRequest() {
-    // Pendiente de conectar.
-    if (!API_URL) {
+ if (!API_URL) {
         throw new Error("Backend de partidos no configurado")
     }
 
@@ -239,16 +133,18 @@ export async function getMatchesRequest() {
 }
 
 export async function createMatchRequest(matchData) {
-    // Pendiente de conectar.
     if (!API_URL) {
         throw new Error("Backend de partidos no configurado")
     }
 
     const response = await fetch(`${API_URL}/matches`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(matchData)
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(matchData),
     })
+
     const body = await response.json()
 
     if (!response.ok) {

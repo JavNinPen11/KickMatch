@@ -10,7 +10,7 @@ import {
 import "./css/HomePage.scss";
 
 
-// array de la sección "Cómo funciona"
+//array de la sección "Cómo funciona"
 const howWorks = [
     {
         title: "Busca un partido",
@@ -86,9 +86,7 @@ export default function HomePage() {
                         </p>
                     </div>
 
-                    {/* card de partidos:
-    cuando conectemos esta sección al backend, aquí irá el map de featuredMatches */}
-                    {/*
+                  {/* card de partidos: */}
                     {/* <div className="matchesGrid">
                         {featuredMatches.map((match) => (
                             <article className="matchCard" key={match.id}>
@@ -185,8 +183,8 @@ export default function HomePage() {
 
                         <div className="heroActions">
                             {isLogin ? (
-                                <Link className="btnOne" to="/matches">
-                                    Ir a partidos
+                                <Link className="btnOne" to="/dashboard">
+                                    Ir a tu dashboard
                                 </Link>
                             ) : (
                                 <Link className="btnOne" to="/register">
