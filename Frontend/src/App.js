@@ -5,10 +5,10 @@ import HomePage from "./pages/HomePage";
 import { DashboardPage } from "./pages/DashboardPage";
 import MatchesPage from "./pages/MatchesPage";
 import MatchDetailPage from "./pages/MatchDetailPage";
-import MyMatchesPage from "./pages/MyMatchesPage";
 import { AuthProvider } from "./context/authContext";
 import PrivateRoute from "./components/authComponent/PrivateRoute";
 import "./App.css"
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   return (
@@ -18,9 +18,9 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/matches" element={<MatchesPage />} />
+          <Route path="/matches" element={<PrivateRoute><MatchesPage /></PrivateRoute>}/>
+          <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>}/>
           <Route path="/matches/:matchId" element={<MatchDetailPage />} />
-          <Route path="/my-matches" element={<PrivateRoute><MyMatchesPage /></PrivateRoute>} />
           <Route path="/dashboard" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
         </Routes>
       </Router>

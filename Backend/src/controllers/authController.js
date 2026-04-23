@@ -20,12 +20,12 @@ const register = async (req, res) => {
         })
         
 
-        const token = getToken(user.id_usuario, user.email, user.username)
+        const token = getToken(user.id, user.email, user.username)
 
         return res.status(201).json({
             message: "Usuario creado correctamente",
             user: {
-                id: user.id_usuario,
+                id: user.id,
                 email: user.email,
                 username: user.username
             },
@@ -61,7 +61,7 @@ const login = async (req, res) => {
         if (!validPassword) {
             return res.status(400).json({ ok: false, message: "Contraseña incorrecta" })
         }
-        const token = getToken(user.id_usuario, user.email, user.username)
+        const token = getToken(user.id, user.email, user.username)
 
         res.json({ok:true, message:"Login Exitoso!!!", username:user.username, token})
     }

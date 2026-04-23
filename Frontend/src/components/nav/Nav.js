@@ -17,10 +17,10 @@ export const Nav = ({ variant = "default" }) => {
                 <div className="navLinks">
                     {isAuthenticatedView ? (
                         <>
-                            <span className="sesionName">Sesion de: {userName}</span>
+                            <Link className="sesionName" to="/profile">Sesion de: {userName}</Link>
                             <Link className="link" to="/">Home</Link>
                             <Link className="link" to="/matches">Partidos</Link>
-                            <Link className="link" to="/my-matches">Mis partidos</Link>
+                            {/* <Link className="link" to="/my-matches">Mis partidos</Link> */}
                             <Link className="link" to="/dashboard">Dashboard</Link>
                             <button className="link navLogoutButton" type="button" onClick={logout}>
                                 Cerrar sesion

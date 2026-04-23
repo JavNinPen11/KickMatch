@@ -1,56 +1,46 @@
-import { useContext, useEffect, useState } from "react";
-import { Nav } from "../components/nav/Nav";
-import { CreateMatchForm } from "../components/forms/CreateMatchForm";
-import { MatchCard } from "../components/matches/MatchCard";
-import { AuthContext } from "../context/authContext";
-import { getCurrentMatchUser } from "../utils/userMatches";
+import { useContext, useEffect, useState } from "react"
+import { Nav } from "../components/nav/Nav"
+import { CreateMatchForm } from "../components/forms/CreateMatchForm"
+import { MatchCard } from "../components/matches/MatchCard"
+import { AuthContext } from "../context/authContext"
+import { getMatchUser } from "../utils/userMatches"
 import {
     createMatchRequest,
-    getLocalMatches,
     getMatchesRequest,
     normalizeMatch,
-    saveLocalMatches,
-} from "../api/matchService";
-import "./css/MatchesPage.css"
+} from "../api/matchService"
+import "./css/MatchesPage.scss"
 
 export default function MatchesPage() {
     const { user } = useContext(AuthContext)
-    const currentUser = getCurrentMatchUser(user)
+    const currentUser =  getMatchUser(user)
+
     const [matches, setMatches] = useState([])
-    const [message, setMessage] = useState("Mostrando partidos guardados en local.")
+    const [message, setMessage] = useState("Listado de partidos")
     const [isFormOpen, setIsFormOpen] = useState(false)
 
     useEffect(() => {
-        // Si falta por conectar, se usan los datos guardados en local.
         const loadMatches = async () => {
-            const localMatches = getLocalMatches()
-            setMatches(localMatches)
-
             try {
                 const response = await getMatchesRequest()
                 const data = Array.isArray(response?.data) ? response.data : response
 
-                if (Array.isArray(data) && data.length > 0) {
+                if (Array.isArray(data)) {
                     const normalizedMatches = data.map(normalizeMatch)
                     setMatches(normalizedMatches)
-                    saveLocalMatches(normalizedMatches)
-                    setMessage("Partidos cargados desde el servidor.")
+                    setMessage("Partidos cargados correctamente.")
                     return
                 }
-            } catch (error) {
-                // De momento se mantiene la información guardada en local.
-            }
 
-            setMessage("Mostrando partidos guardados en local.")
+                setMatches([])
+            } catch (error) {
+                setMatches([])
+                setMessage("No se pudieron cargar los partidos.")
+            }
         }
 
         loadMatches()
     }, [])
-
-    const persistMatches = (nextMatches) => {
-        setMatches(nextMatches)
-        saveLocalMatches(nextMatches)
-    }
 
     const handleCreateMatch = async (newMatch) => {
         const matchToAdd = normalizeMatch({
@@ -65,20 +55,17 @@ export default function MatchesPage() {
         try {
             const response = await createMatchRequest(matchToAdd)
             const createdMatch = normalizeMatch(response?.data || response)
-            const nextMatches = [createdMatch, ...matches]
-            persistMatches(nextMatches)
+
+            setMatches((prevMatches) => [createdMatch, ...prevMatches])
             setMessage("Partido creado correctamente.")
             setIsFormOpen(false)
         } catch (error) {
-            const nextMatches = [matchToAdd, ...matches]
-            persistMatches(nextMatches)
-            setMessage("Partido guardado en local. Pendiente de conectar.")
+            setMessage("No se pudo crear el partido.")
             setIsFormOpen(false)
         }
     }
 
     const handleJoinMatch = (matchId) => {
-        // La inscripción se guarda en local.
         const nextMatches = matches.map((match) => {
             const alreadyJoined = match.participantes.some(
                 (participant) => String(participant.id) === String(currentUser.id)
@@ -94,6 +81,7 @@ export default function MatchesPage() {
                 ...match.participantes,
                 { id: currentUser.id, nombre: currentUser.nombre },
             ]
+
             const jugadoresApuntados = participantes.length
 
             return normalizeMatch({
@@ -103,48 +91,49 @@ export default function MatchesPage() {
             })
         })
 
-        persistMatches(nextMatches)
+        setMatches(nextMatches)
     }
 
-    // Layout de partidos: panel sticky a la izquierda y listado a la derecha
     return (
-        <main className="matchesPage">
+        <main className="matches">
             <Nav />
 
-            <section className="matchesHero">
+            <section className="hero">
                 <h1>Partidos</h1>
                 <p>{message}</p>
             </section>
 
-            <section className={`matchesLayout ${isFormOpen ? "matchesLayoutOpen" : ""}`}>
-                <aside className="matchesSide">
-                    <div className={`createMatchPanel ${isFormOpen ? "createMatchPanelOpen" : ""}`}>
-                    <div className="createMatchHeader">
-                        <h2>Crear partido</h2>
-                        <button
-                            className="toggleCreateButton"
-                            type="button"
-                            onClick={() => setIsFormOpen((prev) => !prev)}
-                        >
-                            {isFormOpen ? "Cerrar formulario" : "Abrir formulario"}
-                        </button>
-                    </div>
+            <section className={`formGrid ${isFormOpen ? "formOpen" : ""}`}>
+                <aside className="aside">
+                    <div className={`panel ${isFormOpen ? "panelOpen" : ""}`}>
+                        <div className="panelTop">
+                            <h2>Crear partido</h2>
 
-                    {isFormOpen ? (
-                        <div className="createMatchFormWrap">
-                            <CreateMatchForm onCreateMatch={handleCreateMatch} />
+                            <button
+                                className="btnForm"
+                                type="button"
+                                onClick={() => setIsFormOpen((prev) => !prev)}
+                            >
+                                {isFormOpen ? "Cerrar formulario" : "Abrir formulario"}
+                            </button>
                         </div>
-                    ) : (
-                        <p className="createMatchHint">
-                            Abre el panel para preparar un nuevo partido sin salir del listado.
-                        </p>
-                    )}
+
+                        {isFormOpen ? (
+                            <div className="formMatches">
+                                <CreateMatchForm onCreateMatch={handleCreateMatch} />
+                            </div>
+                        ) : (
+                            <p className="panelText">
+                                Abre el formulario para preparar un nuevo partido.
+                            </p>
+                        )}
                     </div>
                 </aside>
 
-                <section className={`matchesListSection ${isFormOpen ? "matchesListMuted" : ""}`}>
+                <section className="listSection">
                     <h2>Listado de partidos</h2>
-                    <div className="matchesList">
+
+                    <div className="list">
                         {matches.map((match) => (
                             <MatchCard
                                 key={match.id}

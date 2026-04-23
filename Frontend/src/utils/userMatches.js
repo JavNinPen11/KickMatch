@@ -1,4 +1,6 @@
-function addCandidate(set, value) {
+
+// recibe value y si existe lo convierte a texto limpiandolo y lo mete a set
+function addUserValue(set, value) {
     if (value === null || value === undefined) {
         return
     }
@@ -10,7 +12,9 @@ function addCandidate(set, value) {
     }
 }
 
-export function getCurrentMatchUser(user, profile = null) {
+// devuelve el user actual adaptado al formato de los partidos
+//prioriza profile y si faltan datos usa user o valores defecto
+export function getMatchUser(user, profile = null) {
     return {
         id: profile?.id ?? user?.id ?? user?.username ?? "guest-user",
         username: profile?.username ?? user?.username ?? "Invitado",
@@ -20,23 +24,24 @@ export function getCurrentMatchUser(user, profile = null) {
     }
 }
 
-export function getUserIdentityCandidates(user, profile = null) {
-    const currentUser = getCurrentMatchUser(user, profile)
+// prepara los posibles valores con los que identificar al user
+export function getUserIdentityValues(user, profile = null) {
+    const currentUser = getMatchUser(user, profile)
     const ids = new Set()
     const names = new Set()
 
-    addCandidate(ids, currentUser.id)
-    addCandidate(ids, currentUser.username)
-    addCandidate(names, currentUser.nombre)
-    addCandidate(names, currentUser.username)
+    addUserValue(ids, currentUser.id)
+    addUserValue(ids, currentUser.username)
+    addUserValue(names, currentUser.nombre)
+    addUserValue(names, currentUser.username)
 
-    addCandidate(ids, user?.id)
-    addCandidate(ids, user?.username)
-    addCandidate(names, user?.nombre)
+    addUserValue(ids, user?.id)
+    addUserValue(ids, user?.username)
+    addUserValue(names, user?.nombre)
 
-    addCandidate(ids, profile?.id)
-    addCandidate(ids, profile?.username)
-    addCandidate(names, profile?.nombre)
+    addUserValue(ids, profile?.id)
+    addUserValue(ids, profile?.username)
+    addUserValue(names, profile?.nombre)
 
     return {
         currentUser,
@@ -45,6 +50,7 @@ export function getUserIdentityCandidates(user, profile = null) {
     }
 }
 
+// comprueba si el partido es hoy o en un futuro
 function isFutureMatch(match) {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
@@ -55,17 +61,20 @@ function isFutureMatch(match) {
     return matchDate >= today
 }
 
-function sortMatchesByDate(matches) {
+// ordena los partidos por fecha y hora
+function orderMatchesByDate(matches) {
     return [...matches].sort((a, b) => {
         const left = new Date(`${a.fecha}T${a.hora || "00:00"}`)
         const right = new Date(`${b.fecha}T${b.hora || "00:00"}`)
         return left - right
     })
 }
-
+// recibe todos los partidos, user y opcionalmente el perfil
+// devuelve los aprtidos organizados donde interactua el user en grupos utiles
 export function getUserMatchesSummary(matches, user, profile = null) {
-    const { currentUser, ids, names } = getUserIdentityCandidates(user, profile)
+    const { currentUser, ids, names } = getUserIdentityValues(user, profile)
 
+    //partiodos creados por el user
     const createdByUser = matches.filter((match) => {
         const creatorId = String(match.creador?.id ?? "").trim().toLowerCase()
         const creatorName = String(match.creador?.nombre ?? "").trim().toLowerCase()
@@ -73,6 +82,7 @@ export function getUserMatchesSummary(matches, user, profile = null) {
         return ids.has(creatorId) || names.has(creatorName)
     })
 
+    // partidos en los que el user participa
     const joinedByUser = matches.filter((match) =>
         Array.isArray(match.participantes) &&
         match.participantes.some((participant) => {
@@ -83,23 +93,28 @@ export function getUserMatchesSummary(matches, user, profile = null) {
         })
     )
 
+    // junta los partidos creados por el user y los que se ha unido
+    // los junta sin duplicar
     const uniqueRelatedMatches = new Map()
 
-    ;[...createdByUser, ...joinedByUser].forEach((match) => {
-        uniqueRelatedMatches.set(String(match.id), match)
-    })
+        ;[...createdByUser, ...joinedByUser].forEach((match) => {
+            uniqueRelatedMatches.set(String(match.id), match)
+        })
 
+    // union de partidos creados y en los que participa el user, sin duplicados
     const relatedMatches = Array.from(uniqueRelatedMatches.values())
-    const upcomingMatches = sortMatchesByDate(relatedMatches.filter(isFutureMatch))
-    const playedMatches = sortMatchesByDate(
+    // partidos futuros del user
+    const upcomingMatches = orderMatchesByDate(relatedMatches.filter(isFutureMatch))
+    // partidos pasados en el que el user participo
+    const playedMatches = orderMatchesByDate(
         joinedByUser.filter((match) => !isFutureMatch(match))
     )
 
     return {
         currentUser,
-        createdMatches: sortMatchesByDate(createdByUser),
-        joinedMatches: sortMatchesByDate(joinedByUser),
-        relatedMatches: sortMatchesByDate(relatedMatches),
+        createdMatches: orderMatchesByDate(createdByUser),
+        joinedMatches: orderMatchesByDate(joinedByUser),
+        relatedMatches: orderMatchesByDate(relatedMatches),
         upcomingMatches,
         activeMatches: upcomingMatches,
         playedMatches,
