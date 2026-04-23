@@ -18,8 +18,8 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/matches" element={<MatchesPage />} />
-           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/matches" element={<PrivateRoute><MatchesPage /></PrivateRoute>}/>
+          <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>}/>
           <Route path="/matches/:matchId" element={<MatchDetailPage />} />
           <Route path="/dashboard" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
         </Routes>
