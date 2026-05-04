@@ -51,7 +51,6 @@ model Equipo {
 
 model Match {
   id           Int           @id @default(autoincrement()) @map("id_partido")
-  titulo       String?       @db.VarChar(100)
   fecha        DateTime
   hora         DateTime      @db.Time
   ubicacion    String?       @db.VarChar(255)

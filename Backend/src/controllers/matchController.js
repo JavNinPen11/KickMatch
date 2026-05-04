@@ -5,7 +5,6 @@ const createMatch = async (req, res) => {
     try{
         const match = await prisma.match.create({
             data: {
-                title,
                 date,
                 time,
                 location,
@@ -18,7 +17,6 @@ const createMatch = async (req, res) => {
         return res.status(201).json({
             message: "Partido creado correctamente",
             match: {
-                title: match.title,
                 date: match.data,
                 time: match.time,
                 location: match.location,
