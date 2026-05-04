@@ -39,7 +39,7 @@ model User {
   rol      Rol?     @relation("RolUsuario", fields: [rolId], references: [id])
   creadoEn DateTime @default(now()) @map("creado_en")
 
-  partidosCreados Partido[] @relation("CreadorPartido")
+  partidosCreados Match[] @relation("CreadorPartido")
 }
 
 model Equipo {
@@ -49,7 +49,7 @@ model Equipo {
   color  String? @db.VarChar(20)
 }
 
-model Partido {
+model Match {
   id           Int           @id @default(autoincrement()) @map("id_partido")
   titulo       String?       @db.VarChar(100)
   fecha        DateTime
