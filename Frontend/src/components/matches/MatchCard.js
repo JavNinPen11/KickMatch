@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { formatMatchDate, getMatchDisplayName } from "../../api/matchService";
+import { formatMatchDate, getMatchDisplayName } from "../../api/matchUtils";
 import "./MatchCard.css"
 
 export function MatchCard({ match, currentUser, onJoin }) {

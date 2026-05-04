@@ -3,7 +3,7 @@ import {
     getMaxMatchDateString,
     getTodayDateString,
     isValidMatchDate,
-} from "../../api/matchService";
+} from "../../api/matchUtils";
 import "./CreateMatchForm.css"
 
 const initialForm = {
@@ -69,8 +69,7 @@ export function CreateMatchForm({ onCreateMatch }) {
                     onChange={handleChange}
                     min={minDate}
                     max={maxDate}
-                    required
-                />
+                    required/>
             </div>
             <div className="form-group">
                 <input
