@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useState } from "react"
 import {
     getMaxMatchDateString,
     getTodayDateString,
     isValidMatchDate,
-} from "../../api/matchService";
-import "./CreateMatchForm.css"
+} from "../../api/matchService"
+import "./CreateMatchForm.scss"
 
-const initialForm = {
+const emptyForm = {
     fecha: "",
     hora: "",
     ubicacion: "",
@@ -14,21 +14,25 @@ const initialForm = {
     duracion: "",
 }
 
-export function CreateMatchForm({ onCreateMatch }) {
-    const [form, setForm] = useState(initialForm)
+export function CreateMatchForm({ onCreate }) {
+    const [form, setForm] = useState(emptyForm)
     const [error, setError] = useState("")
+
     const minDate = getTodayDateString()
     const maxDate = getMaxMatchDateString()
 
-    const handleChange = (e) => {
+    function changeInput(e) {
         const { name, value } = e.target
-        setForm((prev) => ({ ...prev, [name]: value }))
-        if (error) {
-            setError("")
-        }
+
+        setForm({
+            ...form,
+            [name]: value,
+        })
+
+        setError("")
     }
 
-    const handleSubmit = (e) => {
+    function sendForm(e) {
         e.preventDefault()
 
         const maxJugadores = Number(form.maxJugadores)
@@ -49,49 +53,54 @@ export function CreateMatchForm({ onCreateMatch }) {
             return
         }
 
-        onCreateMatch({
+        onCreate({
             ...form,
             maxJugadores,
             duracion,
         })
-        setForm(initialForm)
+
+        setForm(emptyForm)
         setError("")
     }
 
     return (
-        <form className="CreateMatchForm" onSubmit={handleSubmit}>
+        <form className="matchForm" onSubmit={sendForm}>
             <p>Crear partido</p>
-            <div className="form-group">
+
+            <div className="field">
                 <input
                     name="fecha"
                     type="date"
                     value={form.fecha}
-                    onChange={handleChange}
+                    onChange={changeInput}
                     min={minDate}
                     max={maxDate}
                     required
                 />
             </div>
-            <div className="form-group">
+
+            <div className="field">
                 <input
                     name="hora"
                     type="time"
                     value={form.hora}
-                    onChange={handleChange}
+                    onChange={changeInput}
                     required
                 />
             </div>
-            <div className="form-group">
+
+            <div className="field">
                 <input
                     name="ubicacion"
                     type="text"
                     placeholder="Ubicación"
                     value={form.ubicacion}
-                    onChange={handleChange}
+                    onChange={changeInput}
                     required
                 />
             </div>
-            <div className="form-group">
+
+            <div className="field">
                 <input
                     name="maxJugadores"
                     type="number"
@@ -99,23 +108,28 @@ export function CreateMatchForm({ onCreateMatch }) {
                     min="2"
                     max="20"
                     value={form.maxJugadores}
-                    onChange={handleChange}
+                    onChange={changeInput}
                     required
                 />
             </div>
-            <div className="form-group">
+
+            <div className="field">
                 <input
                     name="duracion"
                     type="number"
-                    placeholder="Duración del partido en min"
+                    placeholder="Duración en minutos"
                     min="1"
                     max="90"
                     value={form.duracion}
-                    onChange={handleChange}
+                    onChange={changeInput}
                 />
             </div>
+
             {error ? <p className="formError">{error}</p> : null}
-            <button className="submit" type="submit">Guardar partido</button>
+
+            <button className="btnForm" type="submit">
+                Guardar partido
+            </button>
         </form>
     )
 }
