@@ -67,7 +67,7 @@ export function CreateMatchForm({ onCreate }) {
         <form className="matchForm" onSubmit={sendForm}>
             <p>Crear partido</p>
 
-            <div className="field">
+            <div className="formGroup">
                 <input
                     name="fecha"
                     type="date"
@@ -79,7 +79,7 @@ export function CreateMatchForm({ onCreate }) {
                 />
             </div>
 
-            <div className="field">
+            <div className="formGroup">
                 <input
                     name="hora"
                     type="time"
@@ -89,7 +89,7 @@ export function CreateMatchForm({ onCreate }) {
                 />
             </div>
 
-            <div className="field">
+            <div className="formGroup">
                 <input
                     name="ubicacion"
                     type="text"
@@ -100,7 +100,7 @@ export function CreateMatchForm({ onCreate }) {
                 />
             </div>
 
-            <div className="field">
+            <div className="formGroup">
                 <input
                     name="maxJugadores"
                     type="number"
@@ -113,7 +113,7 @@ export function CreateMatchForm({ onCreate }) {
                 />
             </div>
 
-            <div className="field">
+            <div className="formGroup">
                 <input
                     name="duracion"
                     type="number"
@@ -127,7 +127,7 @@ export function CreateMatchForm({ onCreate }) {
 
             {error ? <p className="formError">{error}</p> : null}
 
-            <button className="btnForm" type="submit">
+            <button className="btnSave" type="submit">
                 Guardar partido
             </button>
         </form>

@@ -9,14 +9,14 @@
     margin-bottom: 3vh;
 }
 
-.field {
+.formGroup {
     display: flex;
     align-items: center;
     margin-bottom: 1.2vh;
     width: 100%;
 }
 
-.field input {
+.formGroup input {
     width: 100%;
     min-height: 48px;
     padding: 0 14px;
@@ -25,23 +25,16 @@
     background-color: rgba(255, 255, 255, 0.03);
     color: #fff;
     font: inherit;
-    appearance: textfield;
 }
 
-.field input:focus {
+.formGroup input:focus {
     outline: none;
     border-color: #f2bb2d;
 }
 
-.field input[type="date"],
-.field input[type="time"] {
+.formGroup input[type="date"],
+.formGroup input[type="time"] {
     color-scheme: dark;
-}
-
-.field input::-webkit-outer-spin-button,
-.field input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
 }
 
 .formError {
@@ -51,7 +44,7 @@
     font-size: 0.95rem;
 }
 
-.btnForm {
+.btnSave {
     width: 100%;
     min-height: 46px;
     margin-top: 2vh;
@@ -66,7 +59,7 @@
     transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
-.btnForm:hover {
+.btnSave:hover {
     background-color: #f6c54b;
     border-color: #f6c54b;
 }
