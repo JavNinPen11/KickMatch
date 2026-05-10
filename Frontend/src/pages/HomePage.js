@@ -1,13 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Nav } from "../components/nav/Nav";
+import { Nav } from "../components/nav/nav";
 import { AuthContext } from "../context/authContext";
 import {
-    // formatMatchDate,
+   // formatMatchDate,
     getLocalMatches,
     // getMatchDisplayName,
 } from "../api/matchService";
-import "./css/HomePage.scss";
+import "./css/homePage.scss";
 
 
 //array de la sección "Cómo funciona"
@@ -29,10 +29,10 @@ const howWorks = [
     },
 ];
 
-// devuelve partidos para la home.
+// devuelve partidos para la home
 function getMatches() {
     return [];
-    // devuelve partidos del backend al home.
+    // devuelve partidos del backend al home
 }
 
 export default function HomePage() {

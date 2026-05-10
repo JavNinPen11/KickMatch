@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom"
 import { formatMatchDate, getMatchDisplayName } from "../../api/matchService"
-import "./MatchCard.scss"
+import "./matchCard.scss"
 
 export function MatchCard({ match, user, onJoin }) {
     const full = match.jugadoresApuntados >= match.maxJugadores

@@ -1,10 +1,10 @@
 import { useContext, useEffect, useMemo, useState } from "react"
 import { Link } from "react-router-dom"
-import { Nav } from "../components/nav/Nav"
+import { Nav } from "../components/nav/nav"
 import { AuthContext } from "../context/authContext"
 import { getMeRequest } from "../api/userService"
 import { getUserMatchesSummary } from "../utils/userMatches"
-import "./css/DashboardPage.scss"
+import "./css/dashboardPage.scss"
 
 export const DashboardPage = () => {
     const { user } = useContext(AuthContext)

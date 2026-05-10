@@ -4,7 +4,7 @@ import {
     getTodayDateString,
     isValidMatchDate,
 } from "../../api/matchService"
-import "./CreateMatchForm.scss"
+import "./createMatchForm.scss"
 
 const emptyForm = {
     fecha: "",
@@ -110,18 +110,6 @@ export function CreateMatchForm({ onCreate }) {
                     value={form.maxJugadores}
                     onChange={changeInput}
                     required
-                />
-            </div>
-
-            <div className="formGroup">
-                <input
-                    name="duracion"
-                    type="number"
-                    placeholder="Duración en minutos"
-                    min="1"
-                    max="90"
-                    value={form.duracion}
-                    onChange={changeInput}
                 />
             </div>
 

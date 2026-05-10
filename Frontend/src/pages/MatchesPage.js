@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
-import { Nav } from "../components/nav/Nav"
-import { CreateMatchForm } from "../components/forms/CreateMatchForm"
-import { MatchCard } from "../components/matches/MatchCard"
+import { Nav } from "../components/nav/nav"
+import { CreateMatchForm } from "../components/forms/createMatchForm"
+import { MatchCard } from "../components/matches/matchCard"
 import { AuthContext } from "../context/authContext"
 import { getMatchUser } from "../utils/userMatches"
 import {
@@ -9,7 +9,7 @@ import {
     getMatchesRequest,
     normalizeMatch,
 } from "../api/matchService"
-import "./css/MatchesPage.scss"
+import "./css/matchesPage.scss"
 
 export default function MatchesPage() {
     const { user } = useContext(AuthContext)

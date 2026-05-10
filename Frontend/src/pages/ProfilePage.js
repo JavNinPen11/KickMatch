@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react"
-import { Nav } from "../components/nav/Nav"
+import { Nav } from "../components/nav/nav"
 import { AuthContext } from "../context/authContext"
 import { getMeRequest, updateMeRequest } from "../api/userService"
-import "./css/ProfilePage.scss"
+import "./css/profilePage.scss"
 
 
 export default function ProfilePage() {

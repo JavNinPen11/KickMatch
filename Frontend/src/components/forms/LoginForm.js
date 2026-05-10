@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import "./LoginForm.css"
+import "./loginForm.css"
 
 export const LoginForm = ({onLogin}) => {
   
@@ -20,7 +20,7 @@ export const LoginForm = ({onLogin}) => {
         <div className='form-group'>
             <input placeholder='Contraseña' type='password'autoComplete='off' id='txtPassword'required onChange={e => setPassword(e.target.value)}></input>
         </div>
-        <button className='submit'>Login</button>
+        <button className='submit'>Login</button> 
     </form>
   )
 }

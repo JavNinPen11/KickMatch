@@ -1,6 +1,6 @@
-import { LoginForm } from "../components/forms/LoginForm"
+import { LoginForm } from "../components/forms/loginForm"
 import { loginRequest } from "../api/authService"
-import style from"./LoginPage.module.scss"
+import style from"./loginPage.module.scss"
 import { useState, useContext } from "react"
 import {Link, useNavigate} from "react-router-dom"
 import { AuthContext } from "../context/authContext"
