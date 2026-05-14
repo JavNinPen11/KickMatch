@@ -31,7 +31,7 @@ export function CreateMatchForm({ onCreate }) {
         setError("")
     }
 
-    function sendForm(e) {
+    function handleSubmitSendForm(e) {
         e.preventDefault()
 
         const maxJugadores = Number(form.maxJugadores)
@@ -57,7 +57,7 @@ export function CreateMatchForm({ onCreate }) {
     }
 
     return (
-        <form className="{style.matchForm}" onSubmit={sendForm}>
+        <form className="{style.matchForm}" onSubmit={handleSubmitSendForm}>
             <p>Crear partido</p>
 
   <div className={style.formGroup}>

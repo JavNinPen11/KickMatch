@@ -2,7 +2,7 @@ import { useContext } from "react"
 import { Link } from "react-router-dom"
 import { Nav } from "../components/nav/nav"
 import { AuthContext } from "../context/authContext"
-import style from "./css/homePage.module.scss"
+import style from "./stylePages/homePage.module.scss"
 
 const howWorks = [
     {

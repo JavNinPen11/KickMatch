@@ -1,0 +1,25 @@
+.loginForm {
+    display: grid;
+    gap: 18px;
+}
+
+.loginForm p {
+    margin: 0;
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.formGroup {
+    display: grid;
+    width: 100%;
+}
+
+.formGroup input {
+    width: 100%;
+}
+
+.btnLogin {
+    width: 100%;
+    margin-top: 8px;
+}

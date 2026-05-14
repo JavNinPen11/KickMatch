@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react"
 import { Nav } from "../components/nav/nav"
 import { AuthContext } from "../context/authContext"
 import { getMeRequest, updateMeRequest } from "../api/userService"
-import style from "./css/profilePage.module.scss"
+import style from "./stylePages/profilePage.module.scss"
 
 export default function ProfilePage() {
     const { user } = useContext(AuthContext)

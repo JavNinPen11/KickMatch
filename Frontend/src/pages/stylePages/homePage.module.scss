@@ -13,7 +13,7 @@
 .heroTitle {
     margin: 18px 0 16px;
     font-size: clamp(2.6rem, 5vw, 4.5rem);
-    line-height: 0.98;
+    line-height: 1.12;
 }
 
 .heroBtns {
@@ -85,12 +85,13 @@
 @media (max-width: 768px) {
     .heroBox,
     .stepCard,
-    .finalBox {
+    .cta {
         padding: 22px;
         border-radius: 20px;
     }
 
     .heroTitle {
-        font-size: clamp(2.2rem, 10vw, 3.2rem);
+        font-size: clamp(2rem, 9vw, 3rem);
+        line-height: 1.15;
     }
 }

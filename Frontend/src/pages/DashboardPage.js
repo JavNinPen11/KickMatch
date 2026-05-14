@@ -4,7 +4,7 @@ import { Nav } from "../components/nav/nav"
 import { AuthContext } from "../context/authContext"
 import { getMeRequest } from "../api/userService"
 import { getUserMatchesSummary } from "../utils/userMatches"
-import style from "./css/dashboardPage.module.scss"
+import style from "./stylePages/dashboardPage.module.scss"
 
 export const DashboardPage = () => {
     const { user } = useContext(AuthContext)

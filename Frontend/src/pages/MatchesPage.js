@@ -9,7 +9,7 @@ import {
     getMatchesRequest,
     normalizeMatch,
 } from "../api/matchService"
-import style from "./css/matchesPage.module.scss"
+import style from "./stylePages/matchesPage.module.scss"
 
 export default function MatchesPage() {
     const { user } = useContext(AuthContext)
