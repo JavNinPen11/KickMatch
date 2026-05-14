@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import "./loginForm.css"
+import "./styleForms/loginForm.css"
 
 export const LoginForm = ({onLogin}) => {
   

@@ -1,0 +1,96 @@
+.hero {
+    display: block;
+    margin-top: 28px;
+}
+
+.heroBox {
+    padding: 52px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.heroTitle {
+    margin: 18px 0 16px;
+    font-size: clamp(2.6rem, 5vw, 4.5rem);
+    line-height: 0.98;
+}
+
+.heroBtns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 28px;
+}
+
+.section {
+    margin-top: 32px;
+}
+
+.sectionTop {
+    max-width: 720px;
+    margin-bottom: 24px;
+}
+
+.sectionTitle {
+    margin: 0 0 12px;
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    line-height: 1.1;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.stepCard {
+    padding: 24px;
+}
+
+.stepNumber {
+    display: inline-flex;
+    margin-bottom: 18px;
+    color: #f2bb2d;
+    font-family: "Oswald";
+    font-size: 1.6rem;
+    letter-spacing: 0.08em;
+}
+
+.cardTitle {
+    margin: 0 0 10px;
+    font-size: 1.2rem;
+    line-height: 1.2;
+}
+
+.cta {
+    margin-top: 32px;
+    padding: 36px;
+}
+
+.ctaContent {
+    max-width: 680px;
+}
+
+.ctaContent .sectionTitle {
+    margin-bottom: 14px;
+}
+
+@media (max-width: 1024px) {
+    .steps {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .heroBox,
+    .stepCard,
+    .finalBox {
+        padding: 22px;
+        border-radius: 20px;
+    }
+
+    .heroTitle {
+        font-size: clamp(2.2rem, 10vw, 3.2rem);
+    }
+}

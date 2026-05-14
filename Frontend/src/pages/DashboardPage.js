@@ -4,7 +4,7 @@ import { Nav } from "../components/nav/nav"
 import { AuthContext } from "../context/authContext"
 import { getMeRequest } from "../api/userService"
 import { getUserMatchesSummary } from "../utils/userMatches"
-import "./css/dashboardPage.scss"
+import style from "./css/dashboardPage.module.scss"
 
 export const DashboardPage = () => {
     const { user } = useContext(AuthContext)
@@ -41,15 +41,15 @@ export const DashboardPage = () => {
     const nextMatch = summary.upcomingMatches[0] || null
 
     return (
-        <main className="dash">
+       <main className="mainPage">
             <Nav />
 
             <div className="content">
-                <section className="heroRow">
-                    <article className="cardMain">
+                <section className={style.hero}>
+                    <article className={`cardBase ${style.mainCard}`}>
                         <span className="labelYellow">Zona privada</span>
 
-                        <div className="cardText">
+                        <div className={style.cardText}>
                             <h1>Hola, {summary.currentUser.username}</h1>
                             <p>
                                 Aquí tienes un resumen claro de tu actividad en KickMatch
@@ -62,22 +62,19 @@ export const DashboardPage = () => {
                             <Link className="btnOne" to="/matches">
                                 Ver partidos
                             </Link>
-                            {/* <Link className="btnTwo" to="/matches">
-                                Crear o buscar partidos
-                            </Link> */}
                         </div>
                     </article>
 
-                    <aside className="cardAside">
+                    <aside className={`cardBase ${style.userCard}`}>
                         <span className="labelYellow">Resumen del usuario</span>
 
-                        <div className="userRow">
-                            <div className="userBox">
+                        <div className={style.userRow}>
+                            <div className={style.userBox}>
                                 <span>Usuario</span>
                                 <strong>{summary.currentUser.username}</strong>
                             </div>
 
-                            <div className="userBox">
+                            <div className={style.userBox}>
                                 <span>Rol</span>
                                 <strong>Jugador</strong>
                             </div>
@@ -85,15 +82,15 @@ export const DashboardPage = () => {
                     </aside>
                 </section>
 
-                <section className="section">
-                    <div className="sectionTop">
+                <section className={style.section}>
+                    <div className={style.sectionTop}>
                         <span className="labelYellow">Resumen</span>
                         <h2>Tu actividad en un vistazo</h2>
                     </div>
 
-                    <div className="stats">
+                    <div className={style.stats}>
                         {stats.map((item) => (
-                            <article className="stat" key={item.label}>
+                            <article className={`cardBase ${style.statCard}`} key={item.label}>
                                 <span>{item.label}</span>
                                 <strong>{item.value}</strong>
                             </article>
@@ -101,26 +98,26 @@ export const DashboardPage = () => {
                     </div>
                 </section>
 
-                <section className="agenda">
-                    <div className="sectionTop">
+                <section className={style.agenda}>
+                    <div className={style.sectionTop}>
                         <span className="labelYellow">Próximos partidos</span>
                         <h2>Resumen rápido de tu agenda</h2>
                     </div>
 
                     {nextMatch ? (
-                        <article className="agendaCard">
-                            <div className="agendaTop">
+                        <article className={`cardBase ${style.agendaCard}`}>
+                            <div className={style.agendaTop}>
                                 <h3>Tu próximo partido</h3>
                             </div>
 
-                            <div className="agendaInfo">
+                            <div className={style.agendaInfo}>
                                 <p>
                                     Ya tienes un encuentro pendiente en tu agenda. Entra en
                                     partidos para ver el detalle completo.
                                 </p>
                             </div>
 
-                            <div className="agendaData">
+                            <div className={style.agendaData}>
                                 <p>
                                     <strong>Ubicación</strong>
                                     <span>{nextMatch.ubicacion}</span>
@@ -138,12 +135,12 @@ export const DashboardPage = () => {
                             </div>
                         </article>
                     ) : (
-                        <article className="emptyCard">
-                            <div className="agendaTop">
+                        <article className={`cardBase ${style.emptyCard}`}>
+                            <div className={style.agendaTop}>
                                 <h3>Aún no tienes próximos partidos</h3>
                             </div>
 
-                            <div className="agendaInfo">
+                            <div className={style.agendaInfo}>
                                 <p>
                                     Entra en partidos para crear uno nuevo o apuntarte a un
                                     encuentro abierto.
