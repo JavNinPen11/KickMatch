@@ -1,7 +1,5 @@
-
 const createMatch = async (req, res) => {
-    const { title, date, time, location, maxPlayers, state, creatorId, created, user} = req.body
-
+    const { date, time, location, maxPlayers, state, creatorId } = req.body
     try{
         const match = await prisma.match.create({
             data: {
@@ -11,13 +9,12 @@ const createMatch = async (req, res) => {
                 maxPlayers,
                 state,
                 creatorId,
-                created
             }
         })
         return res.status(201).json({
             message: "Partido creado correctamente",
             match: {
-                date: match.data,
+                date: match.date,
                 time: match.time,
                 location: match.location,
                 creatorId: match.creatorId
