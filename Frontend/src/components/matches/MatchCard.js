@@ -1,51 +1,54 @@
-import { Link } from "react-router-dom";
-import { formatMatchDate, getMatchDisplayName } from "../../api/matchUtils";
-import "./MatchCard.css"
 
-export function MatchCard({ match, currentUser, onJoin }) {
-    const isComplete = match.jugadoresApuntados >= match.maxJugadores
-    const isOwner = String(match.creador.id) === String(currentUser.id)
-    const alreadyJoined = match.participantes.some(
-        (participant) => String(participant.id) === String(currentUser.id)
+import { Link } from "react-router-dom"
+import { formatMatchDate, getMatchDisplayName } from "../../api/matchService"
+import "./MatchCard.scss"
+
+export function MatchCard({ match, user, onJoin }) {
+    const full = match.jugadoresApuntados >= match.maxJugadores
+    const owner = String(match.creador.id) === String(user.id)
+
+    const joined = match.participantes.some(
+        (p) => String(p.id) === String(user.id)
     )
 
-    let joinLabel = "Apuntarme"
+    const disabled = full || owner || joined
 
-    if (isComplete) {
-        joinLabel = "Completo"
-    } else if (isOwner) {
-        joinLabel = "Tu partido"
-    } else if (alreadyJoined) {
-        joinLabel = "Apuntado"
-    }
+    let btnText = "Apuntarme"
+
+    if (full) btnText = "Completo"
+    if (owner) btnText = "Tu partido"
+    if (joined) btnText = "Apuntado"
 
     return (
         <article className="matchCard">
-            <div className="matchCardHeader">
+            <div className="matchTop">
                 <h3>{getMatchDisplayName(match.fecha)}</h3>
-                <span className="matchStatus">{match.estado || "ABIERTO"}</span>
+                <span>{match.estado || "ABIERTO"}</span>
             </div>
 
-            <div className="matchMeta">
+            <div className="matchInfo">
                 <p><strong>Fecha:</strong> {formatMatchDate(match.fecha)}</p>
                 <p><strong>Hora:</strong> {match.hora}</p>
                 <p><strong>Ubicación:</strong> {match.ubicacion}</p>
                 <p><strong>Organizador:</strong> {match.creador.nombre}</p>
-                <p><strong>Máx. jugadores:</strong> {match.maxJugadores}</p>
-                <p><strong>Apuntados:</strong> {match.jugadoresApuntados}/{match.maxJugadores}</p>
-                {match.duracion ? <p><strong>Duración:</strong> {match.duracion} min</p> : null}
+                <p><strong>Jugadores:</strong> {match.jugadoresApuntados}/{match.maxJugadores}</p>
+
+                {match.duracion && (
+                    <p><strong>Duración:</strong> {match.duracion} min</p>
+                )}
             </div>
 
-            <Link className="detailsButton" to={`/matches/${match.id}`}>
+            <Link className="btnDetails" to={`/matches/${match.id}`}>
                 Ver partido
             </Link>
+
             <button
-                className="joinButton"
+                className="btnJoin"
                 type="button"
                 onClick={() => onJoin(match.id)}
-                disabled={isComplete || isOwner || alreadyJoined}
+                disabled={disabled}
             >
-                {joinLabel}
+                {btnText}
             </button>
         </article>
     )
