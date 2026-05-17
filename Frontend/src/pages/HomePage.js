@@ -2,11 +2,6 @@ import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Nav } from "../components/nav/Nav";
 import { AuthContext } from "../context/authContext";
-import {
-    // formatMatchDate,
-    getLocalMatches,
-    // getMatchDisplayName,
-} from "../api/matchService";
 import "./css/HomePage.scss";
 
 

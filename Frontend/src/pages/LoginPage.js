@@ -1,9 +1,9 @@
 import { LoginForm } from "../components/forms/LoginForm"
 import { loginRequest } from "../api/authService"
-import style from"./LoginPage.module.scss"
 import { useState, useContext } from "react"
 import {Link, useNavigate} from "react-router-dom"
 import { AuthContext } from "../context/authContext"
+import style from"./LoginPage.module.scss"
 
 function Login (){
     const {login} = useContext(AuthContext)
@@ -12,6 +12,8 @@ function Login (){
     const handleLogin = async ({username, password}) =>{
         try{
             const response = await loginRequest(username, password)
+            console.log(response);
+            
             if(response.token){
                 login({username}, response.token)
                 navigate("/dashboard")

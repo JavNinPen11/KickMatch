@@ -8,7 +8,7 @@ import {
     createMatchRequest,
     getMatchesRequest,
     normalizeMatch,
-} from "../api/matchService"
+} from "../api/matchUtils"
 import "./css/MatchesPage.scss"
 
 export default function MatchesPage() {
