@@ -1,5 +1,3 @@
-import { prisma } from "../../lib/db"
-
 const createMatch = async (req, res) => {
     const { date, time, location, maxPlayers, state, creatorId } = req.body
     try{
@@ -65,5 +63,6 @@ const deleteMatch = async (req, res) =>{
 }
 export{
     createMatch,
-    myMatches
+    myMatches,
+    deleteMatch
 }

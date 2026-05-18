@@ -3,7 +3,7 @@ import {
     getMaxMatchDateString,
     getTodayDateString,
     isValidMatchDate,
-} from "../../api/matchService"
+} from "../../api/matchUtils.js"
 import "./CreateMatchForm.scss"
 
 const emptyForm = {
