@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Nav } from "../components/nav/nav"
+import { Nav } from "../components/nav/Nav"
 import { AuthContext } from "../context/authContext"
 import style from "./stylePages/homePage.module.scss"
 
