@@ -1,13 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import LoginPage from "./pages/loginPage"
-import RegisterPage from "./pages/registerPage";
-import HomePage from "./pages/homePage";
-import { DashboardPage } from "./pages/dashboardPage";
-import MatchesPage from "./pages/matchesPage";
+import LoginPage from "./pages/LoginPage"
+import RegisterPage from "./pages/RegisterPage";
+import HomePage from "./pages/HomePage";
+import { DashboardPage } from "./pages/DashboardPage";
+import MatchesPage from "./pages/MatchesPage";
 import { AuthProvider } from "./context/authContext";
-import PrivateRoute from "./components/authComponent/privateRoute";
-import "./app.css"
-import ProfilePage from "./pages/profilePage";
+import PrivateRoute from "./components/authComponent/PrivateRoute";
+import "./App.css"
+import ProfilePage from "./pages/ProfilePage";
 import PanelAdmin from "./pages/panelAdmin"
 
 
