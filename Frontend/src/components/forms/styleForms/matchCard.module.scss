@@ -1,0 +1,59 @@
+.matchCard {
+    width: 100%;
+    padding: 18px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.matchTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.matchTop h3 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.matchInfo {
+    display: grid;
+    gap: 8px;
+}
+
+.matchInfo p {
+    margin: 0;
+    color: #d2d2d2;
+    line-height: 1.5;
+}
+
+.matchInfo strong {
+    color: #fff;
+}
+
+.btnDetails,
+.btnJoin {
+    width: 100%;
+}
+
+.btnJoin:disabled {
+    background-color: #6b6b6b;
+    border-color: #6b6b6b;
+    color: #e5e5e5;
+}
+
+@media (max-width: 768px) {
+    .matchCard {
+        padding: 16px;
+        border-radius: 18px;
+    }
+
+    .matchTop {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

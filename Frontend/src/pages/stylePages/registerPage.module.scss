@@ -1,0 +1,42 @@
+.registerPage {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.registerBox {
+    width: min(460px, 92vw);
+    padding: 48px 0 72px;
+    text-align: center;
+}
+
+.registerBox h1 {
+    margin: 18px 0 12px;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    line-height: 1.1;
+}
+
+.registerCard {
+    display: grid;
+    gap: 18px;
+    margin-top: 32px;
+}
+
+.links {
+    display: grid;
+    justify-items: center;
+    gap: 14px;
+    margin-top: 24px;
+}
+
+.homeLink {
+    color: #f2bb2d;
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .registerBox {
+        padding-top: 32px;
+    }
+}

@@ -4,14 +4,14 @@ import {
     getTodayDateString,
     isValidMatchDate,
 } from "../../api/matchUtils.js"
-import "./CreateMatchForm.scss"
+import style from "./styleForms/createMatchForm.module.scss"
+
 
 const emptyForm = {
     fecha: "",
     hora: "",
     ubicacion: "",
     maxJugadores: "",
-    duracion: "",
 }
 
 export function CreateMatchForm({ onCreate }) {
@@ -32,11 +32,10 @@ export function CreateMatchForm({ onCreate }) {
         setError("")
     }
 
-    function sendForm(e) {
+    function handleSubmitSendForm(e) {
         e.preventDefault()
 
         const maxJugadores = Number(form.maxJugadores)
-        const duracion = form.duracion ? Number(form.duracion) : null
 
         if (!isValidMatchDate(form.fecha)) {
             setError("La fecha debe estar entre hoy y un máximo de 6 meses.")
@@ -48,15 +47,10 @@ export function CreateMatchForm({ onCreate }) {
             return
         }
 
-        if (duracion && duracion > 90) {
-            setError("La duración no puede superar 90 minutos.")
-            return
-        }
 
         onCreate({
             ...form,
             maxJugadores,
-            duracion,
         })
 
         setForm(emptyForm)
@@ -64,11 +58,12 @@ export function CreateMatchForm({ onCreate }) {
     }
 
     return (
-        <form className="matchForm" onSubmit={sendForm}>
+        <form className="{style.matchForm}" onSubmit={handleSubmitSendForm}>
             <p>Crear partido</p>
 
-            <div className="formGroup">
+  <div className={style.formGroup}>
                 <input
+                    className="inputBase"
                     name="fecha"
                     type="date"
                     value={form.fecha}
@@ -78,8 +73,9 @@ export function CreateMatchForm({ onCreate }) {
                     required/>
             </div>
 
-            <div className="formGroup">
+            <div className={style.formGroup}>
                 <input
+                    className="inputBase"
                     name="hora"
                     type="time"
                     value={form.hora}
@@ -88,8 +84,9 @@ export function CreateMatchForm({ onCreate }) {
                 />
             </div>
 
-            <div className="formGroup">
+            <div className={style.formGroup}>
                 <input
+                    className="inputBase"
                     name="ubicacion"
                     type="text"
                     placeholder="Ubicación"
@@ -99,8 +96,9 @@ export function CreateMatchForm({ onCreate }) {
                 />
             </div>
 
-            <div className="formGroup">
+            <div className={style.formGroup}>
                 <input
+                    className="inputBase"
                     name="maxJugadores"
                     type="number"
                     placeholder="Máximo de jugadores"
@@ -112,21 +110,9 @@ export function CreateMatchForm({ onCreate }) {
                 />
             </div>
 
-            <div className="formGroup">
-                <input
-                    name="duracion"
-                    type="number"
-                    placeholder="Duración en minutos"
-                    min="1"
-                    max="90"
-                    value={form.duracion}
-                    onChange={changeInput}
-                />
-            </div>
+            {error ? <p className="error">{error}</p> : null}
 
-            {error ? <p className="formError">{error}</p> : null}
-
-            <button className="btnSave" type="submit">
+            <button className={`btnOne ${style.btnSave}`} type="submit">
                 Guardar partido
             </button>
         </form>

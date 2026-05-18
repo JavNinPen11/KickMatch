@@ -1,11 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Nav } from "../components/nav/Nav";
-import { AuthContext } from "../context/authContext";
-import "./css/HomePage.scss";
+import { Nav } from "../components/nav/nav"
+import { AuthContext } from "../context/authContext"
+import style from "./stylePages/homePage.module.scss"
 
-
-//array de la sección "Cómo funciona"
 const howWorks = [
     {
         title: "Busca un partido",
@@ -22,39 +20,31 @@ const howWorks = [
         description:
             "Ten toda la información del partido clara para que solo quede reunirse y jugar.",
     },
-];
-
-// devuelve partidos para la home.
-function getMatches() {
-    return [];
-    // devuelve partidos del backend al home.
-}
+]
 
 export default function HomePage() {
-    const { user } = useContext(AuthContext);
-    const [featuredMatches] = useState([]);
-
-    const isLogin = Boolean(user);
+    const { user } = useContext(AuthContext)
+    const isLogin = Boolean(user)
 
     return (
-        <main className="home">
+        <main className="mainPage">
             <Nav variant="landing" />
 
             <div className="content">
-                <section className="hero">
-                    <div className="heroContent">
-                        <span className="textSmall">KickMatch</span>
+                <section className={style.hero}>
+                    <div className={`cardBase ${style.heroBox}`}>
+                        <span className="labelYellow">KickMatch</span>
 
-                        <h1 className="titleHero">
+                        <h1 className={style.heroTitle}>
                             Encuentra tu próximo partido de fútbol
                         </h1>
 
                         <p className="textBase">
-                            Crea partidos, apúntate a encuentros cerca de ti y conoce gente, o organiza
-                            tus pachangas fácilmente.
+                            Crea partidos, apúntate a encuentros cerca de ti y conoce gente,
+                            o organiza tus pachangas fácilmente.
                         </p>
 
-                        <div className="heroActions">
+                        <div className={style.heroBtns}>
                             <Link className="btnOne" to="/matches">
                                 Ver partidos
                             </Link>
@@ -72,103 +62,39 @@ export default function HomePage() {
                     </div>
                 </section>
 
-                <section className="section" id="partidos-recientes">
-                    <div className="sectionHeading">
-                        <h2 className="titleSection">Partidos más recientes</h2>
+                <section className={style.section} id="partidos-recientes">
+                    <div className={style.sectionTop}>
+                        <h2 className={style.sectionTitle}>Partidos más recientes</h2>
 
                         <p className="textBase">
-                            Consulta los ultimos partidos subidos.
+                            Consulta los últimos partidos subidos.
                         </p>
                     </div>
 
-                  {/* card de partidos: */}
-                    {/* <div className="matchesGrid">
-                        {featuredMatches.map((match) => (
-                            <article className="matchCard" key={match.id}>
-                                <div className="matchCardHeader">
-                                    <h3 className="titleCard">
-                                        {getMatchDisplayName(match.fecha)}
-                                    </h3>
-
-                                    <span className="status">
-                                        {match.estado?.toLowerCase() === "abierto"
-                                            ? "Abierto"
-                                            : match.estado}
-                                    </span>
-                                </div>
-
-                                <div className="matchDetails">
-                                    <p className="textBase">
-                                        <strong>Fecha:</strong> {formatMatchDate(match.fecha)}
-                                    </p>
-
-                                    <p className="textBase">
-                                        <strong>Hora:</strong> {match.hora}
-                                    </p>
-
-                                    <p className="textBase">
-                                        <strong>Ubicación:</strong> {match.ubicacion}
-                                    </p>
-
-                                    <p className="textBase">
-                                        <strong>Organizador:</strong> {match.creador.nombre}
-                                    </p>
-
-                                    <p className="textBase">
-                                        <strong>Plazas:</strong> {match.jugadoresApuntados}/
-                                        {match.maxJugadores}
-                                    </p>
-
-                                    <p className="textBase">
-                                        <strong>Duración:</strong> {match.duracion || 60} min
-                                    </p>
-                                </div>
-
-                                <div className="cardActions">
-                                    <Link
-                                        className="btnTwo"
-                                        to={`/matches/${match.id}`}
-                                    >
-                                        Ver partido
-                                    </Link>
-
-                                    <Link
-                                        className="btnOne"
-                                        to={isLogin ? "/my-matches" : "/login"}
-                                        // si no esta en loggeado lo redirige al login 
-                                    
-                                    >
-                                        {isLogin ? "Ver mis partidos" : "Apuntarme"}
-
-                                    </Link>
-                                </div>
-                            </article>
-                        ))}
-                    </div> */}
+                    {/* Card de partidos pendiente de conectar con backend */}
                 </section>
 
-                <section className="section">
-                    <div className="sectionHeading">
-                        <h2 className="titleSection">
+                <section className={style.section}>
+                    <div className={style.sectionTop}>
+                        <h2 className={style.sectionTitle}>
                             Organiza tus pachangas sin complicarte
                         </h2>
                     </div>
-                    {/* para hacerlo mas facil de editar el texto, reutilizable, limpio etc
-     tenemos el array howWorks y aqui lo recorremos con un map y lo pintamos */}
-                    <div className="stepsGrid">
+
+                    <div className={style.steps}>
                         {howWorks.map((item, index) => (
-                            <article className="stepCard" key={item.title}>
-                                <span className="stepNumber">0{index + 1}</span>
-                                <h3 className="titleCard">{item.title}</h3>
+                            <article className={`cardBase ${style.stepCard}`} key={item.title}>
+                                <span className={style.stepNumber}>0{index + 1}</span>
+                                <h3 className={style.cardTitle}>{item.title}</h3>
                                 <p className="textBase">{item.description}</p>
                             </article>
                         ))}
                     </div>
                 </section>
 
-                <section className="cta">
-                    <div className="ctaContent">
-                        <h2 className="titleSection">¿Listo para jugar?</h2>
+                <section className={`cardBase ${style.cta}`}>
+                    <div className={style.ctaContent}>
+                        <h2 className={style.sectionTitle}>¿Listo para jugar?</h2>
 
                         <p className="textBase">
                             {isLogin
@@ -176,7 +102,7 @@ export default function HomePage() {
                                 : "Regístrate y empieza a unirte o crear partidos de fútbol cerca de ti."}
                         </p>
 
-                        <div className="heroActions">
+                        <div className={style.heroBtns}>
                             {isLogin ? (
                                 <Link className="btnOne" to="/dashboard">
                                     Ir a tu dashboard
@@ -195,5 +121,5 @@ export default function HomePage() {
                 </section>
             </div>
         </main>
-    );
+    )
 }

@@ -1,28 +1,58 @@
 import React, {useState} from "react";
-import "./RegisterForm.css"
+import style from "./styleForms/registerForm.module.scss"
 
 export const RegisterForm = ({onRegister}) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("")
 
-    const handleSubmit = (e) => {
+    const handleSubmitSendForm = (e) => {
         e.preventDefault()
         onRegister({email, username, password})
     }
     return (
-        <form className="Register" onSubmit={handleSubmit}>
+                <form className={style.registerForm} onSubmit={handleSubmitSendForm}>
             <p>Registro</p>
-            <div className="form-group">
-                <input placeholder="Email" type="text" autoComplete="off" id="txtEmail" required onChange={e => setEmail(e.target.value)}></input>
+
+            <div className={style.formGroup}>
+                <input
+                    className="inputBase"
+                    placeholder="Email"
+                    type="email"
+                    autoComplete="off"
+                    id="txtEmail"
+                    required
+                    onChange={(e) => setEmail(e.target.value)}
+                />
             </div>
-            <div className="form-group">
-                <input placeholder="Usuario" type="text" autoComplete="off" id="txtUsername" required onChange={e => setUsername(e.target.value)}></input>
+
+            <div className={style.formGroup}>
+                <input
+                    className="inputBase"
+                    placeholder="Usuario"
+                    type="text"
+                    autoComplete="off"
+                    id="txtUsername"
+                    required
+                    onChange={(e) => setUsername(e.target.value)}
+                />
             </div>
-            <div className="form-group">
-                <input placeholder="Contraseña" type="password" autoComplete="off" id="txtPassword" required onChange={e => setPassword(e.target.value)}></input>
+
+            <div className={style.formGroup}>
+                <input
+                    className="inputBase"
+                    placeholder="Contraseña"
+                    type="password"
+                    autoComplete="off"
+                    id="txtPassword"
+                    required
+                    onChange={(e) => setPassword(e.target.value)}
+                />
             </div>
-            <button className="submit">Register</button>
+
+            <button className={`btnOne ${style.btnRegister}`} type="submit">
+                Registrarse
+            </button>
         </form>
     )
 }

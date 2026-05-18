@@ -1,0 +1,52 @@
+.top {
+    max-width: 680px;
+    margin-bottom: 24px;
+}
+
+.top h1 {
+    margin: 16px 0 12px;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1;
+}
+
+.top p {
+    margin: 0;
+    color: #d2d2d2;
+    line-height: 1.65;
+}
+
+.form {
+    display: grid;
+    gap: 20px;
+}
+
+.formRow {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.formItem {
+    display: grid;
+    gap: 10px;
+}
+
+.formItem label {
+    color: #d2d2d2;
+    font-weight: 700;
+}
+
+.formItem input {
+    width: 100%;
+}
+
+.formItem input[readonly] {
+    opacity: 0.85;
+    cursor: default;
+}
+
+@media (max-width: 768px) {
+    .formRow {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
-import { Nav } from "../components/nav/Nav"
-import { CreateMatchForm } from "../components/forms/CreateMatchForm"
-import { MatchCard } from "../components/matches/MatchCard"
+import { Nav } from "../components/nav/nav"
+import { CreateMatchForm } from "../components/forms/createMatchForm"
+import { MatchCard } from "../components/forms/matchCard"
 import { AuthContext } from "../context/authContext"
 import { getMatchUser } from "../utils/userMatches"
 import {
@@ -9,11 +9,11 @@ import {
     getMatchesRequest,
     normalizeMatch,
 } from "../api/matchUtils"
-import "./css/MatchesPage.scss"
+import style from "./stylePages/matchesPage.module.scss"
 
 export default function MatchesPage() {
     const { user } = useContext(AuthContext)
-    const currentUser =  getMatchUser(user)
+    const currentUser = getMatchUser(user)
 
     const [matches, setMatches] = useState([])
     const [message, setMessage] = useState("Listado de partidos")
@@ -95,22 +95,22 @@ export default function MatchesPage() {
     }
 
     return (
-        <main className="matches">
+        <main className="mainPage">
             <Nav />
 
-            <section className="hero">
+            <section className={style.hero}>
                 <h1>Partidos</h1>
                 <p>{message}</p>
             </section>
 
-            <section className={`formGrid ${isFormOpen ? "formOpen" : ""}`}>
-                <aside className="aside">
-                    <div className={`panel ${isFormOpen ? "panelOpen" : ""}`}>
-                        <div className="panelTop">
+            <section className={`${style.formGrid} ${isFormOpen ? style.formOpen : ""}`}>
+                <aside className={style.aside}>
+                    <div className={`cardBase ${style.panel} ${isFormOpen ? style.panelOpen : ""}`}>
+                        <div className={style.panelTop}>
                             <h2>Crear partido</h2>
 
                             <button
-                                className="btnForm"
+                                className={`btnTwo ${style.btnForm}`}
                                 type="button"
                                 onClick={() => setIsFormOpen((prev) => !prev)}
                             >
@@ -119,26 +119,26 @@ export default function MatchesPage() {
                         </div>
 
                         {isFormOpen ? (
-                            <div className="formMatches">
-                                <CreateMatchForm onCreateMatch={handleCreateMatch} />
+                            <div className={style.formMatches}>
+                                <CreateMatchForm onCreate={handleCreateMatch} />
                             </div>
                         ) : (
-                            <p className="panelText">
+                            <p className={style.panelText}>
                                 Abre el formulario para preparar un nuevo partido.
                             </p>
                         )}
                     </div>
                 </aside>
 
-                <section className="listSection">
+                <section className={`cardBase ${style.listSection}`}>
                     <h2>Listado de partidos</h2>
 
-                    <div className="list">
+                    <div className={style.list}>
                         {matches.map((match) => (
                             <MatchCard
                                 key={match.id}
                                 match={match}
-                                currentUser={currentUser}
+                                user={currentUser}
                                 onJoin={handleJoinMatch}
                             />
                         ))}

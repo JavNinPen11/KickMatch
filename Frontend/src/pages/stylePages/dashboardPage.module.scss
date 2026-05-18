@@ -1,0 +1,172 @@
+//layout principal superior
+.hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+    align-items: stretch;
+    gap: 20px;
+}
+
+//tarjeta principal
+.mainCard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.mainCard h1,
+.userCard h2,
+.agendaTop h3,
+.emptyCard h3,
+.sectionTop h2 {
+    margin: 16px 0 12px;
+}
+
+.cardText {
+    max-width: 700px;
+}
+
+.cardText p,
+.sectionTop p,
+.agendaInfo p,
+.agendaData p,
+.emptyCard p {
+    margin: 0;
+    color: #d2d2d2;
+    line-height: 1.65;
+}
+
+//tarjeta lateral
+.userCard {
+    display: grid;
+    gap: 16px;
+}
+
+//fila de datos del usuario
+.userRow {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.userBox,
+.agendaData p {
+    padding: 16px;
+    border-radius: 18px;
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.userBox span {
+    display: block;
+    margin-bottom: 8px;
+    color: #bdbdbd;
+    font-size: 0.86rem;
+}
+
+.userBox strong,
+.statCard strong {
+    color: #fff;
+}
+
+//secciones
+.section {
+    margin-top: 32px;
+}
+
+//cabecera de seccion
+.sectionTop {
+    max-width: 720px;
+    margin-bottom: 24px;
+}
+
+// grid de estadisticas
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+}
+
+//tarjeta de estadisticas
+.statCard {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 24px;
+}
+
+.statCard span {
+    color: #bdbdbd;
+    font-size: 0.86rem;
+}
+
+.statCard strong {
+    font-size: 1.8rem;
+    font-family: "Oswald";
+    letter-spacing: 0.04em;
+}
+
+//seccion agenda
+.agenda {
+    margin-top: 32px;
+}
+
+//cabecera agenda
+.agendaTop {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.agendaTop h3 {
+    margin: 0;
+}
+
+//txt agenda
+.agendaInfo {
+    margin-bottom: 18px;
+}
+
+.agendaData {
+    display: grid;
+    gap: 10px;
+}
+
+.agendaData strong {
+    display: block;
+    margin-bottom: 6px;
+    color: #f2bb2d;
+}
+
+.agendaData span {
+    color: #fff;
+}
+
+//caja vacia
+.emptyCard {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+@media (max-width: 1024px) {
+    .hero,
+    .stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .mainCard {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .userRow {
+        grid-template-columns: 1fr;
+    }
+
+    .agendaTop {
+        flex-direction: column;
+    }
+}

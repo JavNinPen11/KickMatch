@@ -1,0 +1,32 @@
+.matchForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 2.2vh;
+}
+
+.matchForm p {
+    margin-bottom: 3vh;
+}
+
+.formGroup {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.2vh;
+    width: 100%;
+}
+
+.formGroup input {
+    width: 100%;
+}
+
+.formGroup input[type="date"],
+.formGroup input[type="time"] {
+    color-scheme: dark;
+}
+
+.btnSave {
+    width: 100%;
+    margin-top: 2vh;
+    font-size: 2.2vh;
+}

@@ -1,7 +1,8 @@
 
 import { Link } from "react-router-dom"
+import style from "./styleForms/matchCard.module.scss"
 import { formatMatchDate, getMatchDisplayName } from "../../api/matchUtils.js"
-import "./MatchCard.scss"
+
 
 export function MatchCard({ match, user, onJoin }) {
     const full = match.jugadoresApuntados >= match.maxJugadores
@@ -20,30 +21,30 @@ export function MatchCard({ match, user, onJoin }) {
     if (joined) btnText = "Apuntado"
 
     return (
-        <article className="matchCard">
-            <div className="matchTop">
+    <article className={`cardBase ${style.matchCard}`}>
+            <div className={style.matchTop}>
                 <h3>{getMatchDisplayName(match.fecha)}</h3>
-                <span>{match.estado || "ABIERTO"}</span>
+                <span className="labelYellow">{match.estado || "ABIERTO"}</span>
             </div>
 
-            <div className="matchInfo">
+            <div className={style.matchInfo}>
                 <p><strong>Fecha:</strong> {formatMatchDate(match.fecha)}</p>
                 <p><strong>Hora:</strong> {match.hora}</p>
                 <p><strong>Ubicación:</strong> {match.ubicacion}</p>
                 <p><strong>Organizador:</strong> {match.creador.nombre}</p>
                 <p><strong>Jugadores:</strong> {match.jugadoresApuntados}/{match.maxJugadores}</p>
 
-                {match.duracion && (
+                {match.duracion ? (
                     <p><strong>Duración:</strong> {match.duracion} min</p>
-                )}
+                ) : null}
             </div>
 
-            <Link className="btnDetails" to={`/matches/${match.id}`}>
+            <Link className={`btnTwo ${style.btnDetails}`} to={`/matches/${match.id}`}>
                 Ver partido
             </Link>
 
             <button
-                className="btnJoin"
+                className={`btnOne ${style.btnJoin}`}
                 type="button"
                 onClick={() => onJoin(match.id)}
                 disabled={disabled}

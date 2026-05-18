@@ -1,9 +1,8 @@
 import { useContext, useEffect, useState } from "react"
-import { Nav } from "../components/nav/Nav"
+import { Nav } from "../components/nav/nav"
 import { AuthContext } from "../context/authContext"
 import { getMeRequest, updateMeRequest } from "../api/userService"
-import "./css/ProfilePage.scss"
-
+import style from "./stylePages/profilePage.module.scss"
 
 export default function ProfilePage() {
     const { user } = useContext(AuthContext)
@@ -23,7 +22,7 @@ export default function ProfilePage() {
         const loadProfile = async () => {
             if (!user?.token) {
                 setIsLoading(false)
-                return 
+                return
             }
 
             try {
@@ -48,7 +47,7 @@ export default function ProfilePage() {
         loadProfile()
     }, [user])
 
-    const handleChange = (event) => {
+    const changeInput = (event) => {
         const { name, value } = event.target
 
         setForm((prev) => ({
@@ -57,7 +56,7 @@ export default function ProfilePage() {
         }))
     }
 
-    const handleSubmit = async (event) => {
+    const saveProfile = async (event) => {
         event.preventDefault()
 
         if (!user?.token) {
@@ -85,12 +84,12 @@ export default function ProfilePage() {
     }
 
     return (
-        <main className="profile">
+        <main className="mainPage">
             <Nav />
 
             <div className="content">
-                <section className="card">
-                    <div className="top">
+                <section className="cardBase">
+                    <div className={style.top}>
                         <span className="labelYellow">Perfil</span>
                         <h1>Tus datos</h1>
                         <p>
@@ -101,46 +100,50 @@ export default function ProfilePage() {
                     {isLoading ? (
                         <p className="textBase">Cargando datos...</p>
                     ) : (
-                        <form className="form" onSubmit={handleSubmit}>
-                            <div className="group">
-                                <div className="field">
+                        <form className={style.form} onSubmit={saveProfile}>
+                            <div className={style.formRow}>
+                                <div className={style.formItem}>
                                     <label htmlFor="username">Username</label>
                                     <input
+                                        className="inputBase"
                                         id="username"
                                         name="username"
                                         type="text"
                                         value={form.username}
-                                        onChange={handleChange}
+                                        onChange={changeInput}
                                     />
                                 </div>
 
-                                <div className="field">
+                                <div className={style.formItem}>
                                     <label htmlFor="nombre">Nombre</label>
                                     <input
+                                        className="inputBase"
                                         id="nombre"
                                         name="nombre"
                                         type="text"
                                         value={form.nombre}
-                                        onChange={handleChange}
+                                        onChange={changeInput}
                                     />
                                 </div>
                             </div>
 
-                            <div className="group">
-                                <div className="field">
+                            <div className={style.formRow}>
+                                <div className={style.formItem}>
                                     <label htmlFor="email">Email</label>
                                     <input
+                                        className="inputBase"
                                         id="email"
                                         name="email"
                                         type="email"
                                         value={form.email}
-                                        onChange={handleChange}
+                                        onChange={changeInput}
                                     />
                                 </div>
 
-                                <div className="field">
+                                <div className={style.formItem}>
                                     <label htmlFor="rol">Rol</label>
                                     <input
+                                        className="inputBase"
                                         id="rol"
                                         name="rol"
                                         type="text"
