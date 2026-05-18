@@ -14,7 +14,7 @@ const getAllMatches = async (req, res) => {
     }
     catch(error){
         console.error(error)
-        return res.status(500).json({message: "Error interno del servidor", error: error})
+        return res.status(500).json({message: "Error interno del servidor", error})
     }
 }
 export{
