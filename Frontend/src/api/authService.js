@@ -8,7 +8,6 @@ export async function loginRequest(username, password) {
         body: JSON.stringify({username, password})
     })
     return response.json()
-
 }
 
 export async function registerRequest(email, username, password)  {
