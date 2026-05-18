@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom"
-import { formatMatchDate, getMatchDisplayName } from "../../api/matchService"
+import { formatMatchDate, getMatchDisplayName } from "../../api/matchUtils.js"
 import "./MatchCard.scss"
 
 export function MatchCard({ match, user, onJoin }) {
