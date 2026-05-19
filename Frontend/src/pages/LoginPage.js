@@ -1,4 +1,4 @@
-import { LoginForm } from "../components/forms/LoginForm"
+import { LoginForm } from "../components/forms/loginForm"
 import { loginRequest } from "../api/authService"
 import style from"./stylePages/loginPage.module.scss"
 import { useState, useContext } from "react"

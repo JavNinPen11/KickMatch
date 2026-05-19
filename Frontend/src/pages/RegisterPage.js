@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom"
-import {RegisterForm} from "../components/forms/RegisterForm.js"
+import {RegisterForm} from "../components/forms/registerForm.js"
 import { useContext, useState } from "react"
 import { registerRequest } from "../api/authService.js"
 import { AuthContext } from "../context/authContext.js"

@@ -5,10 +5,10 @@ import HomePage from "./pages/HomePage";
 import { DashboardPage } from "./pages/DashboardPage";
 import MatchesPage from "./pages/MatchesPage";
 import { AuthProvider } from "./context/authContext";
-import PrivateRoute from "./components/authComponent/PrivateRoute";
-import "./App.css"
+import PrivateRoute from "./components/authComponent/privateRoute";
+import "./app.css"
 import ProfilePage from "./pages/ProfilePage";
-import PanelAdmin from "./pages/panelAdmin"
+import PanelAdmin from "./pages/PanelAdmin"
 
 
 //panel admin sin proteger

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react"
-import { Nav } from "../components/nav/Nav"
+import { Nav } from "../components/nav/nav"
 import { AuthContext } from "../context/authContext"
 import { getMeRequest, updateMeRequest } from "../api/userService"
 import style from "./stylePages/profilePage.module.scss"
