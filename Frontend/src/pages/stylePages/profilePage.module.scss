@@ -1,3 +1,5 @@
+
+//cabecera de la card del perfil
 .top {
     max-width: 680px;
     margin-bottom: 24px;
@@ -14,12 +16,12 @@
     color: #d2d2d2;
     line-height: 1.65;
 }
-
+//contenedor prinicipal del fomrulario
 .form {
     display: grid;
     gap: 20px;
 }
-
+//filas dentro del formulario que agrupan los inputs
 .formRow {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -44,43 +46,109 @@
     opacity: 0.85;
     cursor: default;
 }
-
-.deleteBox {
-    display: grid;
-    gap: 14px;
+//zona del boton 'Eliminar cuenta'
+.deleteSection {
     margin-top: 32px;
     padding-top: 24px;
-    border-top: 1px solid rgba(255, 120, 120, 0.28);
+    border-top: 1px solid rgba(255, 120, 120, 0.22);
 }
-
-.deleteBox h2 {
-    margin: 0;
-    color: #ff9b9b;
-}
-
-.deleteBox p {
-    margin: 0;
-    color: #d2d2d2;
-    line-height: 1.6;
-}
-
-.btnDeleteAccount {
+//boton eliminar
+.btnDelete {
     min-height: 46px;
-    padding: 0 20px;
-    border: 1px solid rgba(255, 110, 110, 0.7);
+    padding: 0 22px;
+    border: 1px solid rgba(255, 110, 110, 0.75);
     border-radius: 12px;
-    background-color: rgba(255, 80, 80, 0.12);
+    background-color: rgba(255, 80, 80, 0.1);
     color: #ff9b9b;
     font-family: inherit;
-    font-weight: 700;
+    font-weight: 800;
     cursor: pointer;
 }
 
-.btnDeleteAccount:hover {
-    background-color: rgba(255, 80, 80, 0.2);
+.btnDelete:hover {
+    background-color: rgba(255, 80, 80, 0.18);
+}
+//salvapantallas que oscurece detras del pop up
+.deletePopup {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.72);
+}
+//card del pop up
+.deletePopupCard {
+    position: relative;
+    width: min(520px, 100%);
+    display: grid;
+    gap: 18px;
+    padding: 32px;
+    border: 1px solid rgba(242, 187, 45, 0.35);
+    border-radius: 22px;
+    background-color: #151515;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
 }
 
-.btnDeleteAccount:disabled {
+.deletePopupCard h2 {
+    margin: 0;
+    color: #ff9b9b;
+}
+
+.deletePopupCard p {
+    margin: 0;
+    color: #f1f1f1;
+    line-height: 1.6;
+}
+
+.deletePopupCard strong {
+    color: #f2bb2d;
+}
+//boton "x" para cerrar
+.btnClose {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    border: none;
+    background: transparent;
+    color: #ffffff;
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+}
+//contenedor de los botones cancelar y eliminar
+.popupActions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.btnCancel,
+.btnConfirmDelete {
+    min-height: 44px;
+    padding: 0 18px;
+    border-radius: 12px;
+    font-family: inherit;
+    font-weight: 800;
+    cursor: pointer;
+}
+//boton cancelar
+.btnCancel {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: transparent;
+    color: #ffffff;
+}
+//boton confirmar eliminacion
+.btnConfirmDelete {
+    border: 1px solid rgba(255, 110, 110, 0.75);
+    background-color: rgba(255, 80, 80, 0.16);
+    color: #ff9b9b;
+}
+// visual en el cursor y baja opacidad de boton hasta que ponga ELIMINAR
+.btnCancel:disabled,
+.btnConfirmDelete:disabled {
     opacity: 0.55;
     cursor: not-allowed;
 }

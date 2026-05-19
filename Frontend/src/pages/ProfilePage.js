@@ -97,6 +97,21 @@ export default function ProfilePage() {
         }
     }
 
+    const openDeleteModal = () => {
+        setDeleteText("")
+        setMessage("")
+        setShowDeleteModal(true)
+    }
+
+    const closeDeleteModal = () => {
+        if (isDeleting) {
+            return
+        }
+
+        setDeleteText("")
+        setShowDeleteModal(false)
+    }
+
     const deleteAccount = async () => {
         if (!user?.token) {
             setMessage("No hay sesión activa.")
@@ -121,20 +136,6 @@ export default function ProfilePage() {
             setIsDeleting(false)
         }
     }
-    const openDeleteModal = () => {
-        setDeleteText("")
-        setMessage("")
-        setShowDeleteModal(true)
-    }
-
-    const closeDeleteModal = () => {
-        if (isDeleting) {
-            return
-        }
-
-        setDeleteText("")
-        setShowDeleteModal(false)
-    }
 
     return (
         <main className="mainPage">
@@ -153,77 +154,129 @@ export default function ProfilePage() {
                     {isLoading ? (
                         <p className="textBase">Cargando datos...</p>
                     ) : (
-                        <form className={style.form} onSubmit={saveProfile}>
-                            <div className={style.formRow}>
-                                <div className={style.formItem}>
-                                    <label htmlFor="username">Username</label>
-                                    <input
-                                        className="inputBase"
-                                        id="username"
-                                        name="username"
-                                        type="text"
-                                        value={form.username}
-                                        onChange={changeInput}
-                                    />
+                        <>
+                            <form className={style.form} onSubmit={saveProfile}>
+                                <div className={style.formRow}>
+                                    <div className={style.formItem}>
+                                        <label htmlFor="username">Username</label>
+                                        <input
+                                            className="inputBase"
+                                            id="username"
+                                            name="username"
+                                            type="text"
+                                            value={form.username}
+                                            onChange={changeInput}
+                                        />
+                                    </div>
+
+                                    <div className={style.formItem}>
+                                        <label htmlFor="nombre">Nombre</label>
+                                        <input
+                                            className="inputBase"
+                                            id="nombre"
+                                            name="nombre"
+                                            type="text"
+                                            value={form.nombre}
+                                            onChange={changeInput}
+                                        />
+                                    </div>
                                 </div>
 
-                                <div className={style.formItem}>
-                                    <label htmlFor="nombre">Nombre</label>
-                                    <input
-                                        className="inputBase"
-                                        id="nombre"
-                                        name="nombre"
-                                        type="text"
-                                        value={form.nombre}
-                                        onChange={changeInput}
-                                    />
+                                <div className={style.formRow}>
+                                    <div className={style.formItem}>
+                                        <label htmlFor="email">Email</label>
+                                        <input
+                                            className="inputBase"
+                                            id="email"
+                                            name="email"
+                                            type="email"
+                                            value={form.email}
+                                            onChange={changeInput}
+                                        />
+                                    </div>
+
+                                    <div className={style.formItem}>
+                                        <label htmlFor="rol">Rol</label>
+                                        <input
+                                            className="inputBase"
+                                            id="rol"
+                                            name="rol"
+                                            type="text"
+                                            value={form.rol}
+                                            readOnly
+                                        />
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div className={style.formRow}>
-                                <div className={style.formItem}>
-                                    <label htmlFor="email">Email</label>
-                                    <input
-                                        className="inputBase"
-                                        id="email"
-                                        name="email"
-                                        type="email"
-                                        value={form.email}
-                                        onChange={changeInput}
-                                    />
+                                {message ? <p className="message">{message}</p> : null}
+
+                                <div className="groupBtns">
+                                    <button className="btnOne" type="submit" disabled={isSaving}>
+                                        {isSaving ? "Guardando..." : "Guardar cambios"}
+                                    </button>
                                 </div>
 
-                                <div className={style.formItem}>
-                                    <label htmlFor="rol">Rol</label>
-                                    <input
-                                        className="inputBase"
-                                        id="rol"
-                                        name="rol"
-                                        type="text"
-                                        value={form.rol}
-                                        readOnly
-                                    />
+                                <div className={style.deleteSection}>
+                                    <button
+                                        className={style.btnDelete}
+                                        type="button"
+                                        onClick={openDeleteModal}
+                                    >
+                                        Eliminar cuenta
+                                    </button>
                                 </div>
-                            </div>
+                            </form>
 
-                            {message ? <p className="message">{message}</p> : null}
+                            {showDeleteModal ? (
+                                <div className={style.deletePopup}>
+                                    <div className={style.deletePopupCard}>
+                                        <button
+                                            className={style.btnClose}
+                                            type="button"
+                                            onClick={closeDeleteModal}
+                                            aria-label="Cerrar"
+                                        >
+                                            x
+                                        </button>
 
-                            <div className="groupBtns">
-                                <button className="btnOne" type="submit" disabled={isSaving}>
-                                    {isSaving ? "Guardando..." : "Guardar cambios"}
-                                </button>
-                            </div>
-                            <div className={style.deleteArea}>
-                                <button
-                                    className={style.openDeleteBtn}
-                                    type="button"
-                                    onClick={openDeleteModal}
-                                >
-                                    Eliminar cuenta
-                                </button>
-                            </div>
+                                        <h2>Eliminar cuenta</h2>
 
-                        </form>
+                                        <p>
+                                            Esta acción eliminará tu usuario de forma permanente.
+                                            Para confirmar, escribe <strong>ELIMINAR</strong>.
+                                        </p>
+
+                                        <input
+                                            className="inputBase"
+                                            type="text"
+                                            value={deleteText}
+                                            onChange={(event) => setDeleteText(event.target.value)}
+                                            placeholder="Escribe ELIMINAR"
+                                        />
+
+                                        <div className={style.popupActions}>
+                                            <button
+                                                className={style.btnCancel}
+                                                type="button"
+                                                onClick={closeDeleteModal}
+                                                disabled={isDeleting}
+                                            >
+                                                Cancelar
+                                            </button>
+
+                                            <button
+                                                className={style.btnConfirmDelete}
+                                                type="button"
+                                                onClick={deleteAccount}
+                                                disabled={isDeleting || deleteText !== "ELIMINAR"}
+                                            >
+                                                {isDeleting ? "Eliminando..." : "Eliminar usuario"}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : null}
+                        </>
                     )}
                 </section>
             </div>
