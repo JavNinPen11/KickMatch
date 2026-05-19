@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useCallback } from "react";
 
 export const AuthContext = createContext()
 
@@ -21,11 +21,11 @@ export function AuthProvider ({children}){
         localStorage.setItem("user", JSON.stringify(userToSave))
         setUser(userToSave)
     }
-    const logout = () =>{
+    const logout = useCallback(() =>{
         localStorage.removeItem("user")
         setUser(null)
         alert("Sesion cerrada con exito")
-    }
+    }, [])
     return(
         <AuthContext.Provider value={{user, login, logout}}>
             {!loading && children}
