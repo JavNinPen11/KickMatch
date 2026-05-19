@@ -8,7 +8,8 @@ import { AuthProvider } from "./context/authContext";
 import PrivateRoute from "./components/authComponent/privateRoute";
 import "./app.css"
 import ProfilePage from "./pages/ProfilePage";
-import PanelAdmin from "./pages/PanelAdmin"
+import PanelAdmin from "./pages/panelAdmin"
+import AdminRoute from "./components/authComponent/AdminRoute";
 
 
 //panel admin sin proteger
@@ -22,9 +23,14 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/matches" element={<PrivateRoute><MatchesPage /></PrivateRoute>}/>
           <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>}/>
-          <Route path="/admin" element={<PanelAdmin />} />
-          <Route path="/dashboard" element={<PrivateRoute><DashboardPage /></PrivateRoute>}
-           />
+          <Route path="/admin" element={
+            <PrivateRoute>
+              <AdminRoute>
+                <PanelAdmin />
+              </AdminRoute>
+            </PrivateRoute>
+          } />
+          <Route path="/dashboard" element={<PrivateRoute><DashboardPage /></PrivateRoute>}/>
         </Routes>
       </Router>
     </AuthProvider>

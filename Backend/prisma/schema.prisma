@@ -35,7 +35,7 @@ model User {
   email    String   @unique @db.VarChar(150)
   username String   @unique @db.VarChar(50) @default("No")
   password String   @db.VarChar(255)
-  rolId    Int?     @map("rol_id")
+  rolId    Int?     @default(2) @map("rol_id")
   rol      Rol?     @relation("RolUsuario", fields: [rolId], references: [id])
   creadoEn DateTime @default(now()) @map("creado_en")
 

@@ -1,4 +1,4 @@
-const API_URL = process.env.REACT_APP_BACKEND_URL
+ export const API_URL = process.env.REACT_APP_BACKEND_URL
 
 export async function loginRequest(username, password) {
 
