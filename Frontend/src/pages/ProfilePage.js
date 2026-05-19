@@ -1,11 +1,13 @@
 import { useContext, useEffect, useState } from "react"
 import { Nav } from "../components/nav/nav"
+import { useNavigate } from "react-router-dom"
 import { AuthContext } from "../context/authContext"
-import { getMeRequest, updateMeRequest } from "../api/userService"
+import { getMeRequest, updateMeRequest, deleteMeRequest } from "../api/userService"
 import style from "./stylePages/profilePage.module.scss"
 
 export default function ProfilePage() {
-    const { user } = useContext(AuthContext)
+    const { user, logout } = useContext(AuthContext)
+    const navigate = useNavigate()
 
     const [form, setForm] = useState({
         username: "",
@@ -17,6 +19,9 @@ export default function ProfilePage() {
     const [isLoading, setIsLoading] = useState(true)
     const [isSaving, setIsSaving] = useState(false)
     const [message, setMessage] = useState("")
+    const [deleteText, setDeleteText] = useState("")
+    const [isDeleting, setIsDeleting] = useState(false)
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
 
     useEffect(() => {
         const loadProfile = async () => {
@@ -74,13 +79,61 @@ export default function ProfilePage() {
                 email: form.email,
             }
 
-            await updateMeRequest(user.token, payload)
+            const res = await updateMeRequest(user.token, payload)
+            const data = res?.data || {}
+
+            setForm({
+                username: data.username || "",
+                nombre: data.nombre || "",
+                email: data.email || "",
+                rol: data.rol || "Jugador",
+            })
+
             setMessage("Datos actualizados correctamente.")
         } catch (error) {
             setMessage(error.message || "No se pudieron guardar los cambios.")
         } finally {
             setIsSaving(false)
         }
+    }
+
+    const deleteAccount = async () => {
+        if (!user?.token) {
+            setMessage("No hay sesión activa.")
+            return
+        }
+
+        if (deleteText !== "ELIMINAR") {
+            setMessage("Para eliminar tu cuenta escribe ELIMINAR.")
+            return
+        }
+
+        setIsDeleting(true)
+        setMessage("")
+
+        try {
+            await deleteMeRequest(user.token)
+            logout()
+            navigate("/register")
+        } catch (error) {
+            setMessage(error.message || "No se pudo eliminar la cuenta.")
+        } finally {
+            setIsDeleting(false)
+        }
+    }
+    const openDeleteModal = () => {
+        setDeleteText("")
+        setMessage("")
+        setShowDeleteModal(true)
+    }
+
+    const closeDeleteModal = () => {
+        if (isDeleting) {
+            return
+        }
+
+        setDeleteText("")
+        setShowDeleteModal(false)
     }
 
     return (
@@ -160,6 +213,16 @@ export default function ProfilePage() {
                                     {isSaving ? "Guardando..." : "Guardar cambios"}
                                 </button>
                             </div>
+                            <div className={style.deleteArea}>
+                                <button
+                                    className={style.openDeleteBtn}
+                                    type="button"
+                                    onClick={openDeleteModal}
+                                >
+                                    Eliminar cuenta
+                                </button>
+                            </div>
+
                         </form>
                     )}
                 </section>

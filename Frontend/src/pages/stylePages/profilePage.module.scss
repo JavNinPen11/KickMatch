@@ -45,6 +45,46 @@
     cursor: default;
 }
 
+.deleteBox {
+    display: grid;
+    gap: 14px;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255, 120, 120, 0.28);
+}
+
+.deleteBox h2 {
+    margin: 0;
+    color: #ff9b9b;
+}
+
+.deleteBox p {
+    margin: 0;
+    color: #d2d2d2;
+    line-height: 1.6;
+}
+
+.btnDeleteAccount {
+    min-height: 46px;
+    padding: 0 20px;
+    border: 1px solid rgba(255, 110, 110, 0.7);
+    border-radius: 12px;
+    background-color: rgba(255, 80, 80, 0.12);
+    color: #ff9b9b;
+    font-family: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btnDeleteAccount:hover {
+    background-color: rgba(255, 80, 80, 0.2);
+}
+
+.btnDeleteAccount:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
 @media (max-width: 768px) {
     .formRow {
         grid-template-columns: 1fr;
