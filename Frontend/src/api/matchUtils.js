@@ -116,20 +116,16 @@ export function normalizeMatch(match) {
         estado: jugadoresApuntados >= maxJugadores ? "COMPLETO" : "ABIERTO",
     }
 }
-//hayq conectar la api aqui 
-export async function getMatchesRequest() {
- if (!API_URL) {
-        throw new Error("Backend de partidos no configurado")
-    }
+ 
+export async function myMatchesRequest(userId) {
+    const token = localStorage.getItem("token")
 
-    const response = await fetch(`${API_URL}/matches`)
-    const body = await response.json()
-
-    if (!response.ok) {
-        throw new Error(body.message || "No se pudieron cargar los partidos")
-    }
-
-    return body
+    const response = await fetch(`${API_URL}/match/myMatches`, {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    })
+    return response.json()
 }
 
 export async function createMatchRequest(matchData) {

@@ -27,7 +27,7 @@ const createMatch = async (req, res) => {
     }
 }
 const myMatches = async (req, res) => {
-    const id = req.body.id
+    const id = req.user.id
     try{
         const matches = await prisma.match.findMany({
             include:{

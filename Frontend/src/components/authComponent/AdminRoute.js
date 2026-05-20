@@ -11,7 +11,7 @@ function AdminRoute({children}){
         const verifyRole = async () => {
             try{
                 const res = await fetch(`${API_URL}/admin/role`, {
-                    headers: {Authorization: `Bearer ${user.token}`},
+                    headers: {Authorization: `Bearer ${localStorage.getItem("token")}`},
 
                 })
                 if(res.status === 401){
@@ -30,7 +30,7 @@ function AdminRoute({children}){
             }
         }
         verifyRole()
-    }, [user.token, logout])
+    }, [logout])
     if(status === "checking") return <p>Verificando permisos...</p>
     if(status === "unauthorized") return <Navigate to="/" replace/>
     return children

@@ -5,7 +5,7 @@ import { verifyToken } from "../middleware/authMiddleware.js"
 const router = express.Router()
 
 router.get("/getMatches", getAllMatches)
-router.get("/role", verifyToken, (req, res) => {
+router.get("/role", verifyToken, (req, res) => {    
     res.json({role: req.user.role})
 })
 

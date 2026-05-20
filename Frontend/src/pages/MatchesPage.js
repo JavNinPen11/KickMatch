@@ -4,11 +4,7 @@ import { CreateMatchForm } from "../components/forms/CreateMatchForm"
 import { MatchCard } from "../components/forms/matchCard"
 import { AuthContext } from "../context/authContext"
 import { getMatchUser } from "../utils/userMatches"
-import {
-    createMatchRequest,
-    getMatchesRequest,
-    normalizeMatch,
-} from "../api/matchUtils"
+import {createMatchRequest, myMatchesRequest, normalizeMatch} from "../api/matchUtils"
 import style from "./stylePages/matchesPage.module.scss"
 
 export default function MatchesPage() {
@@ -16,19 +12,18 @@ export default function MatchesPage() {
     const currentUser = getMatchUser(user)
 
     const [matches, setMatches] = useState([])
-    const [message, setMessage] = useState("Listado de partidos")
+    const [message, setMessage] = useState()
     const [isFormOpen, setIsFormOpen] = useState(false)
 
     useEffect(() => {
         const loadMatches = async () => {
             try {
-                const response = await getMatchesRequest()
-                const data = Array.isArray(response?.data) ? response.data : response
+                const response = await myMatchesRequest()
+                const data = Array.isArray(response?.matches) ? response.matches : []
 
                 if (Array.isArray(data)) {
                     const normalizedMatches = data.map(normalizeMatch)
                     setMatches(normalizedMatches)
-                    setMessage("Partidos cargados correctamente.")
                     return
                 }
 
@@ -100,7 +95,7 @@ export default function MatchesPage() {
 
             <section className={style.hero}>
                 <h1>Partidos</h1>
-                <p>{message}</p>
+                {message && <p>{message}</p>}
             </section>
 
             <section className={`${style.formGrid} ${isFormOpen ? style.formOpen : ""}`}>
