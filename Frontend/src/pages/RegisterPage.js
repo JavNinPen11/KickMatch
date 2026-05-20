@@ -14,7 +14,7 @@ function Register (){
             const response = await registerRequest(email,username,password)
 
             if(response.token){
-                login({username}, response.token)
+                login(response.token)
                 navigate("/dashboard")
             }
             else{
