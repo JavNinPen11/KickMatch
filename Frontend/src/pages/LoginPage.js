@@ -12,10 +12,9 @@ function Login (){
     const handleLogin = async ({username, password}) =>{
         try{
             const response = await loginRequest(username, password)
-            console.log(response);
             
             if(response.token){
-                login({username}, response.token)
+                login(response.token)
                 navigate("/dashboard")
             }
             else{

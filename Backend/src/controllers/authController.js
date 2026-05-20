@@ -18,17 +18,12 @@ const register = async (req, res) => {
                 username
             }
         })
-        
+
 
         const token = getToken(user.id, user.email, user.username)
 
         return res.status(201).json({
             message: "Usuario creado correctamente",
-            user: {
-                id: user.id,
-                email: user.email,
-                username: user.username
-            },
             token,
             ok: true
         })
@@ -63,11 +58,11 @@ const login = async (req, res) => {
         }
         const token = getToken(user.id, user.email, user.username)
 
-        res.json({ok:true, message:"Login Exitoso!!!", username:user.username, token})
+        res.json({ ok: true, message: "Login Exitoso!!!", token })
     }
     catch (error) {
         console.log(error);
-        
+
         return res.status(500).json({ message: "Error interno del servidor" })
     }
 }
