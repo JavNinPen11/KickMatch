@@ -22,7 +22,7 @@ export function AuthProvider ({children}){
 
         if(token){
             if(isTokenExpired(token)){
-                localStorage.removeItem("user")
+                localStorage.removeItem("token")
             }
             else{
                 const payload = JSON.parse(atob(token.split(".")[1]))
