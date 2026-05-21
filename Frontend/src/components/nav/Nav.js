@@ -24,7 +24,7 @@ export const Nav = ({ variant = "default" }) => {
                     {isLogged ? (
                         <>
                             <Link className={style.navLink} to="/profile">
-                                Perfil de: {userName}
+                                Perfil de {userName}
                             </Link>
 
                             <Link className={style.navLink} to="/">

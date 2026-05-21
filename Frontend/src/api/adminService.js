@@ -11,10 +11,12 @@ async function parseResponse(response) {
 }
 
 export async function getAdminMatchesRequest() {
+    const token = localStorage.getItem("token")
+
     const response = await fetch(`${API_URL}/admin/getMatches`, {
         method: "GET",
         headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${token}`,
         },
     })
 
