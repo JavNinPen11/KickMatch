@@ -40,13 +40,17 @@ export default function PanelAdmin() {
 
     useEffect(() => {
         const loadMatches = async () => {
-            if (!user?.token) {
+            console.log(user);
+            console.log(user.token);
+            
+            
+            if (!user) {
                 setIsLoadingMatches(false)
                 return
             }
 
             try {
-                const data = await getAdminMatchesRequest(user.token)
+                const data = await getAdminMatchesRequest()
                 setMatches(data)
                 setMessage("")
             } 
