@@ -93,59 +93,37 @@ export function getMatchDisplayName(fecha) {
 }
 
 export function normalizeMatch(match) {
-    const maxJugadores = Math.min(Math.max(Number(match.maxJugadores) || 0, 2), 20)
+    const maxJugadores = Math.min(Math.max(Number(match.maxJugadores || match.maxPlayers) || 0, 2), 20)
     const participantes = Array.isArray(match.participantes) ? match.participantes : []
     const jugadoresApuntados = Math.min(
         Number(match.jugadoresApuntados ?? participantes.length),
         maxJugadores
     )
 
+    const fecha = isValidMatchDate(match.fecha)
+        ? match.fecha
+        : match.date?.split("T")[0] ?? getTodayDateString()
+
+    const hora = typeof match.hora === "string" && match.hora
+        ? match.hora
+        : match.time?.split("T")[1]?.slice(0, 5) ?? ""
+
+    const creador = match.creador ?? match.creator
+
     return {
         id: match.id ?? Date.now(),
-        fecha: isValidMatchDate(match.fecha) ? match.fecha : getTodayDateString(),
-        hora: typeof match.hora === "string" ? match.hora : "",
-        ubicacion: typeof match.ubicacion === "string" ? match.ubicacion : "",
+        fecha,
+        hora,
+        ubicacion: match.ubicacion || match.location || "",
         maxJugadores,
         jugadoresApuntados,
         participantes,
         creador: {
-            id: match.creador?.id ?? "sin-creador",
-            nombre: match.creador?.nombre ?? "Desconocido",
+            id: creador?.id ?? "sin-creador",
+            nombre: creador?.nombre ?? creador?.username ?? "Desconocido",
         },
         duracion: match.duracion ? Math.min(Number(match.duracion), 90) : null,
         estado: jugadoresApuntados >= maxJugadores ? "COMPLETO" : "ABIERTO",
     }
 }
- 
-export async function myMatchesRequest(userId) {
-    const token = localStorage.getItem("token")
 
-    const response = await fetch(`${API_URL}/match/myMatches`, {
-        headers: {
-            "Authorization": `Bearer ${token}`
-        }
-    })
-    return response.json()
-}
-
-export async function createMatchRequest(matchData) {
-    if (!API_URL) {
-        throw new Error("Backend de partidos no configurado")
-    }
-
-    const response = await fetch(`${API_URL}/matches`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(matchData),
-    })
-
-    const body = await response.json()
-
-    if (!response.ok) {
-        throw new Error(body.message || "No se pudo crear el partido")
-    }
-
-    return body
-}

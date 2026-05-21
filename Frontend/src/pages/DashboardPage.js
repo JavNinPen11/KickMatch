@@ -5,24 +5,45 @@ import { AuthContext } from "../context/authContext"
 import { getMeRequest } from "../api/userService"
 import { getUserMatchesSummary } from "../utils/userMatches"
 import style from "./stylePages/dashboardPage.module.scss"
+import { myMatchesRequest } from "../api/matchService"
+import { normalizeMatch } from "../api/matchUtils"
 
 export const DashboardPage = () => {
     const { user } = useContext(AuthContext)
     const [profile, setProfile] = useState(null)
-    const [matches] = useState([])
+    const [matches, setMatches] = useState([])
 
     useEffect(() => {
         const loadProfile = async () => {
             try {
-                const res = await getMeRequest(user.token)
+                const res = await getMeRequest()
                 setProfile(res.data)
             } catch (error) {
                 setProfile(null)
             }
         }
 
-        if (user?.token) {
-            loadProfile()
+        if (localStorage.getItem("token")) {
+            loadProfile()            
+        }
+    }, [user])
+
+    useEffect(() => {
+        const loadMatches = async () => {
+            try{
+                const response = await myMatchesRequest(user.id)
+                
+                const data = Array.isArray(response?.matches) ? response.matches : []                
+                setMatches(data.map(normalizeMatch))
+                console.log(data);
+                
+            }
+            catch{
+                setMatches([])
+            }
+        }
+        if(localStorage.getItem("token")){
+            loadMatches()
         }
     }, [user])
 

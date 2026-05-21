@@ -61,7 +61,7 @@ export function CreateMatchForm({ onCreate }) {
         <form className="{style.matchForm}" onSubmit={handleSubmitSendForm}>
             <p>Crear partido</p>
 
-  <div className={style.formGroup}>
+            <div className={style.formGroup}>
                 <input
                     className="inputBase"
                     name="fecha"
@@ -70,7 +70,7 @@ export function CreateMatchForm({ onCreate }) {
                     onChange={changeInput}
                     min={minDate}
                     max={maxDate}
-                    required/>
+                    required />
             </div>
 
             <div className={style.formGroup}>

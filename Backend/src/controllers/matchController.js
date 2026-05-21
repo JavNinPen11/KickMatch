@@ -1,3 +1,4 @@
+
 const createMatch = async (req, res) => {
     const { date, time, location, maxPlayers, state, creatorId } = req.body
     try{
@@ -26,6 +27,24 @@ const createMatch = async (req, res) => {
         return res.status(500).json({ message: "Error interno en el servidor"})
     }
 }
+export const getMatches = async (req, res) => {
+    try{
+        const matches = await prisma.match.findMany({
+            include:{
+                creator: true
+            },
+            orderBy:{
+                date: "desc"
+            }
+        })
+        return res.status(200).json({matches})
+    }
+    catch(error){
+        console.error(error)
+        res.status(500).json({message: "Error interno del servidor", error})
+    }
+}
+
 const myMatches = async (req, res) => {
     const id = req.user.id
     try{

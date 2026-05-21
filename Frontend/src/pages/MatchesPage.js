@@ -4,7 +4,8 @@ import { CreateMatchForm } from "../components/forms/CreateMatchForm"
 import { MatchCard } from "../components/forms/matchCard"
 import { AuthContext } from "../context/authContext"
 import { getMatchUser } from "../utils/userMatches"
-import {createMatchRequest, myMatchesRequest, normalizeMatch} from "../api/matchUtils"
+import {normalizeMatch} from "../api/matchUtils"
+import { allMatches, createMatchRequest } from "../api/matchService"
 import style from "./stylePages/matchesPage.module.scss"
 
 export default function MatchesPage() {
@@ -18,7 +19,7 @@ export default function MatchesPage() {
     useEffect(() => {
         const loadMatches = async () => {
             try {
-                const response = await myMatchesRequest()
+                const response = await allMatches()
                 const data = Array.isArray(response?.matches) ? response.matches : []
 
                 if (Array.isArray(data)) {

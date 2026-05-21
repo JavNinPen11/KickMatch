@@ -10,11 +10,11 @@ async function parseResponse(response) {
   return body;
 }
 
-export async function getMeRequest(token) {
+export async function getMeRequest() {
   const response = await fetch(`${API_URL}/users/me`, {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
   });
 
