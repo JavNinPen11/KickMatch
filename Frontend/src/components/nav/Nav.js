@@ -24,7 +24,7 @@ export const Nav = ({ variant = "default" }) => {
                     {isLogged ? (
                         <>
                             <Link className={style.navLink} to="/profile">
-                                Perfil de: {userName}
+                                Perfil de {userName}
                             </Link>
 
                             <Link className={style.navLink} to="/">
@@ -33,6 +33,10 @@ export const Nav = ({ variant = "default" }) => {
 
                             <Link className={style.navLink} to="/matches">
                                 Partidos
+                            </Link>
+
+                            <Link className={style.navLink} to="/reservas">
+                                Reservas
                             </Link>
 
                             <Link className={style.navLink} to="/dashboard">
