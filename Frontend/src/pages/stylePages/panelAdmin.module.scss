@@ -1,0 +1,151 @@
+.header {
+    max-width: 760px;
+    margin-bottom: 28px;
+}
+
+.header h1 {
+    margin: 16px 0 12px;
+    font-size: clamp(2.2rem, 4vw, 3.4rem);
+    line-height: 1.08;
+}
+
+.summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.summaryCard {
+    display: grid;
+    gap: 8px;
+    padding: 24px;
+}
+
+.summaryCard span {
+    color: #bdbdbd;
+    font-size: 0.9rem;
+}
+
+.summaryCard strong {
+    color: #fff;
+    font-family: "Oswald";
+    font-size: 2rem;
+    letter-spacing: 0.04em;
+}
+
+.users,
+.matches {
+    margin-top: 32px;
+}
+
+.sectionTop {
+    max-width: 760px;
+    margin-bottom: 22px;
+}
+
+.sectionTop h2 {
+    margin: 0 0 10px;
+    font-size: clamp(1.7rem, 3vw, 2.3rem);
+}
+
+.sectionTop p {
+    margin: 0;
+    color: #d2d2d2;
+    line-height: 1.65;
+}
+
+.tableBox {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 14px 12px;
+    border-bottom: 1px solid rgba(242, 187, 45, 0.16);
+    text-align: left;
+}
+
+.table th {
+    color: #f2bb2d;
+    font-size: 0.88rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.table td {
+    color: #e8e8e8;
+}
+
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.btnEdit,
+.btnDelete,
+.btnCancel {
+    min-height: 34px;
+    padding: 0 12px;
+    border-radius: 9px;
+    font-family: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.btnEdit {
+    border: 1px solid rgba(242, 187, 45, 0.5);
+    background-color: transparent;
+    color: #f2bb2d;
+}
+
+.btnEdit:hover {
+    border-color: #f2bb2d;
+    background-color: rgba(242, 187, 45, 0.08);
+}
+
+.btnCancel {
+    border: 1px solid rgba(255, 190, 90, 0.55);
+    background-color: transparent;
+    color: #ffc46b;
+}
+
+.btnCancel:hover {
+    border-color: #ffc46b;
+    background-color: rgba(255, 196, 107, 0.08);
+}
+
+.btnDelete {
+    border: 1px solid rgba(255, 110, 110, 0.55);
+    background-color: transparent;
+    color: #ff9b9b;
+}
+
+.btnDelete:hover {
+    border-color: #ff9b9b;
+    background-color: rgba(255, 155, 155, 0.08);
+}
+
+@media (max-width: 1024px) {
+    .summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .summary {
+        grid-template-columns: 1fr;
+    }
+
+    .summaryCard {
+        padding: 22px;
+    }
+}
