@@ -6,7 +6,7 @@ import { getMeRequest, updateMeRequest, deleteMeRequest } from "../api/userServi
 import style from "./stylePages/profilePage.module.scss"
 
 export default function ProfilePage() {
-    const { user, logout, refreshUser } = useContext(AuthContext)
+    const { user, logout } = useContext(AuthContext)
     const navigate = useNavigate()
 
     const [form, setForm] = useState({
@@ -25,13 +25,15 @@ export default function ProfilePage() {
 
     useEffect(() => {
         const loadProfile = async () => {
-            if (!user?.token) {
+        const token = localStorage.getItem("token")
+
+            if (!token) {
                 setIsLoading(false)
                 return
             }
 
             try {
-                const res = await getMeRequest(user.token)
+                const res = await getMeRequest(token)
                 const data = res?.data || {}
 
                 setForm({
@@ -66,7 +68,8 @@ export default function ProfilePage() {
     const saveProfile = async (event) => {
         event.preventDefault()
 
-        if (!user?.token) {
+        const token = localStorage.getItem("token")
+        if (token) {
             setMessage("No hay sesión activa.")
             return
         }
@@ -82,7 +85,7 @@ export default function ProfilePage() {
                 email: form.email,
             }
 
-            const res = await updateMeRequest(user.token, payload)
+            const res = await updateMeRequest(token, payload)
             const data = res?.data || {}
 
             setForm({
@@ -118,7 +121,9 @@ export default function ProfilePage() {
     }
 
     const deleteAccount = async () => {
-        if (!user?.token) {
+        const token = localStorage.getItem("token")
+
+        if (token) {
             setMessage("No hay sesión activa.")
             return
         }
@@ -132,7 +137,7 @@ export default function ProfilePage() {
         setMessage("")
 
         try {
-            await deleteMeRequest(user.token)
+            await deleteMeRequest(token)
             logout()
             navigate("/register")
         } 

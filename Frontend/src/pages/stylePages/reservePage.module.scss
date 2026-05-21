@@ -1,0 +1,187 @@
+.header {
+    max-width: 760px;
+    margin-bottom: 28px;
+}
+
+.header h1 {
+    margin: 16px 0 12px;
+    font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.mainGrid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 24px;
+    align-items: start;
+}
+
+.cards,
+.detail {
+    display: grid;
+    gap: 18px;
+}
+
+.myReservations {
+    display: grid;
+    gap: 18px;
+    margin-top: 32px;
+}
+
+.sectionTop {
+    margin-bottom: 18px;
+}
+
+.sectionTop h2 {
+    margin: 0 0 8px;
+}
+
+.sectionTop p {
+    margin: 0;
+    color: #d2d2d2;
+}
+
+.cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.card {
+    display: grid;
+    gap: 14px;
+}
+
+.cardTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.cardTop h3 {
+    margin: 0;
+}
+
+.cardTop span {
+    flex: 0 0 auto;
+}
+
+.available,
+.notAvailable {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: max-content;
+    max-width: 100%;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 800;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.available {
+    color: #8ee2ad;
+    background-color: rgba(70, 190, 120, 0.16);
+}
+
+.notAvailable {
+    color: #ff9b9b;
+    background-color: rgba(255, 100, 100, 0.16);
+}
+
+.info {
+    display: grid;
+    gap: 7px;
+}
+
+.info p,
+.detail p {
+    margin: 0;
+    color: #d2d2d2;
+}
+
+.info strong,
+.detail strong {
+    color: #ffffff;
+}
+
+.summary {
+    position: sticky;
+    top: 110px;
+    display: grid;
+    gap: 18px;
+}
+
+.detail h3 {
+    margin: 0;
+    color: #f2bb2d;
+}
+
+.tableBox {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 14px 12px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    white-space: nowrap;
+}
+
+.table th {
+    color: #f2bb2d;
+}
+
+.table td {
+    color: #f1f1f1;
+}
+
+.btnCancel {
+    min-height: 38px;
+    padding: 0 14px;
+    border: 1px solid rgba(255, 110, 110, 0.75);
+    border-radius: 10px;
+    background-color: rgba(255, 80, 80, 0.12);
+    color: #ff9b9b;
+    font-family: inherit;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.btnCancel:hover {
+    background-color: rgba(255, 80, 80, 0.2);
+}
+
+.card button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+@media (max-width: 1100px) {
+    .mainGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .summary {
+        position: static;
+    }
+}
+
+@media (max-width: 760px) {
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .table th,
+    .table td {
+        padding: 12px 10px;
+    }
+}
