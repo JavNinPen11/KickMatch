@@ -35,6 +35,10 @@ export const Nav = ({ variant = "default" }) => {
                                 Partidos
                             </Link>
 
+                            <Link className={style.navLink} to="/reservas">
+                                Reservas
+                            </Link>
+
                             <Link className={style.navLink} to="/dashboard">
                                 Dashboard
                             </Link>
