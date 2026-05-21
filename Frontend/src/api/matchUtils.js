@@ -93,24 +93,34 @@ export function getMatchDisplayName(fecha) {
 }
 
 export function normalizeMatch(match) {
-    const maxJugadores = Math.min(Math.max(Number(match.maxJugadores) || 0, 2), 20)
+    const maxJugadores = Math.min(Math.max(Number(match.maxJugadores || match.maxPlayers) || 0, 2), 20)
     const participantes = Array.isArray(match.participantes) ? match.participantes : []
     const jugadoresApuntados = Math.min(
         Number(match.jugadoresApuntados ?? participantes.length),
         maxJugadores
     )
 
+    const fecha = isValidMatchDate(match.fecha)
+        ? match.fecha
+        : match.date?.split("T")[0] ?? getTodayDateString()
+
+    const hora = typeof match.hora === "string" && match.hora
+        ? match.hora
+        : match.time?.split("T")[1]?.slice(0, 5) ?? ""
+
+    const creador = match.creador ?? match.creator
+
     return {
         id: match.id ?? Date.now(),
-        fecha: isValidMatchDate(match.fecha) ? match.fecha : getTodayDateString(),
-        hora: typeof match.hora === "string" ? match.hora : "",
-        ubicacion: typeof match.ubicacion === "string" ? match.ubicacion : "",
+        fecha,
+        hora,
+        ubicacion: match.ubicacion || match.location || "",
         maxJugadores,
         jugadoresApuntados,
         participantes,
         creador: {
-            id: match.creador?.id ?? "sin-creador",
-            nombre: match.creador?.nombre ?? "Desconocido",
+            id: creador?.id ?? "sin-creador",
+            nombre: creador?.nombre ?? creador?.username ?? "Desconocido",
         },
         duracion: match.duracion ? Math.min(Number(match.duracion), 90) : null,
         estado: jugadoresApuntados >= maxJugadores ? "COMPLETO" : "ABIERTO",
