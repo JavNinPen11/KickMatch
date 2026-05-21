@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react"
-import { Nav } from "../components/nav/nav"
-import { CreateMatchForm } from "../components/forms/createMatchForm"
+import { Nav } from "../components/nav/Nav"
+import { CreateMatchForm } from "../components/forms/CreateMatchForm"
 import { MatchCard } from "../components/forms/matchCard"
 import { AuthContext } from "../context/authContext"
 import { getMatchUser } from "../utils/userMatches"

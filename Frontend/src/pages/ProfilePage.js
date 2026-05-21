@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react"
-import { Nav } from "../components/nav/nav"
+import { Nav } from "../components/nav/Nav"
 import { useNavigate } from "react-router-dom"
 import { AuthContext } from "../context/authContext"
 import { getMeRequest, updateMeRequest, deleteMeRequest } from "../api/userService"

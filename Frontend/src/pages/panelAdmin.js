@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react"
-import { Nav } from "../components/nav/nav"
+import { Nav } from "../components/nav/Nav"
 import { AuthContext } from "../context/authContext"
 import { getAdminMatchesRequest } from "../api/adminService"
 import style from "./stylePages/panelAdmin.module.scss"
