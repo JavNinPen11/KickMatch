@@ -6,7 +6,7 @@ import { getMeRequest, updateMeRequest, deleteMeRequest } from "../api/userServi
 import style from "./stylePages/profilePage.module.scss"
 
 export default function ProfilePage() {
-    const { user, logout } = useContext(AuthContext)
+    const { user, logout, refreshUser } = useContext(AuthContext)
     const navigate = useNavigate()
 
     const [form, setForm] = useState({
@@ -42,9 +42,11 @@ export default function ProfilePage() {
                 })
 
                 setMessage("")
-            } catch (error) {
+            } 
+            catch (error) {
                 setMessage("No se pudieron cargar tus datos.")
-            } finally {
+            } 
+            finally {
                 setIsLoading(false)
             }
         }
@@ -72,7 +74,8 @@ export default function ProfilePage() {
         setIsSaving(true)
         setMessage("")
 
-        try {
+        try 
+        {
             const payload = {
                 username: form.username,
                 nombre: form.nombre,
@@ -90,7 +93,9 @@ export default function ProfilePage() {
             })
 
             setMessage("Datos actualizados correctamente.")
-        } catch (error) {
+        } 
+        catch (error) 
+        {
             setMessage(error.message || "No se pudieron guardar los cambios.")
         } finally {
             setIsSaving(false)
@@ -130,9 +135,11 @@ export default function ProfilePage() {
             await deleteMeRequest(user.token)
             logout()
             navigate("/register")
-        } catch (error) {
+        } 
+        catch (error) {
             setMessage(error.message || "No se pudo eliminar la cuenta.")
-        } finally {
+        } 
+        finally {
             setIsDeleting(false)
         }
     }
