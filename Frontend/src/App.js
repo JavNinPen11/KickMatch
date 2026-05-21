@@ -10,7 +10,7 @@ import "./App.css"
 import ProfilePage from "./pages/ProfilePage"
 import PanelAdmin from "./pages/panelAdmin"
 import AdminRoute from "./components/authComponent/AdminRoute"
-import FieldsPage from "./pages/FieldsPage"
+import ReservePage from "./pages/ReservePage"
 
 
 //panel admin sin proteger
@@ -31,7 +31,7 @@ function App() {
               </AdminRoute>
             </PrivateRoute>
           } />
-          <Route path="/reservas"element={<PrivateRoute><FieldsPage /></PrivateRoute>}/>
+          <Route path="/reservas"element={<PrivateRoute><ReservePage /></PrivateRoute>}/>
           <Route path="/dashboard" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
         </Routes>
       </Router>

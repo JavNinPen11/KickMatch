@@ -1,8 +1,8 @@
 import { useState } from "react"
 import { Nav } from "../components/nav/Nav"
-import style from "./stylePages/fieldsPage.module.scss"
+import style from "./stylePages/reservePage.module.scss"
 
-const fields = [
+const reserveOptions = [
     {
         id: 1,
         name: "Pista Municipal Norte",
@@ -35,41 +35,41 @@ const fields = [
     },
 ]
 
-export default function FieldsPage() {
-    const [selectedField, setSelectedField] = useState(null)
+export default function ReservePage() {
+    const [selectedReserve, setSelectedReserve] = useState(null)
     const [reservations, setReservations] = useState([])
     const [message, setMessage] = useState("")
 
-    const selectField = (field) => {
-        if (!field.isAvailable) {
+    const selectReserve = (reserve) => {
+        if (!reserve.isAvailable) {
             setMessage("Esta pista no está disponible ahora mismo.")
             return
         }
 
-        setSelectedField(field)
+        setSelectedReserve(reserve)
         setMessage("")
     }
 
     const confirmReservation = () => {
-        if (!selectedField) {
+        if (!selectedReserve) {
             setMessage("Selecciona una pista antes de confirmar la reserva.")
             return
         }
 
         const newReservation = {
             id: Date.now(),
-            fieldName: selectedField.name,
-            location: selectedField.location,
-            price: selectedField.price,
-            date: selectedField.date,
-            startTime: selectedField.startTime,
-            endTime: selectedField.endTime,
+            name: selectedReserve.name,
+            location: selectedReserve.location,
+            price: selectedReserve.price,
+            date: selectedReserve.date,
+            startTime: selectedReserve.startTime,
+            endTime: selectedReserve.endTime,
             status: "Confirmada",
             paymentType: "Efectivo",
         }
 
         setReservations((prev) => [...prev, newReservation])
-        setSelectedField(null)
+        setSelectedReserve(null)
         setMessage("Reserva confirmada correctamente.")
     }
 
@@ -89,10 +89,10 @@ export default function FieldsPage() {
                 <section className={style.header}>
                     <span className="labelYellow">Reservas</span>
 
-                    <h1>Reservar pista de fútbol</h1>
+                    <h1>Reservar pista</h1>
 
                     <p className="textBase">
-                        Selecciona una pista de fútbol disponible, revisa el resumen y confirma tu
+                        Selecciona una pista disponible, revisa el resumen y confirma tu
                         reserva. El pago se realiza en efectivo en la instalación.
                     </p>
                 </section>
@@ -101,47 +101,50 @@ export default function FieldsPage() {
 
                 <section className={style.mainGrid}>
                     <div>
+                        <div className={style.sectionTop}>
+                            <h2>Pistas disponibles</h2>
+                        </div>
 
                         <div className={style.cards}>
-                            {fields.map((field) => (
-                                <article className={`cardBase ${style.card}`} key={field.id}>
+                            {reserveOptions.map((reserve) => (
+                                <article className={`cardBase ${style.card}`} key={reserve.id}>
                                     <div className={style.cardTop}>
-                                        <h3>{field.name}</h3>
+                                        <h3>{reserve.name}</h3>
 
                                         <span
                                             className={
-                                                field.isAvailable
+                                                reserve.isAvailable
                                                     ? style.available
                                                     : style.notAvailable
                                             }
                                         >
-                                            {field.isAvailable ? "Disponible" : "No disponible"}
+                                            {reserve.isAvailable ? "Disponible" : "No disponible"}
                                         </span>
                                     </div>
 
                                     <div className={style.info}>
                                         <p>
-                                            <strong>Ubicación:</strong> {field.location}
+                                            <strong>Ubicación:</strong> {reserve.location}
                                         </p>
 
                                         <p>
-                                            <strong>Fecha:</strong> {field.date}
+                                            <strong>Fecha:</strong> {reserve.date}
                                         </p>
 
                                         <p>
-                                            <strong>Horario:</strong> {field.startTime} - {field.endTime}
+                                            <strong>Horario:</strong> {reserve.startTime} - {reserve.endTime}
                                         </p>
 
                                         <p>
-                                            <strong>Precio:</strong> {field.price} €
+                                            <strong>Precio:</strong> {reserve.price} €
                                         </p>
                                     </div>
 
                                     <button
                                         className="btnOne"
                                         type="button"
-                                        onClick={() => selectField(field)}
-                                        disabled={!field.isAvailable}
+                                        onClick={() => selectReserve(reserve)}
+                                        disabled={!reserve.isAvailable}
                                     >
                                         Reservar pista
                                     </button>
@@ -156,24 +159,24 @@ export default function FieldsPage() {
                             <p>Revisa la pista antes de confirmar.</p>
                         </div>
 
-                        {selectedField ? (
+                        {selectedReserve ? (
                             <div className={style.detail}>
-                                <h3>{selectedField.name}</h3>
+                                <h3>{selectedReserve.name}</h3>
 
                                 <p>
-                                    <strong>Ubicación:</strong> {selectedField.location}
+                                    <strong>Ubicación:</strong> {selectedReserve.location}
                                 </p>
 
                                 <p>
-                                    <strong>Fecha:</strong> {selectedField.date}
+                                    <strong>Fecha:</strong> {selectedReserve.date}
                                 </p>
 
                                 <p>
-                                    <strong>Horario:</strong> {selectedField.startTime} - {selectedField.endTime}
+                                    <strong>Horario:</strong> {selectedReserve.startTime} - {selectedReserve.endTime}
                                 </p>
 
                                 <p>
-                                    <strong>Precio:</strong> {selectedField.price} €
+                                    <strong>Precio:</strong> {selectedReserve.price} €
                                 </p>
 
                                 <p>
@@ -220,7 +223,7 @@ export default function FieldsPage() {
                                 {reservations.length > 0 ? (
                                     reservations.map((reservation) => (
                                         <tr key={reservation.id}>
-                                            <td>{reservation.fieldName}</td>
+                                            <td>{reservation.name}</td>
                                             <td>{reservation.location}</td>
                                             <td>{reservation.date}</td>
                                             <td>{reservation.startTime} - {reservation.endTime}</td>
