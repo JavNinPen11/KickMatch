@@ -1,4 +1,3 @@
-
 // recibe value y si existe lo convierte a texto limpiandolo y lo mete a set
 function addUserValue(set, value) {
     if (value === null || value === undefined) {

@@ -3,6 +3,7 @@ import { Nav } from "../components/nav/Nav"
 import { AuthContext } from "../context/authContext"
 import { getAdminMatchesRequest } from "../api/adminService"
 import style from "./stylePages/panelAdmin.module.scss"
+import { formatDate, formatTime, formatState } from "../utils/formatUtils"
 
 function formatAdminDate(dateValue) {
     if (!dateValue) {

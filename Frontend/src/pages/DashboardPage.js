@@ -7,6 +7,7 @@ import { getUserMatchesSummary } from "../utils/userMatches"
 import style from "./stylePages/dashboardPage.module.scss"
 import { myMatchesRequest } from "../api/matchService"
 import { normalizeMatch } from "../api/matchUtils"
+import { formatDate, formatState } from "../utils/formatUtils"
 
 export const DashboardPage = () => {
     const { user } = useContext(AuthContext)
@@ -24,25 +25,25 @@ export const DashboardPage = () => {
         }
 
         if (localStorage.getItem("token")) {
-            loadProfile()            
+            loadProfile()
         }
     }, [user])
 
     useEffect(() => {
         const loadMatches = async () => {
-            try{
+            try {
                 const response = await myMatchesRequest(user.id)
-                
-                const data = Array.isArray(response?.matches) ? response.matches : []                
+
+                const data = Array.isArray(response?.matches) ? response.matches : []
                 setMatches(data.map(normalizeMatch))
                 console.log(data);
-                
+
             }
-            catch{
+            catch {
                 setMatches([])
             }
         }
-        if(localStorage.getItem("token")){
+        if (localStorage.getItem("token")) {
             loadMatches()
         }
     }, [user])
@@ -59,27 +60,25 @@ export const DashboardPage = () => {
         { label: "Jugados", value: summary.playedMatches.length },
     ]
 
-    const nextMatch = summary.upcomingMatches[0] || null
+    const upcomingMatches = summary.upcomingMatches.slice(0, 3)
 
     return (
-       <main className="mainPage">
+        <main className="mainPage">
             <Nav />
 
             <div className="content">
                 <section className={style.hero}>
                     <article className={`cardBase ${style.mainCard}`}>
-                        <span className="labelYellow">Zona privada</span>
 
                         <div className={style.cardText}>
                             <h1>Hola, {summary.currentUser.username}</h1>
                             <p>
-                                Aquí tienes un resumen claro de tu actividad en KickMatch
-                                y accesos rápidos para ir a la zona de partidos cuando lo
-                                necesites.
+                                Consulta tu actividad en KickMatch
+                                y accede rápidamente a tus partidos.
                             </p>
                         </div>
 
-                        <div className="groupBtns">
+                        <div className={style.mainAction}>
                             <Link className="btnOne" to="/matches">
                                 Ver partidos
                             </Link>
@@ -105,8 +104,7 @@ export const DashboardPage = () => {
 
                 <section className={style.section}>
                     <div className={style.sectionTop}>
-                        <span className="labelYellow">Resumen</span>
-                        <h2>Tu actividad en un vistazo</h2>
+                        <span className="labelYellow">Resumen de tu actividad</span>
                     </div>
 
                     <div className={style.stats}>
@@ -122,34 +120,45 @@ export const DashboardPage = () => {
                 <section className={style.agenda}>
                     <div className={style.sectionTop}>
                         <span className="labelYellow">Próximos partidos</span>
-                        <h2>Resumen rápido de tu agenda</h2>
                     </div>
 
-                    {nextMatch ? (
+                    {upcomingMatches.length > 0 ? (
                         <article className={`cardBase ${style.agendaCard}`}>
                             <div className={style.agendaTop}>
-                                <h3>Tu próximo partido</h3>
+                                <h3>Tus próximos partidos</h3>
                             </div>
 
-                            <div className={style.agendaInfo}>
-                                <p>
-                                    Ya tienes un encuentro pendiente en tu agenda. Entra en
-                                    partidos para ver el detalle completo.
-                                </p>
+                            <div className={style.matchList}>
+                                {upcomingMatches.map((match) => (
+                                    <article className={style.matchItem} key={match.id}>
+                                        <h4>{match.nombre || `Partido el ${formatDate(match.fecha)}`}</h4>
+
+                                        <div className={style.matchInfo}>
+                                            <p>
+                                                <strong>Fecha</strong>
+                                                <span>{formatDate(match.fecha)}</span>
+                                            </p>
+
+                                            <p>
+                                                <strong>Hora</strong>
+                                                <span>{match.hora}</span>
+                                            </p>
+
+                                            <p>
+                                                <strong>Ubicación</strong>
+                                                <span>{match.ubicacion}</span>
+                                            </p>
+
+                                            <p>
+                                                <strong>Estado</strong>
+                                                <span>{match.estado}</span>
+                                            </p>
+                                        </div>
+                                    </article>
+                                ))}
                             </div>
 
-                            <div className={style.agendaData}>
-                                <p>
-                                    <strong>Ubicación</strong>
-                                    <span>{nextMatch.ubicacion}</span>
-                                </p>
-                                <p>
-                                    <strong>Hora</strong>
-                                    <span>{nextMatch.hora}</span>
-                                </p>
-                            </div>
-
-                            <div className="groupBtns">
+                            <div className={style.agendaAction}>
                                 <Link className="btnOne" to="/matches">
                                     Ver partidos
                                 </Link>
