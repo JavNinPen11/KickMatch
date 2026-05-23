@@ -58,7 +58,7 @@ export function CreateMatchForm({ onCreate }) {
     }
 
     return (
-        <form className="{style.matchForm}" onSubmit={handleSubmitSendForm}>
+        <form className={style.matchForm} onSubmit={handleSubmitSendForm}>
             <p>Crear partido</p>
 
             <div className={style.formGroup}>

@@ -4,7 +4,7 @@ import { CreateMatchForm } from "../components/forms/CreateMatchForm"
 import { MatchCard } from "../components/forms/matchCard"
 import { AuthContext } from "../context/authContext"
 import { getMatchUser } from "../utils/userMatches"
-import {normalizeMatch} from "../api/matchUtils"
+import { normalizeMatch } from "../api/matchUtils"
 import { allMatches, createMatchRequest } from "../api/matchService"
 import style from "./stylePages/matchesPage.module.scss"
 
@@ -39,20 +39,22 @@ export default function MatchesPage() {
     }, [])
 
     const handleCreateMatch = async (newMatch) => {
-        const matchToAdd = normalizeMatch({
-            id: Date.now(),
-            ...newMatch,
-            jugadoresApuntados: 0,
-            participantes: [],
-            creador: currentUser,
-            estado: "ABIERTO",
-        })
+        const payload = {
+            date: newMatch.fecha,
+            time: newMatch.hora,
+            location: newMatch.ubicacion,
+            maxPlayers: newMatch.maxJugadores,
+            state: "abierto",
+            creatorId: currentUser.id,
+        }
 
         try {
-            const response = await createMatchRequest(matchToAdd)
-            const createdMatch = normalizeMatch(response?.data || response)
+            await createMatchRequest(payload)
 
-            setMatches((prevMatches) => [createdMatch, ...prevMatches])
+            const response = await allMatches()
+            const data = Array.isArray(response?.matches) ? response.matches : []
+
+            setMatches(data.map(normalizeMatch))
             setMessage("Partido creado correctamente.")
             setIsFormOpen(false)
         } catch (error) {

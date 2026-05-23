@@ -7,7 +7,7 @@ import { getUserMatchesSummary } from "../utils/userMatches"
 import style from "./stylePages/dashboardPage.module.scss"
 import { myMatchesRequest } from "../api/matchService"
 import { normalizeMatch } from "../api/matchUtils"
-import { formatDate, formatState } from "../utils/formatUtils"
+import { formatDate } from "../utils/formatUtils"
 
 export const DashboardPage = () => {
     const { user } = useContext(AuthContext)

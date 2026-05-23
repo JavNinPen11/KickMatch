@@ -1,4 +1,3 @@
-const API_URL = process.env.REACT_APP_BACKEND_URL
 
 function toDateOnly(dateValue) {
     const date = new Date(dateValue)
