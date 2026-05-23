@@ -21,7 +21,7 @@ export async function createMatchRequest(matchData) {
         throw new Error("Backend de partidos no configurado")
     }
 
-    const response = await fetch(`${API_URL}/matches`, {
+    const response = await fetch(`${API_URL}/match/createMatch`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

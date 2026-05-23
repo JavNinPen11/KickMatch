@@ -1,8 +1,11 @@
-import { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 import { Nav } from "../components/nav/Nav"
 import { AuthContext } from "../context/authContext"
 import style from "./stylePages/homePage.module.scss"
+import { allMatches } from "../api/matchService"
+import { normalizeMatch } from "../api/matchUtils"
+import { formatDate, formatState } from "../utils/formatUtils"
 
 const howWorks = [
     {
@@ -26,6 +29,29 @@ export default function HomePage() {
     const { user } = useContext(AuthContext)
     const isLogin = Boolean(user)
 
+    const [matches, setMatches] = useState([])
+    const [isLoadingMatches, setIsLoadingMatches] = useState(true)
+    const [matchesMessage, setMatchesMessage] = useState("")
+
+    useEffect(() => {
+        const loadMatches = async () => {
+            try {
+                const response = await allMatches()
+                const data = Array.isArray(response?.matches) ? response.matches : []
+
+                setMatches(data.map(normalizeMatch).slice(0, 3))
+                setMatchesMessage("")
+            } catch (error) {
+                setMatches([])
+                setMatchesMessage("No se pudieron cargar los partidos.")
+            } finally {
+                setIsLoadingMatches(false)
+            }
+        }
+
+        loadMatches()
+    }, [])
+
     return (
         <main className="mainPage">
             <Nav variant="landing" />
@@ -35,7 +61,7 @@ export default function HomePage() {
                     <div className={`cardBase ${style.heroBox}`}>
                         <span className="labelYellow">KickMatch</span>
 
-                        <h1 className={style.heroTitle}>
+                        <h1 className="titleLarge">
                             Encuentra tu próximo partido de fútbol
                         </h1>
 
@@ -64,20 +90,52 @@ export default function HomePage() {
 
                 <section className={style.section} id="partidos-recientes">
                     <div className={style.sectionTop}>
-                        <h2 className={style.sectionTitle}>Partidos más recientes</h2>
-
-                        <p className="textBase">
-                            Consulta los últimos partidos subidos.
-                        </p>
+                        <h2 className="title">Partidos más recientes</h2>
                     </div>
 
-                    {/* Card de partidos pendiente de conectar con backend */}
+                    <div className={style.matchesGrid}>
+                        {isLoadingMatches ? (
+                            <p className="textBase">Cargando partidos...</p>
+                        ) : matches.length > 0 ? (
+                            matches.map((match) => (
+                                <article className={`cardBase ${style.matchCard}`} key={match.id}>
+                                    <h3 className={style.cardTitle}>
+                                        {match.nombre || `Partido el ${formatDate(match.fecha)}`}
+                                    </h3>
+
+                                    <p>
+                                        <strong>Fecha:</strong> {formatDate(match.fecha)}
+                                    </p>
+
+                                    <p>
+                                        <strong>Hora:</strong> {match.hora}
+                                    </p>
+
+                                    <p>
+                                        <strong>Ubicación:</strong> {match.ubicacion}
+                                    </p>
+
+                                    <p>
+                                        <strong>Estado:</strong> <strong>Estado:</strong> {formatState(match.estado)}
+                                    </p>
+                                </article>
+                            ))
+                        ) : (
+                            <p className="textBase">
+                                {matchesMessage || "Todavía no hay partidos disponibles."}
+                            </p>
+                        )}
+                    </div>
+
+                    <Link className={`btnOne ${style.sectionButton}`} to="/matches">
+                        Ver todos los partidos
+                    </Link>
                 </section>
 
                 <section className={style.section}>
                     <div className={style.sectionTop}>
-                        <h2 className={style.sectionTitle}>
-                            Organiza tus pachangas sin complicarte
+                        <h2 className="title">
+                            Organiza tus partidos de fútbol sin complicarte
                         </h2>
                     </div>
 
@@ -94,7 +152,7 @@ export default function HomePage() {
 
                 <section className={`cardBase ${style.cta}`}>
                     <div className={style.ctaContent}>
-                        <h2 className={style.sectionTitle}>¿Listo para jugar?</h2>
+                        <h2 className="title">¿Listo para jugar?</h2>
 
                         <p className="textBase">
                             {isLogin

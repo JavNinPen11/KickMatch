@@ -17,8 +17,7 @@
 .mainCard h1,
 .userCard h2,
 .agendaTop h3,
-.emptyCard h3,
-.sectionTop h2 {
+.emptyCard h3{
     margin: 16px 0 12px;
 }
 
@@ -27,7 +26,6 @@
 }
 
 .cardText p,
-.sectionTop p,
 .agendaInfo p,
 .agendaData p,
 .emptyCard p {
@@ -149,6 +147,58 @@
     gap: 18px;
 }
 
+.mainAction {
+    flex-shrink: 0;
+}
+
+.mainAction a,
+.mainAction button {
+    min-width: 140px;
+    white-space: nowrap;
+}
+
+.agendaAction {
+    margin-top: 18px;
+}
+
+.matchList {
+    display: grid;
+    gap: 16px;
+}
+
+.matchItem {
+    display: grid;
+    gap: 14px;
+    padding: 18px;
+    border-radius: 18px;
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.matchItem h4 {
+    margin: 0;
+    font-size: 1.15rem;
+}
+
+.matchInfo {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.matchInfo p {
+    margin: 0;
+}
+
+.matchInfo strong {
+    display: block;
+    margin-bottom: 6px;
+    color: #f2bb2d;
+}
+
+.matchInfo span {
+    color: #ffffff;
+}
+
 @media (max-width: 1024px) {
     .hero,
     .stats {
@@ -169,4 +219,8 @@
     .agendaTop {
         flex-direction: column;
     }
+    
+    .matchInfo {
+    grid-template-columns: 1fr;
+}
 }
