@@ -6,6 +6,7 @@ import style from "./stylePages/homePage.module.scss"
 import { allMatches } from "../api/matchService"
 import { normalizeMatch } from "../api/matchUtils"
 import { formatDate, formatState } from "../utils/formatUtils"
+import { getEscaparateRequest } from "../api/reservaService"
 import Loading from "../components/forms/Loading"
 
 const howWorks = [
@@ -18,6 +19,11 @@ const howWorks = [
         title: "Apúntate o crea el tuyo",
         description:
             "Únete a una pachanga cercana o prepara un partido nuevo en pocos pasos.",
+    },
+    {
+        title: "Reserva una pista",
+        description:
+            "Elige una pista disponible, selecciona fecha y horario, y confirma tu reserva.",
     },
     {
         title: "Organiza y juega",
@@ -33,6 +39,9 @@ export default function HomePage() {
     const [matches, setMatches] = useState([])
     const [isLoadingMatches, setIsLoadingMatches] = useState(true)
     const [matchesMessage, setMatchesMessage] = useState("")
+    const [fields, setFields] = useState([])
+    const [fieldPage, setFieldPage] = useState(0)
+    const [matchPage, setMatchPage] = useState(0)
 
     useEffect(() => {
         const loadMatches = async () => {
@@ -40,7 +49,7 @@ export default function HomePage() {
                 const response = await allMatches()
                 const data = Array.isArray(response?.matches) ? response.matches : []
 
-                setMatches(data.map(normalizeMatch).slice(0, 3))
+                setMatches(data.map(normalizeMatch))
                 setMatchesMessage("")
             } catch (error) {
                 setMatches([])
@@ -52,8 +61,6 @@ export default function HomePage() {
 
         loadMatches()
     }, [])
-    
-    if(isLoadingMatches) return <Loading />
 
     return (
         <main className="mainPage">
@@ -69,8 +76,7 @@ export default function HomePage() {
                         </h1>
 
                         <p className="textBase">
-                            Crea partidos, apúntate a encuentros cerca de ti y conoce gente,
-                            o organiza tus pachangas fácilmente.
+                            Crea partidos, apúntate a encuentros cerca de ti y conoce gente facilmente
                         </p>
 
                         <div className={style.heroBtns}>
@@ -96,42 +102,134 @@ export default function HomePage() {
                         <h2 className="title">Partidos más recientes</h2>
                     </div>
 
-                    <div className={style.matchesGrid}>
-                        {isLoadingMatches ? (
-                            <p className="textBase">Cargando partidos...</p>
-                        ) : matches.length > 0 ? (
-                            matches.map((match) => (
-                                <article className={`cardBase ${style.matchCard}`} key={match.id}>
-                                    <h3 className={style.cardTitle}>
-                                        {match.nombre || `Partido el ${formatDate(match.fecha)}`}
-                                    </h3>
+                    <div className={style.carouselBox}>
+                        <div className={style.carouselContent}>
+                            <div className={style.carouselGrid} key={matchPage}>
+                                {isLoadingMatches ? (
+                                    <p className="textBase">Cargando partidos...</p>
+                                ) : visibleMatches.length > 0 ? (
+                                    visibleMatches.map((match) => (
+                                        <article className={`cardBase ${style.matchCard}`} key={match.id}>
+                                            <h3 className={style.cardTitle}>
+                                                {match.nombre || `Partido el ${formatDate(match.fecha)}`}
+                                            </h3>
 
-                                    <p>
-                                        <strong>Fecha:</strong> {formatDate(match.fecha)}
-                                    </p>
+                                            <p>
+                                                <strong>Fecha:</strong> {formatDate(match.fecha)}
+                                            </p>
 
-                                    <p>
-                                        <strong>Hora:</strong> {match.hora}
-                                    </p>
+                                            <p>
+                                                <strong>Hora:</strong> {match.hora}
+                                            </p>
 
-                                    <p>
-                                        <strong>Ubicación:</strong> {match.ubicacion}
-                                    </p>
+                                            <p>
+                                                <strong>Ubicación:</strong> {match.ubicacion}
+                                            </p>
 
-                                    <p>
-                                        <strong>Estado:</strong> <strong>Estado:</strong> {formatState(match.estado)}
+                                            <p>
+                                                <strong>Estado:</strong> {formatState(match.estado)}
+                                            </p>
+                                        </article>
+                                    ))
+                                ) : (
+                                    <p className="textBase">
+                                        {matchesMessage || "Todavía no hay partidos disponibles."}
                                     </p>
-                                </article>
-                            ))
-                        ) : (
-                            <p className="textBase">
-                                {matchesMessage || "Todavía no hay partidos disponibles."}
-                            </p>
-                        )}
+                                )}
+                            </div>
+                        </div>
+
+                        {matches.length > matchesPerPage ? (
+                            <div className={style.carouselActions}>
+                                <button
+                                    className={style.btnArrow}
+                                    type="button"
+                                    onClick={goPrevMatches}
+                                    aria-label="Ver partidos anteriores"
+                                >
+                                    {"<"}
+                                </button>
+
+                                <span>{matchPage + 1} / {matches.length}</span>
+
+                                <button
+                                    className={style.btnArrow}
+                                    type="button"
+                                    onClick={goNextMatches}
+                                    aria-label="Ver partidos siguientes"
+                                >
+                                    {">"}
+                                </button>
+                            </div>
+                        ) : null}
                     </div>
 
                     <Link className={`btnOne ${style.sectionButton}`} to="/matches">
                         Ver todos los partidos
+                    </Link>
+                </section>
+
+                <section className={style.section}>
+                    <div className={style.sectionTop}>
+                        <h2 className="title">Campos de fútbol disponibles</h2>
+                    </div>
+
+                    <div className={style.carouselBox}>
+                        <div className={style.carouselContent}>
+                            <div className={style.carouselGrid} key={fieldPage}>
+                                {visibleFields.length > 0 ? (
+                                    visibleFields.map((field) => (
+                                        <article className={`cardBase ${style.matchCard}`} key={field.id}>
+                                            <h3 className={style.cardTitle}>{field.nombre}</h3>
+
+                                            <p>
+                                                <strong>Categoría:</strong>{" "}
+                                                {field.category?.nombre || "Sin categoría"}
+                                            </p>
+
+                                            <p>
+                                                <strong>Descripción:</strong>{" "}
+                                                {field.descripcion || "Sin descripción"}
+                                            </p>
+
+                                            <p>
+                                                <strong>Precio:</strong> {field.precio} €/h
+                                            </p>
+                                        </article>
+                                    ))
+                                ) : (
+                                    <p className="textBase">No hay campos de fútbol disponibles ahora mismo.</p>
+                                )}
+                            </div>
+                        </div>
+
+                        {fields.length > fieldsPerPage ? (
+                            <div className={style.carouselActions}>
+                                <button
+                                    className={style.btnArrow}
+                                    type="button"
+                                    onClick={goPrevFields}
+                                    aria-label="Ver campos anteriores"
+                                >
+                                    {"<"}
+                                </button>
+
+                                <span>{fieldPage + 1} / {fields.length}</span>
+
+                                <button
+                                    className={style.btnArrow}
+                                    type="button"
+                                    onClick={goNextFields}
+                                    aria-label="Ver campos siguientes"
+                                >
+                                    {">"}
+                                </button>
+                            </div>
+                        ) : null}
+                    </div>
+
+                    <Link className={`btnOne ${style.sectionButton}`} to="/reservas">
+                        Ver reservas
                     </Link>
                 </section>
 
@@ -159,14 +257,15 @@ export default function HomePage() {
 
                         <p className="textBase">
                             {isLogin
-                                ? "Entra en tu panel o revisa los partidos abiertos para organizar tu siguiente pachanga."
-                                : "Regístrate y empieza a unirte o crear partidos de fútbol cerca de ti."}
+                                ? "Revisa los partidos abiertos para unirte a tú proximo partido de fútbol o crea el tuyo propio."
+                                + " O busca entre nuestros campos de fútbol para reservarlo"
+                                : "Regístrate y empieza a unirte o crear partidos de fútbol cerca de ti"}
                         </p>
 
                         <div className={style.heroBtns}>
                             {isLogin ? (
-                                <Link className="btnOne" to="/dashboard">
-                                    Ir a tu dashboard
+                                <Link className="btnOne" to="/matches">
+                                    Ir a partidos
                                 </Link>
                             ) : (
                                 <Link className="btnOne" to="/register">
@@ -174,8 +273,8 @@ export default function HomePage() {
                                 </Link>
                             )}
 
-                            <Link className="btnTwo" to="/matches">
-                                Explorar partidos
+                            <Link className="btnTwo" to="/reservas">
+                                Ir a Reservas
                             </Link>
                         </div>
                     </div>

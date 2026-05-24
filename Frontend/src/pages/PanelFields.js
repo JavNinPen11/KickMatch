@@ -156,6 +156,7 @@ export default function PanelFields() {
                 <section className={`cardBase ${style.matches}`}>
                     <div className={style.sectionTop}>
                         <h2>Campos</h2>
+                        <p>Listado de campos de fútbol en KickMatch</p>
                         <button className="btnOne" type="button" onClick={() => setShowCreateField(true)}>
                             Crear campo
                         </button>
@@ -200,6 +201,7 @@ export default function PanelFields() {
                 <section className={`cardBase ${style.matches}`}>
                     <div className={style.sectionTop}>
                         <h2>Categorías</h2>
+                        <p>Listado de categorias de los campos de fútbol en KickMatch</p>
                         <button className="btnOne" type="button" onClick={() => setShowCreateCategory(true)}>
                             Crear categoría
                         </button>
