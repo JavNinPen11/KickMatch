@@ -49,3 +49,13 @@ export async function updateAdminUserRequest(token, userId, formData) {
 
     return parseResponse(response)
 }
+export async function deleteAdminUserRequest(token, userId) {
+    const response = await fetch(`${API_URL}/admin/users/${userId}`, {
+        method: "DELETE",
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    })
+
+    return parseResponse(response)
+}

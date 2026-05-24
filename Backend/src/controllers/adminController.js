@@ -1,3 +1,23 @@
+import bcrypt from "bcrypt"
+const userSelect = {
+    id: true,
+    username: true,
+    nombre: true,
+    email: true,
+    rolId: true,
+    creadoEn: true,
+    rol: { select: { nombre: true } }
+}
+
+const mapUser = (user) => ({
+    id: user.id,
+    username: user.username,
+    nombre: user.nombre,
+    email: user.email,
+    rol: user.rol?.nombre ?? null,
+    creadoEn: user.creadoEn,
+})
+
 export const getAllMatches = async (req, res) => {
     try {
         const matches = await prisma.match.findMany({
@@ -63,6 +83,7 @@ export async function adminUpdateUser(req, res) {
         return res.json({ ok: true, message: "Usuario actualizado", data: mapUser(updated) })
 
     } catch (error) {
+        console.error("Error adminUpdateUser:", error)
         if (error.code === "P2002") {
             return res.status(400).json({ ok: false, message: "Email o username ya existe" })
         }

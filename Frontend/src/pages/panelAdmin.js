@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { Nav } from "../components/nav/Nav"
 import { AuthContext } from "../context/authContext"
-import { getAdminMatchesRequest, getAdminUsersRequest, updateAdminUserRequest } from "../api/adminService"
+import { getAdminMatchesRequest, getAdminUsersRequest, updateAdminUserRequest, deleteAdminUserRequest } from "../api/adminService"
 import style from "./stylePages/panelAdmin.module.scss"
 
 function formatAdminDate(dateValue) {
@@ -41,6 +41,7 @@ export default function PanelAdmin() {
     const [editForm, setEditForm] = useState({
         username: "", nombre: "", email: "", password: "", rolId: ""
     })
+    const [deleteUser, setDeleteUser] = useState(null)
 
     const openEditUser = (user) => {
         setEditUser(user)
@@ -98,6 +99,19 @@ export default function PanelAdmin() {
             closeEditUser()
         } catch (error) {
             setMessage(error.message || "No se pudo actualizar el usuario.")
+        }
+    }
+    const openDeleteUser = (user) => setDeleteUser(user)
+    const closeDeleteUser = () => setDeleteUser(null)
+
+    const handleDeleteUser = async () => {
+        const token = localStorage.getItem("token")
+        try {
+            await deleteAdminUserRequest(token, deleteUser.id)
+            setUsers((prev) => prev.filter((u) => u.id !== deleteUser.id))
+            closeDeleteUser()
+        } catch (error) {
+            setMessage(error.message || "No se pudo eliminar el usuario.")
         }
     }
 
@@ -170,7 +184,7 @@ export default function PanelAdmin() {
                                             <td>{user.rol?.nombre || "Sin rol"}</td>
                                             <td>
                                                 <div className={style.buttons}>
-                                                    <button className={style.btnDelete} type="button">
+                                                    <button className={style.btnDelete} type="button" onClick={() => openDeleteUser(user)}>
                                                         Borrar
                                                     </button>
                                                     <button className={style.btnEdit} type="button" onClick={() => openEditUser(user)}>
@@ -294,6 +308,23 @@ export default function PanelAdmin() {
                                     Guardar cambios
                                 </button>
                                 <button className="btnTwo" type="button" onClick={closeEditUser}>
+                                    Cancelar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {deleteUser && (
+                    <div className={style.deletePopup}>
+                        <div className={style.deletePopupCard}>
+                            <button className={style.btnClose} type="button" onClick={closeDeleteUser}>x</button>
+                            <h2>Eliminar usuario</h2>
+                            <p>¿Seguro que quieres eliminar a <strong>{deleteUser.username}</strong>? Esta acción no se puede deshacer.</p>
+                            <div className="groupBtns">
+                                <button className="btnOne" type="button" onClick={handleDeleteUser}>
+                                    Confirmar
+                                </button>
+                                <button className="btnTwo" type="button" onClick={closeDeleteUser}>
                                     Cancelar
                                 </button>
                             </div>
