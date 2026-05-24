@@ -46,7 +46,7 @@ export default function PanelFields() {
         load()
     }, [])
 
-    
+
     const handleCreateField = async () => {
         try {
             const newField = await createAdminFieldRequest(createFieldForm)
@@ -133,9 +133,10 @@ export default function PanelFields() {
         try {
             await deleteAdminCategoryRequest(deleteCategory.id)
             setCategories((prev) => prev.filter((c) => c.id !== deleteCategory.id))
-            setDeleteCategory(null)
+            setDeleteCategory(null)  
             setMessage("Categoría eliminada correctamente.")
         } catch (error) {
+            setDeleteCategory(null)  
             setMessage(error.message || "No se pudo eliminar la categoría.")
         }
     }

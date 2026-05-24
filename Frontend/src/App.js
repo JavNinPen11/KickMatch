@@ -11,9 +11,9 @@ import ProfilePage from "./pages/ProfilePage"
 import PanelAdmin from "./pages/panelAdmin"
 import AdminRoute from "./components/authComponent/AdminRoute"
 import ReservePage from "./pages/ReservePage"
+import PanelFields from "./pages/PanelFields"
 
 
-//panel admin sin proteger
 function App() {
   return (
     <AuthProvider>
@@ -33,6 +33,13 @@ function App() {
           } />
           <Route path="/reservas"element={<PrivateRoute><ReservePage /></PrivateRoute>}/>
           <Route path="/dashboard" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
+          <Route path="/admin/fields" element={
+            <PrivateRoute>
+              <AdminRoute>
+                <PanelFields />
+              </AdminRoute>
+            </PrivateRoute>  
+          } />
         </Routes>
       </Router>
     </AuthProvider>

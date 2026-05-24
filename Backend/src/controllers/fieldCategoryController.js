@@ -44,6 +44,14 @@ export const updateCategory = async (req, res) => {
 
 export const deleteCategory = async (req, res) => {
     try {
+        const campos = await prisma.field.count({
+            where: { categoryId: Number(req.params.id) }
+        })
+
+        if (campos > 0) {
+            return res.status(400).json({ message: `No puedes eliminar esta categoría porque tiene ${campos} campo(s) asociado(s).` })
+        }
+
         await prisma.fieldCategory.delete({
             where: { id: Number(req.params.id) }
         })
