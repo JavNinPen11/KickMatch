@@ -15,6 +15,7 @@ import PanelFields from "./pages/PanelFields"
 import { Footer } from "./components/forms/Footer"
 import AboutPage from "./pages/AboutPage"
 import { ScrollToTop } from "./components/scrollTop/ScrollTop"
+import ContactPage from "./pages/ContactPage"
 
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
             </PrivateRoute>  
           } />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
         </Routes>
         <Footer/>
       </Router>
