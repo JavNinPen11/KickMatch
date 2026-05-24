@@ -11,6 +11,7 @@ import {
     getMyReservasRequest,
     cancelarReservaRequest
 } from "../api/reservaService"
+import Loading from "../components/forms/Loading"
 
 export default function ReservePage() {
     const [fields, setFields] = useState([])
@@ -20,28 +21,28 @@ export default function ReservePage() {
     const [reservas, setReservas] = useState([])
     const [selectedField, setSelectedField] = useState(null)
     const [message, setMessage] = useState("")
-
+    const [isLoading, setIsLoading] = useState(true)
     const [bookingForm, setBookingForm] = useState({
         fecha: "", horaInicio: "", horaFin: ""
     })
 
     function formatReserveDate(dateValue) {
-    if (!dateValue) {
-        return "Sin fecha"
+        if (!dateValue) {
+            return "Sin fecha"
+        }
+
+        const date = new Date(dateValue)
+
+        if (Number.isNaN(date.getTime())) {
+            return "Sin fecha"
+        }
+
+        return date.toLocaleDateString("es-ES", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+        })
     }
-
-    const date = new Date(dateValue)
-
-    if (Number.isNaN(date.getTime())) {
-        return "Sin fecha"
-    }
-
-    return date.toLocaleDateString("es-ES", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-    })
-}
 
     useEffect(() => {
         const load = async () => {
@@ -58,7 +59,7 @@ export default function ReservePage() {
                 setReservas(reservasData)
             } catch (error) {
                 setMessage("No se pudieron cargar los datos.")
-            }
+            } finally { setIsLoading(false) }
         }
         load()
     }, [])
@@ -142,6 +143,8 @@ export default function ReservePage() {
             setMessage(error.message || "No se pudo cancelar la reserva.")
         }
     }
+
+    if (isLoading) return <Loading />
 
     return (
         <main className="mainPage">
@@ -251,7 +254,7 @@ export default function ReservePage() {
                                 {carrito.lineas.map((linea) => (
                                     <div className={style.carritoLinea} key={linea.id}>
                                         <p><strong>{linea.field.nombre}</strong></p>
-                                       <p>{formatReserveDate(linea.fecha)} · {linea.horaInicio} - {linea.horaFin}</p>
+                                        <p>{formatReserveDate(linea.fecha)} · {linea.horaInicio} - {linea.horaFin}</p>
                                         <p>{linea.precio} €</p>
                                         <button className={style.btnCancel} type="button"
                                             onClick={() => handleEliminarLinea(linea.id)}>
