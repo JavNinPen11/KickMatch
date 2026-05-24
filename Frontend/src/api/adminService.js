@@ -210,3 +210,28 @@ export async function deleteAdminCategoryRequest(categoryId) {
     })
     return parseResponse(response)
 }
+export async function getAdminReservasRequest() {
+    const token = localStorage.getItem("token")
+    const response = await fetch(`${API_URL}/admin/reservas`, {
+        headers: { Authorization: `Bearer ${token}` }
+    })
+    return parseResponse(response)
+}
+
+export async function cancelAdminReservaRequest(reservaId) {
+    const token = localStorage.getItem("token")
+    const response = await fetch(`${API_URL}/admin/reservas/${reservaId}/cancelar`, {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${token}` }
+    })
+    return parseResponse(response)
+}
+
+export async function deleteAdminReservaRequest(reservaId) {
+    const token = localStorage.getItem("token")
+    const response = await fetch(`${API_URL}/admin/reservas/${reservaId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` }
+    })
+    return parseResponse(response)
+}
