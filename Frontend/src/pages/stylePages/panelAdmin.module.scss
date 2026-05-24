@@ -197,3 +197,14 @@
         color: #fff;
     }
 }
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.formGroup label {
+    font-size: 0.88rem;
+    color: #bdbdbd;
+    font-weight: 600;
+}
