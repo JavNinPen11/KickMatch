@@ -57,7 +57,8 @@ export default function MatchesPage() {
             setMatches(data.map(normalizeMatch))
             setMessage("Partido creado correctamente.")
             setIsFormOpen(false)
-        } catch (error) {
+        } 
+        catch (error) {
             setMessage("No se pudo crear el partido.")
             setIsFormOpen(false)
         }

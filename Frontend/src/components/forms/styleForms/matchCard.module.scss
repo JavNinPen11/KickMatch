@@ -46,6 +46,16 @@
     color: #e5e5e5;
 }
 
+.btnCancel {
+    margin-top: 10px;
+    border-color: rgba(255, 110, 110, 0.7);
+    color: #ff9b9b;
+}
+
+.btnCancel:hover {
+    background-color: rgba(255, 80, 80, 0.12);
+}
+
 @media (max-width: 768px) {
     .matchCard {
         padding: 16px;

@@ -21,7 +21,7 @@ export function MatchCard({ match, user, onJoin }) {
     if (joined) btnText = "Apuntado"
 
     return (
-    <article className={`cardBase ${style.matchCard}`}>
+        <article className={`cardBase ${style.matchCard}`}>
             <div className={style.matchTop}>
                 <h3>{getMatchDisplayName(match.fecha)}</h3>
                 <span className="labelYellow">{match.estado || "ABIERTO"}</span>

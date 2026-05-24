@@ -1,39 +1,71 @@
 import { API_URL } from "./authService"
 
-export async function myMatchesRequest(userId) {
-    const token = localStorage.getItem("token")
+async function parseResponse(response) {
+    const body = await response.json()
+
+    if (!response.ok) {
+        throw new Error(body.message || "Error en la petición")
+    }
+
+    return body
+}
+
+function getToken() {
+    return localStorage.getItem("token")
+}
+
+export async function myMatchesRequest() {
 
     const response = await fetch(`${API_URL}/match/myMatches`, {
         headers: {
-            "Authorization": `Bearer ${token}`
+            "Authorization": `Bearer ${getToken()}`
         }
     })
-    return response.json()
+    return parseResponse(response)
 }
-export async function allMatches() {
-    const response = await fetch(`${API_URL}/match/getMatches`)
 
-    return response.json()
+export async function allMatches() {
+    const response = await fetch(`${API_URL}/match/getMatches`, {
+     method: "GET" , 
+    })
+
+    return parseResponse(response)
 }
 
 export async function createMatchRequest(matchData) {
-    if (!API_URL) {
-        throw new Error("Backend de partidos no configurado")
-    }
 
     const response = await fetch(`${API_URL}/match/createMatch`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${getToken()}`,
         },
         body: JSON.stringify(matchData),
     })
 
-    const body = await response.json()
+    return parseResponse(response)
+}
 
-    if (!response.ok) {
-        throw new Error(body.message || "No se pudo crear el partido")
-    }
+export async function updateMatchRequest(matchId, matchData) {
+    const response = await fetch(`${API_URL}/match/${matchId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getToken()}`,
+        },
+        body: JSON.stringify(matchData),
+    })
 
-    return body
+    return parseResponse(response)
+}
+
+export async function cancelMatchRequest(matchId) {
+    const response = await fetch(`${API_URL}/match/${matchId}/cancel`, {
+        method: "PUT",
+        headers: {
+            Authorization: `Bearer ${getToken()}`,
+        },
+    })
+
+    return parseResponse(response)
 }
