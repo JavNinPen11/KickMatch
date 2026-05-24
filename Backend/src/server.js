@@ -6,6 +6,7 @@ import userRoutes from "./routes/userRoutes.js"
 import matchRoutes from "./routes/matchRoutes.js"
 import adminRoutes from "./routes/adminRoutes.js"
 import fieldCategoryRoutes from "./routes/fieldCategoryRoutes.js"
+import fieldRoutes from "./routes/fieldRoutes.js"
 
 dotenv.config()
 
@@ -18,6 +19,7 @@ app.use("/match", matchRoutes)
 app.use("/admin", adminRoutes)
 app.use("/users", userRoutes)
 app.use("/categories", fieldCategoryRoutes)
+app.use("/fields", fieldRoutes)
 
 app.get("/",(req, res) => {
     res.send("Backend de KickMatch funcionando!!!")
