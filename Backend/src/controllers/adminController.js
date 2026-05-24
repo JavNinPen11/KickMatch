@@ -93,34 +93,58 @@ export async function adminUpdateUser(req, res) {
     }
 }
 export async function adminDeleteUser(req, res) {
+    const userId = Number(req.params.id)
+
     try {
         const user = await prisma.user.findUnique({
-            where: { id: Number(req.params.id) }
+            where: { id: userId }
         })
 
         if (!user) {
-            return res.status(404).json({ ok: false, message: "Usuario no encontrado." })
+            return res.status(404).json({
+                ok: false,
+                message: "Usuario no encontrado."
+            })
         }
 
-        await prisma.matchParticipant.deleteMany({
-            where: { userId: Number(req.params.id) }
+        const createdMatches = await prisma.match.count({
+            where: { creatorId: userId }
         })
 
-        await prisma.match.deleteMany({
-            where: { creatorId: Number(req.params.id) }
+        const joinedMatches = await prisma.matchParticipant.count({
+            where: { userId }
         })
+
+        const reservas = await prisma.reserva.count({
+            where: { userId }
+        })
+
+        if (createdMatches > 0 || joinedMatches > 0 || reservas > 0) {
+            return res.status(400).json({
+                ok: false,
+                message: "No se puede eliminar este usuario porque tiene partidos o reservas asociadas."
+            })
+        }
 
         await prisma.user.delete({
-            where: { id: Number(req.params.id) }
+            where: { id: userId }
         })
 
-        return res.json({ ok: true, message: "Usuario eliminado.", data: null })
+        return res.json({
+            ok: true,
+            message: "Usuario eliminado.",
+            data: null
+        })
 
     } catch (error) {
         console.error("Error adminDeleteUser:", error)
-        return res.status(500).json({ ok: false, message: "Error interno del servidor" })
+        return res.status(500).json({
+            ok: false,
+            message: "Error interno del servidor"
+        })
     }
 }
+
 export const createAdminUser = async (req, res) => {
     const { email, username, nombre, password, rolId } = req.body
 

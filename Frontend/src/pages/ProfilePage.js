@@ -87,7 +87,6 @@ export default function ProfilePage() {
 
             const res = await updateMeRequest(token, payload)
             const data = res?.data || {}
-            console.log("token recibido:", data.token)
 
             if(data.token){
                 login(data.token)
