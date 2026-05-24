@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { Nav } from "../components/nav/Nav"
 import { AuthContext } from "../context/authContext"
-import { getAdminMatchesRequest, getAdminUsersRequest, updateAdminUserRequest, deleteAdminUserRequest } from "../api/adminService"
+import { getAdminMatchesRequest, getAdminUsersRequest, updateAdminUserRequest, deleteAdminUserRequest, cancelAdminMatchRequest, updateAdminMatchRequest, deleteAdminMatchRequest } from "../api/adminService"
 import style from "./stylePages/panelAdmin.module.scss"
 
 function formatAdminDate(dateValue) {
@@ -42,6 +42,11 @@ export default function PanelAdmin() {
         username: "", nombre: "", email: "", password: "", rolId: ""
     })
     const [deleteUser, setDeleteUser] = useState(null)
+    const [editMatch, setEditMatch] = useState(null)
+    const [editMatchForm, setEditMatchForm] = useState({
+        date: "", time: "", location: "", maxPlayers: "", state: ""
+    })
+    const [deleteMatch, setDeleteMatch] = useState(null)
 
     const openEditUser = (user) => {
         setEditUser(user)
@@ -95,7 +100,6 @@ export default function PanelAdmin() {
                     ? { ...u, username: editForm.username, nombre: editForm.nombre, email: editForm.email, rol: { nombre: editForm.rolId === 1 ? "admin" : "usuario" } }
                     : u
             ))
-            setMessage("Usuario actualizado correctamente.")
             closeEditUser()
         } catch (error) {
             setMessage(error.message || "No se pudo actualizar el usuario.")
@@ -112,6 +116,58 @@ export default function PanelAdmin() {
             closeDeleteUser()
         } catch (error) {
             setMessage(error.message || "No se pudo eliminar el usuario.")
+        }
+    }
+    const openEditMatch = (match) => {
+        setEditMatch(match)
+        setEditMatchForm({
+            date: match.date?.split("T")[0] || "",
+            time: match.time?.includes("T")
+                ? match.time.split("T")[1].slice(0, 5)
+                : match.time || "",
+            location: match.location || "",
+            maxPlayers: match.maxPlayers || "",
+            state: match.state || "",
+        })
+    }
+    const closeEditMatch = () => setEditMatch(null)
+
+    const handleUpdateMatch = async () => {
+        const token = localStorage.getItem("token")
+        try {
+            await updateAdminMatchRequest(token, editMatch.id, editMatchForm)
+            setMatches((prev) => prev.map((m) =>
+                m.id === editMatch.id ? { ...m, ...editMatchForm } : m
+            ))
+            closeEditMatch()
+        } catch (error) {
+            setMessage(error.message || "No se pudo actualizar el partido.")
+        }
+    }
+
+    const openDeleteMatch = (match) => setDeleteMatch(match)
+    const closeDeleteMatch = () => setDeleteMatch(null)
+
+    const handleDeleteMatch = async () => {
+        const token = localStorage.getItem("token")
+        try {
+            await deleteAdminMatchRequest(token, deleteMatch.id)
+            setMatches((prev) => prev.filter((m) => m.id !== deleteMatch.id))
+            closeDeleteMatch()
+        } catch (error) {
+            setMessage(error.message || "No se pudo eliminar el partido.")
+        }
+    }
+
+    const handleCancelMatch = async (matchId) => {
+        const token = localStorage.getItem("token")
+        try {
+            await cancelAdminMatchRequest(token, matchId)
+            setMatches((prev) => prev.map((m) =>
+                m.id === matchId ? { ...m, state: "cancelado" } : m
+            ))
+        } catch (error) {
+            setMessage(error.message || "No se pudo cancelar el partido.")
         }
     }
 
@@ -236,15 +292,13 @@ export default function PanelAdmin() {
                                             <td>{match.state}</td>
                                             <td>
                                                 <div className={style.buttons}>
-                                                    <button className={style.btnEdit} type="button">
+                                                    <button className={style.btnEdit} type="button" onClick={() => openEditMatch(match)}>
                                                         Editar
                                                     </button>
-
-                                                    <button className={style.btnCancel} type="button">
+                                                    <button className={style.btnCancel} type="button" onClick={() => handleCancelMatch(match.id)}>
                                                         Cancelar
                                                     </button>
-
-                                                    <button className={style.btnDelete} type="button">
+                                                    <button className={style.btnDelete} type="button" onClick={() => openDeleteMatch(match)}>
                                                         Borrar
                                                     </button>
                                                 </div>
@@ -327,6 +381,68 @@ export default function PanelAdmin() {
                                 <button className="btnTwo" type="button" onClick={closeDeleteUser}>
                                     Cancelar
                                 </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {editMatch && (
+                    <div className={style.deletePopup}>
+                        <div className={style.deletePopupCard}>
+                            <button className={style.btnClose} type="button" onClick={closeEditMatch}>x</button>
+                            <h2>Editar partido</h2>
+
+                            <div className={style.formGroup}>
+                                <label>Fecha</label>
+                                <input className="inputBase" type="date" value={editMatchForm.date}
+                                    onChange={(e) => setEditMatchForm((p) => ({ ...p, date: e.target.value }))} />
+                            </div>
+
+                            <div className={style.formGroup}>
+                                <label>Hora</label>
+                                <input className="inputBase" type="time" value={editMatchForm.time}
+                                    onChange={(e) => setEditMatchForm((p) => ({ ...p, time: e.target.value }))} />
+                            </div>
+
+                            <div className={style.formGroup}>
+                                <label>Ubicación</label>
+                                <input className="inputBase" type="text" value={editMatchForm.location}
+                                    onChange={(e) => setEditMatchForm((p) => ({ ...p, location: e.target.value }))} />
+                            </div>
+
+                            <div className={style.formGroup}>
+                                <label>Máximo de jugadores</label>
+                                <input className="inputBase" type="number" min="2" max="20" value={editMatchForm.maxPlayers}
+                                    onChange={(e) => setEditMatchForm((p) => ({ ...p, maxPlayers: e.target.value }))} />
+                            </div>
+
+                            <div className={style.formGroup}>
+                                <label>Estado</label>
+                                <select className="inputBase" value={editMatchForm.state}
+                                    onChange={(e) => setEditMatchForm((p) => ({ ...p, state: e.target.value }))}>
+                                    <option value="abierto">Abierto</option>
+                                    <option value="completo">Completo</option>
+                                    <option value="cancelado">Cancelado</option>
+                                    <option value="finalizado">Finalizado</option>
+                                </select>
+                            </div>
+
+                            <div className="groupBtns">
+                                <button className="btnOne" type="button" onClick={handleUpdateMatch}>Guardar</button>
+                                <button className="btnTwo" type="button" onClick={closeEditMatch}>Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {deleteMatch && (
+                    <div className={style.deletePopup}>
+                        <div className={style.deletePopupCard}>
+                            <button className={style.btnClose} type="button" onClick={closeDeleteMatch}>x</button>
+                            <h2>Eliminar partido</h2>
+                            <p>¿Seguro que quieres eliminar el partido en <strong>{deleteMatch.location}</strong>? Esta acción no se puede deshacer.</p>
+                            <div className="groupBtns">
+                                <button className="btnOne" type="button" onClick={handleDeleteMatch}>Confirmar</button>
+                                <button className="btnTwo" type="button" onClick={closeDeleteMatch}>Cancelar</button>
                             </div>
                         </div>
                     </div>

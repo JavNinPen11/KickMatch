@@ -16,17 +16,17 @@ export const createMatch = async (req, res) => {
                         userId: req.user.id
                     }
                 }
-        },
-        include: {
-            creator: true,
-            participants: {
-                include: {
-                    user: true
+            },
+            include: {
+                creator: true,
+                participants: {
+                    include: {
+                        user: true
+                    }
                 }
             }
-        }
 
-})
+        })
         return res.status(201).json({
             message: "Partido creado correctamente",
             match: {
@@ -51,7 +51,8 @@ export const getMatches = async (req, res) => {
                 participants: {
                     include: {
                         user: true
-                }}
+                    }
+                }
 
             },
             orderBy: {
@@ -76,11 +77,12 @@ export const myMatches = async (req, res) => {
                 participants: {
                     include: {
                         user: true
-                }}
+                    }
+                }
 
             },
             where: {
-                 OR: [
+                OR: [
                     { creatorId: id },
                     { participants: { some: { userId: id } } }
                 ]
@@ -184,7 +186,9 @@ export const deleteMatch = async (req, res) => {
         if (!isCreator && !isAdmin) {
             return res.status(403).json({ message: "No tienes permiso para eliminar este partido." })
         }
-
+        await prisma.matchParticipant.deleteMany({
+            where: { matchId: Number(id) }
+        })
         await prisma.match.delete({
             where: { id: Number(id) }
         })
@@ -192,6 +196,7 @@ export const deleteMatch = async (req, res) => {
         return res.status(200).json({ message: "Partido eliminado correctamente." })
 
     } catch (error) {
+        console.error("Error deleteMatch:", error)
         return res.status(500).json({ message: "Error al eliminar el partido.", error: error.message })
     }
 }
