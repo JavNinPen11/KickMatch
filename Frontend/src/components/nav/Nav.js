@@ -5,9 +5,9 @@ import { AuthContext } from "../../context/authContext"
 
 export const Nav = ({ variant = "default" }) => {
     const { user, logout } = useContext(AuthContext)
+    
     const isLogged = Boolean(user)
-    const userName = user?.nombre ?? user?.username ?? "Usuario"
-
+    const userName = user?.username || user?.nombre || "Usuario"
     return (
         <nav className={`${style.navMenu} ${variant === "landing" ? style.navLanding : ""}`}>
             <div className={style.navContent}>
@@ -23,8 +23,13 @@ export const Nav = ({ variant = "default" }) => {
                 <div className={style.navLinks}>
                     {isLogged ? (
                         <>
-                            <Link className={style.navLink} to="/profile">
-                                Perfil de {userName}
+                            <Link className={style.userChip} to="/profile">
+                                <span className={style.userAvatar}>
+                                    {userName.charAt(0).toUpperCase()}
+                                </span>
+                                <span className={style.userName}>
+                                    {userName.toUpperCase()} · MI PERFIL
+                                </span>
                             </Link>
 
                             <Link className={style.navLink} to="/">

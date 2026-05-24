@@ -1,14 +1,16 @@
 import bcrypt from "bcrypt";
 import { prisma } from "../../lib/db.js";
+import jwt from "jsonwebtoken"
 
 const userSelect = {
-  id: true,
-  username: true,
-  email: true,
-  nombre: true,
-  creadoEn: true,
-  rol: { select: { nombre: true } },
-};
+    id: true,
+    username: true,
+    nombre: true,
+    email: true,
+    rolId: true,  
+    creadoEn: true,
+    rol: { select: { nombre: true } }
+}
 
 function mapUser(user) {
   return {
@@ -84,13 +86,24 @@ export async function updateMe(req, res) {
       data,
       select: userSelect,
     })
+    const newToken = jwt.sign(
+      {
+        id: updated.id,
+        username: updated.username,
+        nombre: updated.nombre,
+        rolId: updated.rolId 
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    )
 
     return res.json({
       ok: true,
       message: "Usuario actualizado",
-      data: mapUser(updated),
+      data: { ...mapUser(updated), token: newToken }
     })
   } catch (error) {
+    console.error("Error updateMe:", error)
     if (error.code === "P2002") {
       return res.status(400).json({
         ok: false,
@@ -127,24 +140,24 @@ export async function deleteMe(req, res) {
   }
 }
 export const getAllUsers = async (req, res) => {
-    try {
-        const users = await prisma.user.findMany({
-            select: {
-                id: true,
-                nombre: true,
-                username: true,
-                email: true,
-                creadoEn: true,
-                rol: { select: { nombre: true } }
-            },
-            orderBy: {
-                creadoEn: "asc"
-            }
-        })
-        return res.status(200).json({ users })
-    }
-    catch (error) {
-        console.error(error)
-        return res.status(500).json({ message: "Error interno del servidor", error })
-    }
+  try {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        nombre: true,
+        username: true,
+        email: true,
+        creadoEn: true,
+        rol: { select: { nombre: true } }
+      },
+      orderBy: {
+        creadoEn: "asc"
+      }
+    })
+    return res.status(200).json({ users })
+  }
+  catch (error) {
+    console.error(error)
+    return res.status(500).json({ message: "Error interno del servidor", error })
+  }
 }

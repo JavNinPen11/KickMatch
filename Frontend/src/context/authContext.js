@@ -43,7 +43,7 @@ export function AuthProvider ({children}){
         alert("Sesion cerrada con exito")
     }, [])
     return(
-        <AuthContext.Provider value={{user, login, logout}}>
+        <AuthContext.Provider value={{ user, setUser, login, logout }}>
             {!loading && children}
         </AuthContext.Provider>
     )
