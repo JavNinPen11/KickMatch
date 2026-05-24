@@ -1,5 +1,5 @@
 import express from "express"
-import {createMatch, myMatches, deleteMatch, getMatches, updateMatch} from "../controllers/matchController.js"
+import {createMatch, myMatches, deleteMatch, getMatches, updateMatch, cancelMatch} from "../controllers/matchController.js"
 import { verifyToken } from "../middleware/authMiddleware.js"
 
 const router = express.Router()
