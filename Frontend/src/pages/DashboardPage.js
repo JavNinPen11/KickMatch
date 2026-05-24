@@ -5,7 +5,7 @@ import { AuthContext } from "../context/authContext"
 import { getMeRequest } from "../api/userService"
 import { getUserMatchesSummary } from "../utils/userMatches"
 import style from "./stylePages/dashboardPage.module.scss"
-import { myMatchesRequest } from "../api/matchService"
+import { myMatchesRequest, cancelMatchRequest } from "../api/matchService"
 import { normalizeMatch } from "../api/matchUtils"
 import { formatDate } from "../utils/formatUtils"
 
@@ -13,6 +13,25 @@ export const DashboardPage = () => {
     const { user } = useContext(AuthContext)
     const [profile, setProfile] = useState(null)
     const [matches, setMatches] = useState([])
+
+    const handleCancelMatch = async (matchId) => {
+        const confirmCancel = window.confirm("¿Seguro que quieres cancelar este partido?")
+
+        if (!confirmCancel) {
+            return
+        }
+
+        try {
+            await cancelMatchRequest(matchId)
+
+            const response = await myMatchesRequest()
+            const data = Array.isArray(response?.matches) ? response.matches : []
+
+            setMatches(data.map(normalizeMatch))
+        } catch (error) {
+            setMatches([])
+        }
+    }
 
     useEffect(() => {
         const loadProfile = async () => {
@@ -36,7 +55,6 @@ export const DashboardPage = () => {
 
                 const data = Array.isArray(response?.matches) ? response.matches : []
                 setMatches(data.map(normalizeMatch))
-                console.log(data);
 
             }
             catch {
@@ -134,6 +152,7 @@ export const DashboardPage = () => {
                                         <h4>{match.nombre || `Partido el ${formatDate(match.fecha)}`}</h4>
 
                                         <div className={style.matchInfo}>
+
                                             <p>
                                                 <strong>Fecha</strong>
                                                 <span>{formatDate(match.fecha)}</span>
@@ -153,10 +172,22 @@ export const DashboardPage = () => {
                                                 <strong>Estado</strong>
                                                 <span>{match.estado}</span>
                                             </p>
+
                                         </div>
+                                        {String(match.creador?.id) === String(summary.currentUser.id) &&
+                                            match.estado !== "cancelado" ? (
+                                            <button
+                                                className={`btnTwo ${style.btnCancelMatch}`}
+                                                type="button"
+                                                onClick={() => handleCancelMatch(match.id)}
+                                            >
+                                                Cancelar partido
+                                            </button>
+                                        ) : null}
                                     </article>
                                 ))}
                             </div>
+
 
                             <div className={style.agendaAction}>
                                 <Link className="btnOne" to="/matches">

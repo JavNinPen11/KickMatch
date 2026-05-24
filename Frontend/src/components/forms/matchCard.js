@@ -4,7 +4,7 @@ import style from "./styleForms/matchCard.module.scss"
 import { formatMatchDate, getMatchDisplayName } from "../../api/matchUtils.js"
 
 
-export function MatchCard({ match, user, onJoin }) {
+export function MatchCard({ match, user, onJoin, onCancel }) {
     const full = match.jugadoresApuntados >= match.maxJugadores
     const owner = String(match.creador.id) === String(user.id)
 
@@ -21,7 +21,7 @@ export function MatchCard({ match, user, onJoin }) {
     if (joined) btnText = "Apuntado"
 
     return (
-    <article className={`cardBase ${style.matchCard}`}>
+        <article className={`cardBase ${style.matchCard}`}>
             <div className={style.matchTop}>
                 <h3>{getMatchDisplayName(match.fecha)}</h3>
                 <span className="labelYellow">{match.estado || "ABIERTO"}</span>
@@ -51,6 +51,16 @@ export function MatchCard({ match, user, onJoin }) {
             >
                 {btnText}
             </button>
+            
+            {owner && match.estado !== "cancelado" ? (
+                <button
+                    className={`btnTwo ${style.btnCancel}`}
+                    type="button"
+                    onClick={() => onCancel(match.id)}
+                >
+                    Cancelar partido
+                </button>
+            ) : null}
         </article>
     )
 }
