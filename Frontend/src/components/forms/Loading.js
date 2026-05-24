@@ -1,4 +1,4 @@
-import style from "../forms/styleForms/loginForm.module.scss"
+import style from "../forms/styleForms/Loading.module.scss"
 
 export default function Loading() {
     return (
