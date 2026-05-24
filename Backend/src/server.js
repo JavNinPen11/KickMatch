@@ -5,6 +5,7 @@ import authRoutes from "./routes/authRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
 import matchRoutes from "./routes/matchRoutes.js"
 import adminRoutes from "./routes/adminRoutes.js"
+import fieldCategoryRoutes from "./routes/fieldCategoryRoutes.js"
 
 dotenv.config()
 
@@ -15,7 +16,8 @@ app.use(express.json())
 app.use("/auth", authRoutes)
 app.use("/match", matchRoutes)
 app.use("/admin", adminRoutes)
-app.use("/users", userRoutes);
+app.use("/users", userRoutes)
+app.use("/categories", fieldCategoryRoutes)
 
 app.get("/",(req, res) => {
     res.send("Backend de KickMatch funcionando!!!")
