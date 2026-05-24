@@ -5,7 +5,7 @@ import { MatchCard } from "../components/forms/matchCard"
 import { AuthContext } from "../context/authContext"
 import { getMatchUser } from "../utils/userMatches"
 import { normalizeMatch } from "../api/matchUtils"
-import { allMatches, createMatchRequest } from "../api/matchService"
+import { allMatches, createMatchRequest, joinMatchRequest } from "../api/matchService"
 import style from "./stylePages/matchesPage.module.scss"
 
 export default function MatchesPage() {
@@ -40,12 +40,12 @@ export default function MatchesPage() {
 
     const handleCreateMatch = async (newMatch) => {
         const payload = {
-            date: newMatch.fecha,
-            time: newMatch.hora,
+            date: `${newMatch.fecha}T00:00:00.000Z`,
+            time: `1970-01-01T${newMatch.hora}:00.000Z`,
             location: newMatch.ubicacion,
             maxPlayers: newMatch.maxJugadores,
             state: "abierto",
-            creatorId: currentUser.id,
+            creatorId: Number(currentUser.id),
         }
 
         try {
@@ -64,34 +64,20 @@ export default function MatchesPage() {
         }
     }
 
-    const handleJoinMatch = (matchId) => {
-        const nextMatches = matches.map((match) => {
-            const alreadyJoined = match.participantes.some(
-                (participant) => String(participant.id) === String(currentUser.id)
-            )
-            const isOwner = String(match.creador.id) === String(currentUser.id)
-            const isComplete = match.jugadoresApuntados >= match.maxJugadores
+    const handleJoinMatch = async (matchId) => {
+    try {
+        await joinMatchRequest(matchId)
 
-            if (String(match.id) !== String(matchId) || alreadyJoined || isOwner || isComplete) {
-                return match
-            }
+        const response = await allMatches()
+        const data = Array.isArray(response?.matches) ? response.matches : []
 
-            const participantes = [
-                ...match.participantes,
-                { id: currentUser.id, nombre: currentUser.nombre },
-            ]
-
-            const jugadoresApuntados = participantes.length
-
-            return normalizeMatch({
-                ...match,
-                participantes,
-                jugadoresApuntados,
-            })
-        })
-
-        setMatches(nextMatches)
+        setMatches(data.map(normalizeMatch))
+        setMessage("Te has apuntado al partido correctamente.")
+    } catch (error) {
+        setMessage(error.message || "No se pudo apuntar al partido.")
     }
+    }
+    
 
     return (
         <main className="mainPage">

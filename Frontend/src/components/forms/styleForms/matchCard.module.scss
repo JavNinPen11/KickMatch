@@ -55,6 +55,83 @@
 .btnCancel:hover {
     background-color: rgba(255, 80, 80, 0.12);
 }
+.matchModal {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.72);
+}
+
+.matchModalCard {
+    position: relative;
+    width: min(680px, 100%);
+    display: grid;
+    gap: 20px;
+    padding: 32px;
+}
+
+.matchModalCard h2,
+.matchModalCard h3 {
+    margin: 0;
+}
+
+.btnClose {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    border: none;
+    background: transparent;
+    color: #ffffff;
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.matchModalInfo {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.matchModalInfo p {
+    margin: 0;
+    padding: 14px;
+    border-radius: 14px;
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.matchModalInfo strong {
+    color: #f2bb2d;
+}
+
+.playersList {
+    display: grid;
+    gap: 12px;
+}
+
+.playersList ul {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding-left: 20px;
+}
+
+.playersList li {
+    color: #ffffff;
+}
+
+@media (max-width: 768px) {
+    .matchModalInfo {
+        grid-template-columns: 1fr;
+    }
+
+    .matchModalCard {
+        padding: 24px;
+    }
+}
 
 @media (max-width: 768px) {
     .matchCard {

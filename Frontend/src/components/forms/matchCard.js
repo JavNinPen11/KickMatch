@@ -1,10 +1,10 @@
-
-import { Link } from "react-router-dom"
+import { useState } from "react"
 import style from "./styleForms/matchCard.module.scss"
 import { formatMatchDate, getMatchDisplayName } from "../../api/matchUtils.js"
 
 
 export function MatchCard({ match, user, onJoin }) {
+    const [showDetails, setShowDetails] = useState(false)
     const full = match.jugadoresApuntados >= match.maxJugadores
     const owner = String(match.creador.id) === String(user.id)
 
@@ -39,9 +39,13 @@ export function MatchCard({ match, user, onJoin }) {
                 ) : null}
             </div>
 
-            <Link className={`btnTwo ${style.btnDetails}`} to={`/matches/${match.id}`}>
+            <button
+                className={`btnTwo ${style.btnDetails}`}
+                type="button"
+                onClick={() => setShowDetails(true)}
+            >
                 Ver partido
-            </Link>
+            </button>
 
             <button
                 className={`btnOne ${style.btnJoin}`}
@@ -51,6 +55,49 @@ export function MatchCard({ match, user, onJoin }) {
             >
                 {btnText}
             </button>
+            {showDetails ? (
+                <div className={style.matchModal}>
+                    <article className={`cardBase ${style.matchModalCard}`}>
+                        <button
+                            className={style.btnClose}
+                            type="button"
+                            onClick={() => setShowDetails(false)}
+                            aria-label="Cerrar"
+                        >
+                            x
+                        </button>
+
+                        <span className="labelYellow">Detalle del partido</span>
+
+                        <h2>{getMatchDisplayName(match.fecha)}</h2>
+
+                        <div className={style.matchModalInfo}>
+                            <p><strong>Fecha:</strong> {formatMatchDate(match.fecha)}</p>
+                            <p><strong>Hora:</strong> {match.hora}</p>
+                            <p><strong>Ubicación:</strong> {match.ubicacion}</p>
+                            <p><strong>Organizador:</strong> {match.creador.nombre}</p>
+                            <p><strong>Estado:</strong> {match.estado}</p>
+                            <p><strong>Jugadores:</strong> {match.jugadoresApuntados}/{match.maxJugadores}</p>
+                        </div>
+
+                        <div className={style.playersList}>
+                            <h3>Participantes</h3>
+
+                            {match.participantes.length > 0 ? (
+                                <ul>
+                                    {match.participantes.map((participant) => (
+                                        <li key={participant.id}>
+                                            {participant.nombre || participant.username || "Jugador sin nombre"}
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p className="textBase">Todavía no hay participantes.</p>
+                            )}
+                        </div>
+                    </article>
+                </div>
+            ) : null}
         </article>
     )
 }

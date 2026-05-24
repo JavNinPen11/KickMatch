@@ -6,7 +6,7 @@ import { prisma } from "../../lib/db.js"
 
 const register = async (req, res) => {
 
-    const { email, password, username } = req.body
+    const { email, password, username, nonmbre } = req.body
 
     try {
         const hashedPassword = bcrypt.hashSync(password, 10)
@@ -15,7 +15,8 @@ const register = async (req, res) => {
             data: {
                 email,
                 password: hashedPassword,
-                username
+                username,
+                nombre,
             }
         })
 

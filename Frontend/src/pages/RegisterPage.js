@@ -9,9 +9,9 @@ function Register (){
     const {login} = useContext(AuthContext)
     const navigate = useNavigate()
 
-    const handleRegister = async ({email, username, password}) => {
+    const handleRegister = async ({email, username, password, nombre }) => {
         try{            
-            const response = await registerRequest(email,username,password)
+            const response = await registerRequest(email,username,password, nombre)
 
             if(response.token){
                 login(response.token)
