@@ -104,3 +104,15 @@ export async function createAdminUserRequest(token, formData) {
 
     return parseResponse(response)
 }
+export async function createAdminMatchRequest(token, formData) {
+    const response = await fetch(`${API_URL}/admin/matches`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(formData),
+    })
+
+    return parseResponse(response)
+}

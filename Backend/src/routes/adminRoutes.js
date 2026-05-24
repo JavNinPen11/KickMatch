@@ -1,5 +1,5 @@
 import express from "express"
-import { adminDeleteUser, adminUpdateUser, createAdminUser, getAllMatches } from "../controllers/adminController.js"
+import { adminDeleteUser, adminUpdateUser, createAdminMatch, createAdminUser, getAllMatches } from "../controllers/adminController.js"
 import { verifyToken } from "../middleware/authMiddleware.js"
 import { isAdmin } from "../middleware/adminMiddleware.js"
 import { cancelMatch, deleteMatch, updateMatch } from "../controllers/matchController.js"
@@ -13,6 +13,7 @@ router.get("/role", verifyToken, (req, res) => {
     res.json({ role: req.user.role })
 })
 router.post("/users", verifyToken, isAdmin, createAdminUser)
+router.post("/matches", verifyToken, isAdmin, createAdminMatch)
 router.delete("/matches/:id", verifyToken, isAdmin, deleteMatch)
 router.delete("/users/:id", verifyToken, isAdmin, adminDeleteUser)
 router.put("/matches/:id/cancel", verifyToken, isAdmin, cancelMatch)

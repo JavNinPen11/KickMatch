@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { Nav } from "../components/nav/Nav"
 import { AuthContext } from "../context/authContext"
-import { getAdminMatchesRequest, getAdminUsersRequest, updateAdminUserRequest, deleteAdminUserRequest, cancelAdminMatchRequest, updateAdminMatchRequest, deleteAdminMatchRequest, createAdminUserRequest } from "../api/adminService"
+import { getAdminMatchesRequest, getAdminUsersRequest, updateAdminUserRequest, deleteAdminUserRequest, cancelAdminMatchRequest, updateAdminMatchRequest, deleteAdminMatchRequest, createAdminUserRequest, createAdminMatchRequest } from "../api/adminService"
 import style from "./stylePages/panelAdmin.module.scss"
 
 function formatAdminDate(dateValue) {
@@ -51,6 +51,10 @@ export default function PanelAdmin() {
     const [createUserForm, setCreateUserForm] = useState({
         username: "", nombre: "", email: "", password: "", rolId: 2
     })
+    const [showCreateMatch, setShowCreateMatch] = useState(false)
+    const [createMatchForm, setCreateMatchForm] = useState({
+        date: "", time: "", location: "", maxPlayers: "", state: "abierto", creatorId: ""
+    })
 
     const openEditUser = (user) => {
         setEditUser(user)
@@ -90,8 +94,8 @@ export default function PanelAdmin() {
         loadData()
     }, [user])
 
-    const openMatches = matches.filter((match) => match.state === "Abierto").length
-    const cancelMatches = matches.filter((match) => match.state === "Cancelado").length
+    const openMatches = matches.filter((match) => match.state === "abierto").length
+    const cancelMatches = matches.filter((match) => match.state === "cancelado").length
 
     const closeEditUser = () => setEditUser(null)
 
@@ -117,6 +121,7 @@ export default function PanelAdmin() {
         try {
             await deleteAdminUserRequest(token, deleteUser.id)
             setUsers((prev) => prev.filter((u) => u.id !== deleteUser.id))
+            setMatches((prev) => prev.filter((m) => m.creator?.id !== deleteUser.id))
             closeDeleteUser()
         } catch (error) {
             setMessage(error.message || "No se pudo eliminar el usuario.")
@@ -191,6 +196,23 @@ export default function PanelAdmin() {
             closeCreateUser()
         } catch (error) {
             setMessage(error.message || "No se pudo crear el usuario.")
+        }
+    }
+    const openCreateMatch = () => setShowCreateMatch(true)
+    const closeCreateMatch = () => {
+        setShowCreateMatch(false)
+        setCreateMatchForm({ date: "", time: "", location: "", maxPlayers: "", state: "abierto", creatorId: "" })
+    }
+
+    const handleCreateMatch = async () => {
+        const token = localStorage.getItem("token")
+        try {
+            const newMatch = await createAdminMatchRequest(token, createMatchForm)
+            setMatches((prev) => [...prev, newMatch])
+            setMessage("Partido creado correctamente.")
+            closeCreateMatch()
+        } catch (error) {
+            setMessage(error.message || "No se pudo crear el partido.")
         }
     }
     return (
@@ -291,10 +313,9 @@ export default function PanelAdmin() {
                 <section className={`cardBase ${style.matches}`}>
                     <div className={style.sectionTop}>
                         <h2>Partidos</h2>
-
-                        <p>
-                            Listado básico de partidos creados en la plataforma.
-                        </p>
+                        <button className="btnOne" type="button" onClick={openCreateMatch}>
+                            Crear partido
+                        </button>
                     </div>
 
                     <div className={style.tableBox}>
@@ -517,6 +538,66 @@ export default function PanelAdmin() {
                             <div className="groupBtns">
                                 <button className="btnOne" type="button" onClick={handleCreateUser}>Crear</button>
                                 <button className="btnTwo" type="button" onClick={closeCreateUser}>Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {showCreateMatch && (
+                    <div className={style.deletePopup}>
+                        <div className={style.deletePopupCard}>
+                            <button className={style.btnClose} type="button" onClick={closeCreateMatch}>x</button>
+                            <h2>Crear partido</h2>
+
+                            <div className={style.formGroup}>
+                                <label>Fecha</label>
+                                <input className="inputBase" type="date" value={createMatchForm.date}
+                                    onChange={(e) => setCreateMatchForm((p) => ({ ...p, date: e.target.value }))} />
+                            </div>
+
+                            <div className={style.formGroup}>
+                                <label>Hora</label>
+                                <input className="inputBase" type="time" value={createMatchForm.time}
+                                    onChange={(e) => setCreateMatchForm((p) => ({ ...p, time: e.target.value }))} />
+                            </div>
+
+                            <div className={style.formGroup}>
+                                <label>Ubicación</label>
+                                <input className="inputBase" type="text" value={createMatchForm.location}
+                                    onChange={(e) => setCreateMatchForm((p) => ({ ...p, location: e.target.value }))} />
+                            </div>
+
+                            <div className={style.formGroup}>
+                                <label>Máximo de jugadores</label>
+                                <input className="inputBase" type="number" min="2" max="20" value={createMatchForm.maxPlayers}
+                                    onChange={(e) => setCreateMatchForm((p) => ({ ...p, maxPlayers: e.target.value }))} />
+                            </div>
+
+                            <div className={style.formGroup}>
+                                <label>Estado</label>
+                                <select className="inputBase" value={createMatchForm.state}
+                                    onChange={(e) => setCreateMatchForm((p) => ({ ...p, state: e.target.value }))}>
+                                    <option value="abierto">Abierto</option>
+                                    <option value="completo">Completo</option>
+                                    <option value="cancelado">Cancelado</option>
+                                    <option value="finalizado">Finalizado</option>
+                                </select>
+                            </div>
+                            <div className={style.formGroup}>
+                                <label>Creador</label>
+                                <select className="inputBase" value={createMatchForm.creatorId}
+                                    onChange={(e) => setCreateMatchForm((p) => ({ ...p, creatorId: Number(e.target.value) }))}>
+                                    <option value="">Selecciona un usuario</option>
+                                    {users.map((user) => (
+                                        <option key={user.id} value={user.id}>
+                                            {user.username}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="groupBtns">
+                                <button className="btnOne" type="button" onClick={handleCreateMatch}>Crear</button>
+                                <button className="btnTwo" type="button" onClick={closeCreateMatch}>Cancelar</button>
                             </div>
                         </div>
                     </div>

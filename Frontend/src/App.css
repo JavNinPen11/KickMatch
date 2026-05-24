@@ -33,3 +33,7 @@ h1, h2, h3, .title, .score, .ranking {
     text-transform: uppercase;
     letter-spacing: 0.04em;
 }
+select.inputBase option {
+    background-color: #1a1a1a;
+    color: #e8e8e8;
+}
