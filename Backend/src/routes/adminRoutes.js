@@ -15,5 +15,6 @@ router.delete("/matches/:id", verifyToken, isAdmin, deleteMatch)
 router.put("/matches/:id/cancel", verifyToken, isAdmin, cancelMatch)
 router.get("/getUsers", verifyToken, isAdmin, getAllUsers)
 router.put("/users/:id", verifyToken, isAdmin, adminUpdateUser)
+router.delete("/users/:id", verifyToken, isAdmin, adminDeleteUser)
 
 export default router

@@ -69,3 +69,23 @@ export async function adminUpdateUser(req, res) {
         return res.status(500).json({ ok: false, message: "Error interno del servidor" })
     }
 }
+export async function adminDeleteUser(req, res) {
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id: Number(req.params.id) }
+        })
+
+        if (!user) {
+            return res.status(404).json({ ok: false, message: "Usuario no encontrado." })
+        }
+
+        await prisma.user.delete({
+            where: { id: Number(req.params.id) }
+        })
+
+        return res.json({ ok: true, message: "Usuario eliminado.", data: null })
+
+    } catch (error) {
+        return res.status(500).json({ ok: false, message: "Error interno del servidor" })
+    }
+}
