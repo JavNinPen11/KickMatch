@@ -6,7 +6,7 @@ import { getMeRequest, updateMeRequest, deleteMeRequest } from "../api/userServi
 import style from "./stylePages/profilePage.module.scss"
 
 export default function ProfilePage() {
-    const { user, logout } = useContext(AuthContext)
+    const { logout, login } = useContext(AuthContext)
     const navigate = useNavigate()
 
     const [form, setForm] = useState({
@@ -25,7 +25,7 @@ export default function ProfilePage() {
 
     useEffect(() => {
         const loadProfile = async () => {
-        const token = localStorage.getItem("token")
+            const token = localStorage.getItem("token")
 
             if (!token) {
                 setIsLoading(false)
@@ -36,6 +36,7 @@ export default function ProfilePage() {
                 const res = await getMeRequest(token)
                 const data = res?.data || {}
 
+
                 setForm({
                     username: data.username || "",
                     nombre: data.nombre || "",
@@ -44,17 +45,17 @@ export default function ProfilePage() {
                 })
 
                 setMessage("")
-            } 
+            }
             catch (error) {
                 setMessage("No se pudieron cargar tus datos.")
-            } 
+            }
             finally {
                 setIsLoading(false)
             }
         }
 
         loadProfile()
-    }, [user])
+    }, [])
 
     const changeInput = (event) => {
         const { name, value } = event.target
@@ -69,7 +70,7 @@ export default function ProfilePage() {
         event.preventDefault()
 
         const token = localStorage.getItem("token")
-        if (token) {
+        if (!token) {
             setMessage("No hay sesión activa.")
             return
         }
@@ -77,8 +78,7 @@ export default function ProfilePage() {
         setIsSaving(true)
         setMessage("")
 
-        try 
-        {
+        try {
             const payload = {
                 username: form.username,
                 nombre: form.nombre,
@@ -87,6 +87,11 @@ export default function ProfilePage() {
 
             const res = await updateMeRequest(token, payload)
             const data = res?.data || {}
+            console.log("token recibido:", data.token)
+
+            if(data.token){
+                login(data.token)
+            }
 
             setForm({
                 username: data.username || "",
@@ -94,11 +99,10 @@ export default function ProfilePage() {
                 email: data.email || "",
                 rol: data.rol || "Jugador",
             })
-
+            
             setMessage("Datos actualizados correctamente.")
-        } 
-        catch (error) 
-        {
+        }
+        catch (error) {
             setMessage(error.message || "No se pudieron guardar los cambios.")
         } finally {
             setIsSaving(false)
@@ -123,7 +127,7 @@ export default function ProfilePage() {
     const deleteAccount = async () => {
         const token = localStorage.getItem("token")
 
-        if (token) {
+        if (!token) {
             setMessage("No hay sesión activa.")
             return
         }
@@ -140,10 +144,10 @@ export default function ProfilePage() {
             await deleteMeRequest(token)
             logout()
             navigate("/register")
-        } 
+        }
         catch (error) {
             setMessage(error.message || "No se pudo eliminar la cuenta.")
-        } 
+        }
         finally {
             setIsDeleting(false)
         }

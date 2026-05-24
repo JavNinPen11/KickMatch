@@ -5,9 +5,9 @@ import { AuthContext } from "../../context/authContext"
 
 export const Nav = ({ variant = "default" }) => {
     const { user, logout } = useContext(AuthContext)
+    
     const isLogged = Boolean(user)
-    const userName = user?.nombre ?? user?.username ?? "Usuario"
-
+    const userName = user?.username || user?.nombre || "Usuario"
     return (
         <nav className={`${style.navMenu} ${variant === "landing" ? style.navLanding : ""}`}>
             <div className={style.navContent}>
