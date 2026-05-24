@@ -41,6 +41,7 @@ model User {
 
   partidosCreados Match[]            @relation("CreadorPartido")
   partidosUnidos  MatchParticipant[]
+  reservas Reserva[]
 }
 
 model Equipo {
@@ -71,4 +72,55 @@ model MatchParticipant {
   user    User  @relation(fields: [userId], references: [id])
 
   @@unique([matchId, userId]) // un usuario no puede apuntarse dos veces
+}
+model FieldCategory {
+  id          Int     @id @default(autoincrement())
+  nombre      String  @db.VarChar(100)
+  descripcion String? @db.Text
+
+  campos Field[]
+}
+
+model Field {
+  id          Int            @id @default(autoincrement())
+  nombre      String         @db.VarChar(100)
+  descripcion String?        @db.Text
+  precio      Decimal        @db.Decimal(10, 2)
+  imagen      String?        @db.VarChar(255)
+  escaparate  Boolean        @default(false)
+  categoryId  Int
+  category    FieldCategory  @relation(fields: [categoryId], references: [id])
+  creadoEn    DateTime       @default(now())
+
+  reservas ReservaLinea[]
+}
+
+model Reserva {
+  id          Int            @id @default(autoincrement())
+  userId      Int
+  user        User           @relation(fields: [userId], references: [id])
+  estado      EstadoReserva  @default(pendiente)
+  creadoEn    DateTime       @default(now())
+  confirmadoEn DateTime?
+
+  lineas ReservaLinea[]
+}
+
+model ReservaLinea {
+  id        Int      @id @default(autoincrement())
+  reservaId Int
+  reserva   Reserva  @relation(fields: [reservaId], references: [id])
+  fieldId   Int
+  field     Field    @relation(fields: [fieldId], references: [id])
+  fecha     DateTime
+  horaInicio String  @db.VarChar(5)
+  horaFin    String  @db.VarChar(5)
+  cantidad  Int      @default(1)
+  precio    Decimal  @db.Decimal(10, 2)
+}
+
+enum EstadoReserva {
+  pendiente
+  confirmada
+  cancelada
 }
