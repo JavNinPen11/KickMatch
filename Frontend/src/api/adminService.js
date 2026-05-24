@@ -92,3 +92,15 @@ export async function deleteAdminMatchRequest(token, matchId) {
 
     return parseResponse(response)
 }
+export async function createAdminUserRequest(token, formData) {
+    const response = await fetch(`${API_URL}/admin/users`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(formData),
+    })
+
+    return parseResponse(response)
+}

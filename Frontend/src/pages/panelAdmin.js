@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { Nav } from "../components/nav/Nav"
 import { AuthContext } from "../context/authContext"
-import { getAdminMatchesRequest, getAdminUsersRequest, updateAdminUserRequest, deleteAdminUserRequest, cancelAdminMatchRequest, updateAdminMatchRequest, deleteAdminMatchRequest } from "../api/adminService"
+import { getAdminMatchesRequest, getAdminUsersRequest, updateAdminUserRequest, deleteAdminUserRequest, cancelAdminMatchRequest, updateAdminMatchRequest, deleteAdminMatchRequest, createAdminUserRequest } from "../api/adminService"
 import style from "./stylePages/panelAdmin.module.scss"
 
 function formatAdminDate(dateValue) {
@@ -47,6 +47,10 @@ export default function PanelAdmin() {
         date: "", time: "", location: "", maxPlayers: "", state: ""
     })
     const [deleteMatch, setDeleteMatch] = useState(null)
+    const [showCreateUser, setShowCreateUser] = useState(false)
+    const [createUserForm, setCreateUserForm] = useState({
+        username: "", nombre: "", email: "", password: "", rolId: 2
+    })
 
     const openEditUser = (user) => {
         setEditUser(user)
@@ -170,7 +174,25 @@ export default function PanelAdmin() {
             setMessage(error.message || "No se pudo cancelar el partido.")
         }
     }
+    const openCreateUser = () => setShowCreateUser(true)
+    const closeCreateUser = () => {
+        setShowCreateUser(false)
+        setCreateUserForm({ username: "", nombre: "", email: "", password: "", rolId: 2 })
+    }
 
+    const handleCreateUser = async () => {
+        const token = localStorage.getItem("token")
+        try {
+            const newUser = await createAdminUserRequest(token, createUserForm)
+            setUsers((prev) => [...prev, {
+                ...newUser,
+                rol: { nombre: createUserForm.rolId === 1 ? "admin" : "usuario" }
+            }])
+            closeCreateUser()
+        } catch (error) {
+            setMessage(error.message || "No se pudo crear el usuario.")
+        }
+    }
     return (
         <main className="mainPage">
             <Nav />
@@ -218,6 +240,12 @@ export default function PanelAdmin() {
                         <p>
                             Listado básico de usuarios registrados.
                         </p>
+                    </div>
+                    <div className={style.sectionTop}>
+                        <h2>Usuarios</h2>
+                        <button className="btnOne" type="button" onClick={openCreateUser}>
+                            Crear usuario
+                        </button>
                     </div>
 
                     <div className={style.tableBox}>
@@ -443,6 +471,52 @@ export default function PanelAdmin() {
                             <div className="groupBtns">
                                 <button className="btnOne" type="button" onClick={handleDeleteMatch}>Confirmar</button>
                                 <button className="btnTwo" type="button" onClick={closeDeleteMatch}>Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {showCreateUser && (
+                    <div className={style.deletePopup}>
+                        <div className={style.deletePopupCard}>
+                            <button className={style.btnClose} type="button" onClick={closeCreateUser}>x</button>
+                            <h2>Crear usuario</h2>
+
+                            <div className={style.formGroup}>
+                                <label>Username</label>
+                                <input className="inputBase" value={createUserForm.username}
+                                    onChange={(e) => setCreateUserForm((p) => ({ ...p, username: e.target.value }))} />
+                            </div>
+
+                            <div className={style.formGroup}>
+                                <label>Nombre</label>
+                                <input className="inputBase" value={createUserForm.nombre}
+                                    onChange={(e) => setCreateUserForm((p) => ({ ...p, nombre: e.target.value }))} />
+                            </div>
+
+                            <div className={style.formGroup}>
+                                <label>Email</label>
+                                <input className="inputBase" type="email" value={createUserForm.email}
+                                    onChange={(e) => setCreateUserForm((p) => ({ ...p, email: e.target.value }))} />
+                            </div>
+
+                            <div className={style.formGroup}>
+                                <label>Contraseña</label>
+                                <input className="inputBase" type="password" value={createUserForm.password}
+                                    onChange={(e) => setCreateUserForm((p) => ({ ...p, password: e.target.value }))} />
+                            </div>
+
+                            <div className={style.formGroup}>
+                                <label>Rol</label>
+                                <select className="inputBase" value={createUserForm.rolId}
+                                    onChange={(e) => setCreateUserForm((p) => ({ ...p, rolId: Number(e.target.value) }))}>
+                                    <option value={2}>Jugador</option>
+                                    <option value={1}>Admin</option>
+                                </select>
+                            </div>
+
+                            <div className="groupBtns">
+                                <button className="btnOne" type="button" onClick={handleCreateUser}>Crear</button>
+                                <button className="btnTwo" type="button" onClick={closeCreateUser}>Cancelar</button>
                             </div>
                         </div>
                     </div>

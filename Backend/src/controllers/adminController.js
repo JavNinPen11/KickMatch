@@ -110,3 +110,36 @@ export async function adminDeleteUser(req, res) {
         return res.status(500).json({ ok: false, message: "Error interno del servidor" })
     }
 }
+export const createAdminUser = async (req, res) => {
+    const { email, username, nombre, password, rolId } = req.body
+
+    if (!email || !username || !password) {
+        return res.status(400).json({ ok: false, message: "Email, username y password son obligatorios." })
+    }
+
+    try {
+        const hashed = await bcrypt.hash(password, 10)
+
+        const user = await prisma.user.create({
+            data: {
+                email: email.trim().toLowerCase(),
+                username: username.trim(),
+                nombre: nombre?.trim() || "Sin nombre",
+                password: hashed,
+                rolId: Number(rolId) || 2,
+            },
+            select: {
+                ...userSelect,
+                rol: { select: { nombre: true } }
+            },
+        })
+
+        return res.status(201).json(mapUser(user))
+
+    } catch (error) {
+        if (error.code === "P2002") {
+            return res.status(400).json({ ok: false, message: "Email o username ya existe." })
+        }
+        return res.status(500).json({ ok: false, message: "Error interno del servidor." })
+    }
+}
