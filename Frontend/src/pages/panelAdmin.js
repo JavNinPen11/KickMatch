@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { Nav } from "../components/nav/Nav"
 import { AuthContext } from "../context/authContext"
-import { getAdminMatchesRequest } from "../api/adminService"
+import { getAdminMatchesRequest, getAdminUsersRequest, updateAdminUserRequest, deleteAdminUserRequest } from "../api/adminService"
 import style from "./stylePages/panelAdmin.module.scss"
 
 function formatAdminDate(dateValue) {
@@ -33,40 +33,87 @@ function formatAdminTime(timeValue) {
 export default function PanelAdmin() {
     const { user } = useContext(AuthContext)
 
-    const [users] = useState([])
+    const [users, setUsers] = useState([])
     const [matches, setMatches] = useState([])
     const [message, setMessage] = useState("")
     const [isLoadingMatches, setIsLoadingMatches] = useState(true)
+    const [editUser, setEditUser] = useState(null)
+    const [editForm, setEditForm] = useState({
+        username: "", nombre: "", email: "", password: "", rolId: ""
+    })
+    const [deleteUser, setDeleteUser] = useState(null)
+
+    const openEditUser = (user) => {
+        setEditUser(user)
+        setEditForm({
+            username: user.username || "",
+            nombre: user.nombre || "",
+            email: user.email || "",
+            password: "",
+            rolId: user.rol?.nombre === "admin" ? 1 : 2,
+        })
+    }
 
     useEffect(() => {
-        const loadMatches = async () => {
-            console.log(user);
-            console.log(user.token);
-            
-            
+        const loadData = async () => {
             if (!user) {
                 setIsLoadingMatches(false)
                 return
             }
 
+            const token = localStorage.getItem("token")
+
             try {
                 const data = await getAdminMatchesRequest()
+                const usersData = await getAdminUsersRequest(token)
                 setMatches(data)
+                setUsers(usersData)
                 setMessage("")
-            } 
+            }
             catch (error) {
-                setMessage(error.message || "No se pudieron cargar los partidos.")
-            } 
+                setMessage(error.message || "No se pudieron cargar los datos.")
+            }
             finally {
                 setIsLoadingMatches(false)
             }
         }
 
-        loadMatches()
+        loadData()
     }, [user])
 
     const openMatches = matches.filter((match) => match.state === "Abierto").length
     const cancelMatches = matches.filter((match) => match.state === "Cancelado").length
+
+    const closeEditUser = () => setEditUser(null)
+
+    const handleUpdateUser = async () => {
+        const token = localStorage.getItem("token")
+        try {
+            await updateAdminUserRequest(token, editUser.id, editForm)
+            setUsers((prev) => prev.map((u) =>
+                u.id === editUser.id
+                    ? { ...u, username: editForm.username, nombre: editForm.nombre, email: editForm.email, rol: { nombre: editForm.rolId === 1 ? "admin" : "usuario" } }
+                    : u
+            ))
+            setMessage("Usuario actualizado correctamente.")
+            closeEditUser()
+        } catch (error) {
+            setMessage(error.message || "No se pudo actualizar el usuario.")
+        }
+    }
+    const openDeleteUser = (user) => setDeleteUser(user)
+    const closeDeleteUser = () => setDeleteUser(null)
+
+    const handleDeleteUser = async () => {
+        const token = localStorage.getItem("token")
+        try {
+            await deleteAdminUserRequest(token, deleteUser.id)
+            setUsers((prev) => prev.filter((u) => u.id !== deleteUser.id))
+            closeDeleteUser()
+        } catch (error) {
+            setMessage(error.message || "No se pudo eliminar el usuario.")
+        }
+    }
 
     return (
         <main className="mainPage">
@@ -129,11 +176,29 @@ export default function PanelAdmin() {
                             </thead>
 
                             <tbody>
-                                <tr>
-                                    <td colSpan="4">
-                                        No hay usuarios conectados todavía.
-                                    </td>
-                                </tr>
+                                {users.length > 0 ? (
+                                    users.map((user) => (
+                                        <tr key={user.id}>
+                                            <td>{user.username}</td>
+                                            <td>{user.email}</td>
+                                            <td>{user.rol?.nombre || "Sin rol"}</td>
+                                            <td>
+                                                <div className={style.buttons}>
+                                                    <button className={style.btnDelete} type="button" onClick={() => openDeleteUser(user)}>
+                                                        Borrar
+                                                    </button>
+                                                    <button className={style.btnEdit} type="button" onClick={() => openEditUser(user)}>
+                                                        Editar
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="4">No hay usuarios registrados todavía.</td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
                     </div>
@@ -199,6 +264,73 @@ export default function PanelAdmin() {
                         </table>
                     </div>
                 </section>
+                {editUser && (
+                    <div className={style.deletePopup}>
+                        <div className={style.deletePopupCard}>
+                            <button className={style.btnClose} type="button" onClick={closeEditUser}>x</button>
+                            <h2>Editar usuario</h2>
+
+                            <div className={style.formGroup}>
+                                <label>Username</label>
+                                <input className="inputBase" value={editForm.username}
+                                    onChange={(e) => setEditForm((p) => ({ ...p, username: e.target.value }))} />
+                            </div>
+
+                            <div className={style.formGroup}>
+                                <label>Nombre</label>
+                                <input className="inputBase" value={editForm.nombre}
+                                    onChange={(e) => setEditForm((p) => ({ ...p, nombre: e.target.value }))} />
+                            </div>
+
+                            <div className={style.formGroup}>
+                                <label>Email</label>
+                                <input className="inputBase" type="email" value={editForm.email}
+                                    onChange={(e) => setEditForm((p) => ({ ...p, email: e.target.value }))} />
+                            </div>
+
+                            <div className={style.formGroup}>
+                                <label>Contraseña (dejar vacío para no cambiar)</label>
+                                <input className="inputBase" type="password" value={editForm.password}
+                                    onChange={(e) => setEditForm((p) => ({ ...p, password: e.target.value }))} />
+                            </div>
+
+                            <div className={style.formGroup}>
+                                <label>Rol</label>
+                                <select className="inputBase" value={editForm.rolId}
+                                    onChange={(e) => setEditForm((p) => ({ ...p, rolId: Number(e.target.value) }))}>
+                                    <option value={2}>Jugador</option>
+                                    <option value={1}>Admin</option>
+                                </select>
+                            </div>
+
+                            <div className="groupBtns">
+                                <button className="btnOne" type="button" onClick={handleUpdateUser}>
+                                    Guardar cambios
+                                </button>
+                                <button className="btnTwo" type="button" onClick={closeEditUser}>
+                                    Cancelar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {deleteUser && (
+                    <div className={style.deletePopup}>
+                        <div className={style.deletePopupCard}>
+                            <button className={style.btnClose} type="button" onClick={closeDeleteUser}>x</button>
+                            <h2>Eliminar usuario</h2>
+                            <p>¿Seguro que quieres eliminar a <strong>{deleteUser.username}</strong>? Esta acción no se puede deshacer.</p>
+                            <div className="groupBtns">
+                                <button className="btnOne" type="button" onClick={handleDeleteUser}>
+                                    Confirmar
+                                </button>
+                                <button className="btnTwo" type="button" onClick={closeDeleteUser}>
+                                    Cancelar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </main>
     )

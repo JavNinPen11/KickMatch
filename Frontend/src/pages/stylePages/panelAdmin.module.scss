@@ -149,3 +149,62 @@
         padding: 22px;
     }
 }
+.deletePopup {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.deletePopupCard {
+    background-color: #1a1a1a;
+    border: 1px solid rgba(242, 187, 45, 0.2);
+    border-radius: 16px;
+    padding: 32px;
+    width: min(480px, 90vw);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+}
+
+.deletePopupCard h2 {
+    margin: 0;
+    font-size: 1.6rem;
+}
+
+.deletePopupCard p {
+    margin: 0;
+    color: #d2d2d2;
+}
+
+.btnClose {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: transparent;
+    border: none;
+    color: #d2d2d2;
+    font-size: 1.1rem;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 700;
+
+    &:hover {
+        color: #fff;
+    }
+}
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.formGroup label {
+    font-size: 0.88rem;
+    color: #bdbdbd;
+    font-weight: 600;
+}
