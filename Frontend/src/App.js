@@ -16,6 +16,7 @@ import { Footer } from "./components/forms/Footer"
 import AboutPage from "./pages/AboutPage"
 import { ScrollToTop } from "./components/scrollTop/ScrollTop"
 import ContactPage from "./pages/ContactPage"
+import TermsPage from "./pages/TermsPage"
 
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
           } />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/terms" element={<TermsPage />} />
         </Routes>
         <Footer/>
       </Router>
