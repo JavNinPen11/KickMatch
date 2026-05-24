@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/authContext";
 import { API_URL } from "../../api/authService";
 import { Navigate } from "react-router-dom";
+import Loading from "../forms/Loading";
 
 function AdminRoute({children}){
     const {logout} = useContext(AuthContext)
@@ -31,7 +32,7 @@ function AdminRoute({children}){
         }
         verifyRole()
     }, [logout])
-    if(status === "checking") return <p>Verificando permisos...</p>
+    if(status === "checking") return <Loading/>
     if(status === "unauthorized") return <Navigate to="/" replace/>
     return children
 }

@@ -2,7 +2,7 @@ import { log } from "node:console"
 import { prisma } from "../../lib/db.js"
 
 export const createMatch = async (req, res) => {
-    const { date, time, location, maxPlayers, state } = req.body  // quita creatorId
+    const { date, time, location, maxPlayers, state } = req.body
     try {
         const match = await prisma.match.create({
             data: {

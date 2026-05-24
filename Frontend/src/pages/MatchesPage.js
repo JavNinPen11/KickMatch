@@ -7,6 +7,7 @@ import { getMatchUser } from "../utils/userMatches"
 import { normalizeMatch } from "../api/matchUtils"
 import { allMatches, createMatchRequest, joinMatchRequest, leaveMatchRequest } from "../api/matchService"
 import style from "./stylePages/matchesPage.module.scss"
+import Loading from "../components/forms/Loading"
 
 export default function MatchesPage() {
     const { user } = useContext(AuthContext)
@@ -15,6 +16,7 @@ export default function MatchesPage() {
     const [matches, setMatches] = useState([])
     const [message, setMessage] = useState()
     const [isFormOpen, setIsFormOpen] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
         const loadMatches = async () => {
@@ -32,6 +34,8 @@ export default function MatchesPage() {
             } catch (error) {
                 setMatches([])
                 setMessage("No se pudieron cargar los partidos.")
+            } finally {
+                setIsLoading(false)
             }
         }
 
@@ -50,45 +54,42 @@ export default function MatchesPage() {
 
         try {
             await createMatchRequest(payload)
-
             const response = await allMatches()
             const data = Array.isArray(response?.matches) ? response.matches : []
-
             setMatches(data.map(normalizeMatch).filter((m) => m.estado !== "cancelado" && m.estado !== "finalizado" && m.estado !== "completado"))
             setMessage("Partido creado correctamente.")
             setIsFormOpen(false)
-        } 
-        catch (error) {
+        } catch (error) {
             setMessage("No se pudo crear el partido.")
             setIsFormOpen(false)
         }
     }
 
     const handleJoinMatch = async (matchId) => {
-    try {
-        await joinMatchRequest(matchId)
-
-        const response = await allMatches()
-        const data = Array.isArray(response?.matches) ? response.matches : []
-
-        setMatches(data.map(normalizeMatch).filter((m) => m.estado !== "cancelado" && m.estado !== "finalizado" && m.estado !== "completado"))
-        setMessage("Te has apuntado al partido correctamente.")
-    } catch (error) {
-        setMessage(error.message || "No se pudo apuntar al partido.")
+        try {
+            await joinMatchRequest(matchId)
+            const response = await allMatches()
+            const data = Array.isArray(response?.matches) ? response.matches : []
+            setMatches(data.map(normalizeMatch).filter((m) => m.estado !== "cancelado" && m.estado !== "finalizado" && m.estado !== "completado"))
+            setMessage("Te has apuntado al partido correctamente.")
+        } catch (error) {
+            setMessage(error.message || "No se pudo apuntar al partido.")
+        }
     }
-    }
+
     const handleLeaveMatch = async (matchId) => {
-    try {
-        await leaveMatchRequest(matchId)
-        const response = await allMatches()
-        const data = Array.isArray(response?.matches) ? response.matches : []
-        setMatches(data.map(normalizeMatch).filter((m) => m.estado !== "cancelado" && m.estado !== "finalizado"))
-        setMessage("Te has desapuntado correctamente.")
-    } catch (error) {
-        setMessage(error.message || "No se pudo desapuntar.")
+        try {
+            await leaveMatchRequest(matchId)
+            const response = await allMatches()
+            const data = Array.isArray(response?.matches) ? response.matches : []
+            setMatches(data.map(normalizeMatch).filter((m) => m.estado !== "cancelado" && m.estado !== "finalizado"))
+            setMessage("Te has desapuntado correctamente.")
+        } catch (error) {
+            setMessage(error.message || "No se pudo desapuntar.")
+        }
     }
-}
-    
+
+    if (isLoading) return <Loading />
 
     return (
         <main className="mainPage">
@@ -104,7 +105,6 @@ export default function MatchesPage() {
                     <div className={`cardBase ${style.panel} ${isFormOpen ? style.panelOpen : ""}`}>
                         <div className={style.panelTop}>
                             <h2>Crear partido</h2>
-
                             <button
                                 className={`btnTwo ${style.btnForm}`}
                                 type="button"
@@ -128,7 +128,6 @@ export default function MatchesPage() {
 
                 <section className={`cardBase ${style.listSection}`}>
                     <h2>Listado de partidos</h2>
-
                     <div className={style.list}>
                         {matches.map((match) => (
                             <MatchCard

@@ -4,6 +4,7 @@ import { AuthContext } from "../context/authContext"
 import { getAdminMatchesRequest, getAdminUsersRequest, updateAdminUserRequest, deleteAdminUserRequest, cancelAdminMatchRequest, updateAdminMatchRequest, deleteAdminMatchRequest, createAdminUserRequest, createAdminMatchRequest } from "../api/adminService"
 import style from "./stylePages/panelAdmin.module.scss"
 import { getAdminReservasRequest, cancelAdminReservaRequest, deleteAdminReservaRequest } from "../api/adminService"
+import Loading from "../components/forms/Loading"
 
 function formatAdminDate(dateValue) {
     if (!dateValue) {
@@ -82,6 +83,8 @@ export default function PanelAdmin() {
         })
     }
 
+    const [isLoading, setIsLoading] = useState(true)
+
     useEffect(() => {
         const loadData = async () => {
             if (!user) {
@@ -105,6 +108,7 @@ export default function PanelAdmin() {
             }
             finally {
                 setIsLoadingMatches(false)
+                setIsLoading(false)
             }
         }
 
@@ -254,6 +258,7 @@ export default function PanelAdmin() {
             setMessage(error.message || "No se pudo eliminar la reserva.")
         }
     }
+    if (isLoading) return <Loading />
     return (
         <main className="mainPage">
             <Nav />

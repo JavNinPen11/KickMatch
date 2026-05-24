@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { AuthContext } from "../context/authContext"
 import { getMeRequest, updateMeRequest, deleteMeRequest } from "../api/userService"
 import style from "./stylePages/profilePage.module.scss"
+import Loading from "../components/forms/Loading"
 
 export default function ProfilePage() {
     const { logout, login } = useContext(AuthContext)
@@ -152,7 +153,7 @@ export default function ProfilePage() {
             setIsDeleting(false)
         }
     }
-
+if (isLoading) return <Loading />
     return (
         <main className="mainPage">
             <Nav />
