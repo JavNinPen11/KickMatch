@@ -100,6 +100,14 @@ export async function adminDeleteUser(req, res) {
             return res.status(404).json({ ok: false, message: "Usuario no encontrado." })
         }
 
+        await prisma.matchParticipant.deleteMany({
+            where: { userId: Number(req.params.id) }
+        })
+
+        await prisma.match.deleteMany({
+            where: { creatorId: Number(req.params.id) }
+        })
+
         await prisma.user.delete({
             where: { id: Number(req.params.id) }
         })
@@ -107,6 +115,67 @@ export async function adminDeleteUser(req, res) {
         return res.json({ ok: true, message: "Usuario eliminado.", data: null })
 
     } catch (error) {
+        console.error("Error adminDeleteUser:", error)
         return res.status(500).json({ ok: false, message: "Error interno del servidor" })
+    }
+}
+export const createAdminUser = async (req, res) => {
+    const { email, username, nombre, password, rolId } = req.body
+
+    if (!email || !username || !password) {
+        return res.status(400).json({ ok: false, message: "Email, username y password son obligatorios." })
+    }
+
+    try {
+        const hashed = await bcrypt.hash(password, 10)
+
+        const user = await prisma.user.create({
+            data: {
+                email: email.trim().toLowerCase(),
+                username: username.trim(),
+                nombre: nombre?.trim() || "Sin nombre",
+                password: hashed,
+                rolId: Number(rolId) || 2,
+            },
+            select: {
+                ...userSelect,
+                rol: { select: { nombre: true } }
+            },
+        })
+
+        return res.status(201).json(mapUser(user))
+
+    } catch (error) {
+        if (error.code === "P2002") {
+            return res.status(400).json({ ok: false, message: "Email o username ya existe." })
+        }
+        return res.status(500).json({ ok: false, message: "Error interno del servidor." })
+    }
+}
+export const createAdminMatch = async (req, res) => {
+    const { date, time, location, maxPlayers, state, creatorId } = req.body
+
+    if (!date || !time || !location || !maxPlayers) {
+        return res.status(400).json({ ok: false, message: "Todos los campos son obligatorios." })
+    }
+
+    try {
+        const match = await prisma.match.create({
+            data: {
+                date: new Date(date),
+                time: new Date(`1970-01-01T${time}:00.000Z`),
+                location,
+                maxPlayers: Number(maxPlayers),
+                state: state || "abierto",
+                creatorId: Number(creatorId) || req.user.id,
+            },
+            include: { creator: { select: { id: true, username: true } } }
+        })
+
+        return res.status(201).json(match)
+
+    } catch (error) {
+        console.error("Error createAdminMatch:", error)
+        return res.status(500).json({ ok: false, message: "Error interno del servidor." })
     }
 }
