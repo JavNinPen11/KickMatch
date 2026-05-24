@@ -107,32 +107,75 @@ export async function adminDeleteUser(req, res) {
             })
         }
 
-        const createdMatches = await prisma.match.count({
-            where: { creatorId: userId }
+        const createdMatches = await prisma.match.findMany({
+            where: { creatorId: userId },
+            select: { id: true }
         })
 
-        const joinedMatches = await prisma.matchParticipant.count({
-            where: { userId }
+        const createdMatchIds = createdMatches.map((match) => match.id)
+
+        const userReservas = await prisma.reserva.findMany({
+            where: { userId },
+            select: { id: true }
         })
 
-        const reservas = await prisma.reserva.count({
-            where: { userId }
-        })
+        const userReservaIds = userReservas.map((reserva) => reserva.id)
 
-        if (createdMatches > 0 || joinedMatches > 0 || reservas > 0) {
-            return res.status(400).json({
-                ok: false,
-                message: "No se puede eliminar este usuario porque tiene partidos o reservas asociadas."
-            })
+        const deleteOperations = []
+
+        if (userReservaIds.length > 0) {
+            deleteOperations.push(
+                prisma.reservaLinea.deleteMany({
+                    where: {
+                        reservaId: {
+                            in: userReservaIds
+                        }
+                    }
+                })
+            )
         }
 
-        await prisma.user.delete({
-            where: { id: userId }
-        })
+        deleteOperations.push(
+            prisma.reserva.deleteMany({
+                where: { userId }
+            })
+        )
+
+        deleteOperations.push(
+            prisma.matchParticipant.deleteMany({
+                where: { userId }
+            })
+        )
+
+        if (createdMatchIds.length > 0) {
+            deleteOperations.push(
+                prisma.matchParticipant.deleteMany({
+                    where: {
+                        matchId: {
+                            in: createdMatchIds
+                        }
+                    }
+                })
+            )
+        }
+
+        deleteOperations.push(
+            prisma.match.deleteMany({
+                where: { creatorId: userId }
+            })
+        )
+
+        deleteOperations.push(
+            prisma.user.delete({
+                where: { id: userId }
+            })
+        )
+
+        await prisma.$transaction(deleteOperations)
 
         return res.json({
             ok: true,
-            message: "Usuario eliminado.",
+            message: "Usuario eliminado correctamente.",
             data: null
         })
 
