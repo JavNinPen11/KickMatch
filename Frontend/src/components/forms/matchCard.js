@@ -8,9 +8,9 @@ export function MatchCard({ match, user, onJoin, onLeave }) {
     const full = match.jugadoresApuntados >= match.maxJugadores
     const owner = String(match.creador.id) === String(user.id)
 
-    const joined = match.participantes.some(
+    const joined = match.participantes?.some(
         (p) => String(p.id) === String(user.id)
-    )
+    ) ?? false
 
     const disabled = full || owner || joined
 

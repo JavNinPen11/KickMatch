@@ -5,7 +5,7 @@ import { AuthContext } from "../context/authContext"
 import { getMeRequest } from "../api/userService"
 import { getUserMatchesSummary } from "../utils/userMatches"
 import style from "./stylePages/dashboardPage.module.scss"
-import { myMatchesRequest, cancelMatchRequest } from "../api/matchService"
+import { myMatchesRequest, cancelMatchRequest, leaveMatchRequest } from "../api/matchService"
 import { normalizeMatch } from "../api/matchUtils"
 import { formatDate } from "../utils/formatUtils"
 
@@ -27,7 +27,9 @@ export const DashboardPage = () => {
             const response = await myMatchesRequest()
             const data = Array.isArray(response?.matches) ? response.matches : []
 
-            setMatches(data.map(normalizeMatch))
+            setMatches(data.map(normalizeMatch)
+            .filter()        
+        )
         } catch (error) {
             setMatches([])
         }
@@ -89,6 +91,17 @@ export const DashboardPage = () => {
     ]
 
     const upcomingMatches = summary.upcomingMatches.slice(0, 3)
+
+    const handleLeaveMatch = async (matchId) => {
+        try {
+            await leaveMatchRequest(matchId)
+            const response = await myMatchesRequest()
+            const data = Array.isArray(response?.matches) ? response.matches : []
+            setMatches(data.map(normalizeMatch))
+        } catch (error) {
+            console.error(error)
+        }
+    }
 
     return (
         <main className="mainPage">
@@ -192,6 +205,17 @@ export const DashboardPage = () => {
                                                 onClick={() => handleCancelMatch(match.id)}
                                             >
                                                 Cancelar partido
+                                            </button>
+                                        ) : null}
+
+                                        {match.participantes?.some(p => String(p.id) === String(summary.currentUser.id)) &&
+                                            String(match.creador?.id) !== String(summary.currentUser.id) ? (
+                                            <button
+                                                className={`btnTwo ${style.btnCancelMatch}`}
+                                                type="button"
+                                                onClick={() => handleLeaveMatch(match.id)}
+                                            >
+                                                Desapuntarme
                                             </button>
                                         ) : null}
                                     </article>

@@ -23,7 +23,7 @@ export default function MatchesPage() {
                 const data = Array.isArray(response?.matches) ? response.matches : []
 
                 if (Array.isArray(data)) {
-                    const normalizedMatches = data.map(normalizeMatch)
+                    const normalizedMatches = data.map(normalizeMatch).filter((m) => m.estado !== "cancelado" && m.estado !== "finalizado" && m.estado !== "completado")
                     setMatches(normalizedMatches)
                     return
                 }
@@ -54,7 +54,7 @@ export default function MatchesPage() {
             const response = await allMatches()
             const data = Array.isArray(response?.matches) ? response.matches : []
 
-            setMatches(data.map(normalizeMatch))
+            setMatches(data.map(normalizeMatch).filter((m) => m.estado !== "cancelado" && m.estado !== "finalizado" && m.estado !== "completado"))
             setMessage("Partido creado correctamente.")
             setIsFormOpen(false)
         } 
@@ -71,7 +71,7 @@ export default function MatchesPage() {
         const response = await allMatches()
         const data = Array.isArray(response?.matches) ? response.matches : []
 
-        setMatches(data.map(normalizeMatch))
+        setMatches(data.map(normalizeMatch).filter((m) => m.estado !== "cancelado" && m.estado !== "finalizado" && m.estado !== "completado"))
         setMessage("Te has apuntado al partido correctamente.")
     } catch (error) {
         setMessage(error.message || "No se pudo apuntar al partido.")
