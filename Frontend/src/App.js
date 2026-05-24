@@ -13,12 +13,15 @@ import AdminRoute from "./components/authComponent/AdminRoute"
 import ReservePage from "./pages/ReservePage"
 import PanelFields from "./pages/PanelFields"
 import { Footer } from "./components/forms/Footer"
+import AboutPage from "./pages/AboutPage"
+import { ScrollToTop } from "./components/scrollTop/ScrollTop"
 
 
 function App() {
   return (
     <AuthProvider>
       <Router>
+        <ScrollToTop/>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/register" element={<RegisterPage />} />
@@ -41,6 +44,7 @@ function App() {
               </AdminRoute>
             </PrivateRoute>  
           } />
+          <Route path="/about" element={<AboutPage />} />
         </Routes>
         <Footer/>
       </Router>
