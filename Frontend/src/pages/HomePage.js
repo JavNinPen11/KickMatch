@@ -6,6 +6,7 @@ import style from "./stylePages/homePage.module.scss"
 import { allMatches } from "../api/matchService"
 import { normalizeMatch } from "../api/matchUtils"
 import { formatDate, formatState } from "../utils/formatUtils"
+import { getEscaparateRequest } from "../api/reservaService"
 
 const howWorks = [
     {
@@ -32,6 +33,7 @@ export default function HomePage() {
     const [matches, setMatches] = useState([])
     const [isLoadingMatches, setIsLoadingMatches] = useState(true)
     const [matchesMessage, setMatchesMessage] = useState("")
+    const [fields, setFields] = useState([])
 
     useEffect(() => {
         const loadMatches = async () => {
@@ -52,6 +54,19 @@ export default function HomePage() {
         loadMatches()
     }, [])
 
+    useEffect(() => {
+        const loadFields = async () => {
+            try {
+                const data = await getEscaparateRequest()
+                setFields(Array.isArray(data) ? data.slice(0, 3) : [])
+            } catch (error) {
+                setFields([])
+            }
+        }
+
+        loadFields()
+    }, [])
+
     return (
         <main className="mainPage">
             <Nav variant="landing" />
@@ -66,8 +81,7 @@ export default function HomePage() {
                         </h1>
 
                         <p className="textBase">
-                            Crea partidos, apúntate a encuentros cerca de ti y conoce gente,
-                            o organiza tus pachangas fácilmente.
+                            Crea partidos, apúntate a encuentros cerca de ti y conoce gente facilmente
                         </p>
 
                         <div className={style.heroBtns}>
@@ -116,7 +130,7 @@ export default function HomePage() {
                                     </p>
 
                                     <p>
-                                        <strong>Estado:</strong> <strong>Estado:</strong> {formatState(match.estado)}
+                                        <strong>Estado:</strong> {formatState(match.estado)}
                                     </p>
                                 </article>
                             ))
@@ -129,6 +143,42 @@ export default function HomePage() {
 
                     <Link className={`btnOne ${style.sectionButton}`} to="/matches">
                         Ver todos los partidos
+                    </Link>
+                </section>
+
+                <section className={style.section}>
+                    <div className={style.sectionTop}>
+                        <h2 className="title">Campos de fútbol disponibles</h2>
+                    </div>
+
+                    <div className={style.matchesGrid}>
+                        {fields.length > 0 ? (
+                            fields.map((field) => (
+                                <article className={`cardBase ${style.matchCard}`} key={field.id}>
+                                    <h3 className={style.cardTitle}>{field.nombre}</h3>
+
+                                    <p>
+                                        <strong>Categoría:</strong>{" "}
+                                        {field.category?.nombre || "Sin categoría"}
+                                    </p>
+
+                                    <p>
+                                        <strong>Descripción:</strong>{" "}
+                                        {field.descripcion || "Sin descripción"}
+                                    </p>
+
+                                    <p>
+                                        <strong>Precio:</strong> {field.precio} €/h
+                                    </p>
+                                </article>
+                            ))
+                        ) : (
+                            <p className="textBase">No hay campos de fútbol disponibles ahora mismo.</p>
+                        )}
+                    </div>
+
+                    <Link className={`btnOne ${style.sectionButton}`} to="/reservas">
+                        Ver reservas
                     </Link>
                 </section>
 
@@ -156,8 +206,8 @@ export default function HomePage() {
 
                         <p className="textBase">
                             {isLogin
-                                ? "Entra en tu panel o revisa los partidos abiertos para organizar tu siguiente pachanga."
-                                : "Regístrate y empieza a unirte o crear partidos de fútbol cerca de ti."}
+                                ? "Entra en tu panel o revisa los partidos abiertos para organizar tu siguiente partido de fútbol"
+                                : "Regístrate y empieza a unirte o crear partidos de fútbol cerca de ti"}
                         </p>
 
                         <div className={style.heroBtns}>

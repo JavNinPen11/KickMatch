@@ -54,6 +54,18 @@
     line-height: 1.65;
 }
 
+.adminToolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.adminToolbar input {
+    width: min(340px, 100%);
+}
+
 .tableBox {
     width: 100%;
     overflow-x: auto;
@@ -147,6 +159,14 @@
 
     .summaryCard {
         padding: 22px;
+    }
+        .adminToolbar {
+        align-items: stretch;
+    }
+
+    .adminToolbar button,
+    .adminToolbar input {
+        width: 100%;
     }
 }
 .deletePopup {
