@@ -12,6 +12,7 @@ import PanelAdmin from "./pages/panelAdmin"
 import AdminRoute from "./components/authComponent/AdminRoute"
 import ReservePage from "./pages/ReservePage"
 import PanelFields from "./pages/PanelFields"
+import { Footer } from "./components/forms/Footer"
 
 
 function App() {
@@ -41,8 +42,10 @@ function App() {
             </PrivateRoute>  
           } />
         </Routes>
+        <Footer/>
       </Router>
     </AuthProvider>
+    
   );
 }
 
