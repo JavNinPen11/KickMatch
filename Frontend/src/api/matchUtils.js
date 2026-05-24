@@ -92,11 +92,27 @@ export function getMatchDisplayName(fecha) {
 }
 
 export function normalizeMatch(match) {
-    const maxJugadores = Math.min(Math.max(Number(match.maxJugadores || match.maxPlayers) || 0, 2), 20)
-    const participantes = Array.isArray(match.participantes) ? match.participantes : []
-    const jugadoresApuntados = Math.min(
-        Number(match.jugadoresApuntados ?? participantes.length),
-        maxJugadores
+    const maxPlayers = Math.min(
+        Math.max(Number(match.maxPlayers || match.maxJugadores) || 0, 2),
+        20
+    )
+
+    const backendParticipants = Array.isArray(match.participants)
+        ? match.participants.map((participant) => ({
+            id: participant.user?.id ?? participant.userId,
+            nombre: participant.user?.nombre ?? participant.user?.username ?? "Sin nombre",
+            username: participant.user?.username ?? "",
+            email: participant.user?.email ?? "",
+        }))
+        : []
+
+    const participants = Array.isArray(match.participantes)
+        ? match.participantes
+        : backendParticipants
+
+    const joinedPlayers = Math.min(
+        Number(match.jugadoresApuntados ?? participants.length),
+        maxPlayers
     )
 
     const fecha = isValidMatchDate(match.fecha)
@@ -107,22 +123,22 @@ export function normalizeMatch(match) {
         ? match.hora
         : match.time?.split("T")[1]?.slice(0, 5) ?? ""
 
-    const creador = match.creador ?? match.creator
+    const creator = match.creador ?? match.creator
 
     return {
         id: match.id ?? Date.now(),
         fecha,
         hora,
         ubicacion: match.ubicacion || match.location || "",
-        maxJugadores,
-        jugadoresApuntados,
-        participantes,
+        maxJugadores: maxPlayers,
+        jugadoresApuntados: joinedPlayers,
+        participantes: participants,
         creador: {
-            id: creador?.id ?? "sin-creador",
-            nombre: creador?.nombre ?? creador?.username ?? "Desconocido",
+            id: creator?.id ?? "sin-creador",
+            nombre: creator?.nombre ?? creator?.username ?? "Desconocido",
         },
         duracion: match.duracion ? Math.min(Number(match.duracion), 90) : null,
-        estado: jugadoresApuntados >= maxJugadores ? "COMPLETO" : "ABIERTO",
+        estado: match.estado || match.state || (joinedPlayers >= maxPlayers ? "COMPLETO" : "ABIERTO"),
     }
 }
 

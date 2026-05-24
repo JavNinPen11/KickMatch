@@ -10,9 +10,23 @@ export const createMatch = async (req, res) => {
                 location,
                 maxPlayers,
                 state,
-                creatorId: req.user.id  // ← del token
+                creatorId: req.user.id,  // ← del token
+                participants: {
+                    create: {
+                        userId: req.user.id
+                    }
+                }
+        },
+        include: {
+            creator: true,
+            participants: {
+                include: {
+                    user: true
+                }
             }
-        })
+        }
+
+})
         return res.status(201).json({
             message: "Partido creado correctamente",
             match: {
@@ -32,7 +46,13 @@ export const getMatches = async (req, res) => {
     try {
         const matches = await prisma.match.findMany({
             include: {
-                creator: true
+                creator: true,
+
+                participants: {
+                    include: {
+                        user: true
+                }}
+
             },
             orderBy: {
                 date: "desc"
@@ -51,10 +71,19 @@ export const myMatches = async (req, res) => {
     try {
         const matches = await prisma.match.findMany({
             include: {
-                creator: true
+                creator: true,
+
+                participants: {
+                    include: {
+                        user: true
+                }}
+
             },
             where: {
-                creatorId: id
+                 OR: [
+                    { creatorId: id },
+                    { participants: { some: { userId: id } } }
+                ]
             },
             orderBy: {
                 date: "asc"

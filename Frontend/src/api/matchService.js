@@ -46,18 +46,29 @@ export async function createMatchRequest(matchData) {
     return parseResponse(response)
 }
 
-export async function updateMatchRequest(matchId, matchData) {
-    const response = await fetch(`${API_URL}/match/${matchId}`, {
-        method: "PUT",
+export async function joinMatchRequest(matchId) {
+    const response = await fetch(`${API_URL}/match/${matchId}/join`, {
+        method: "POST",
         headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${getToken()}`,
         },
-        body: JSON.stringify(matchData),
     })
 
     return parseResponse(response)
 }
+
+// export async function updateMatchRequest(matchId, matchData) {
+//     const response = await fetch(`${API_URL}/match/${matchId}`, {
+//         method: "PUT",
+//         headers: {
+//             "Content-Type": "application/json",
+//             Authorization: `Bearer ${getToken()}`,
+//         },
+//         body: JSON.stringify(matchData),
+//     })
+
+//     return parseResponse(response)
+// }
 
 export async function cancelMatchRequest(matchId) {
     const response = await fetch(`${API_URL}/match/${matchId}/cancel`, {
