@@ -5,7 +5,7 @@ import { AuthContext } from "../context/authContext"
 import { getMeRequest } from "../api/userService"
 import { getUserMatchesSummary } from "../utils/userMatches"
 import style from "./stylePages/dashboardPage.module.scss"
-import { myMatchesRequest, cancelMatchRequest, leaveMatchRequest } from "../api/matchService"
+import { myMatchesRequest, cancelMatchRequest, leaveMatchRequest, updateMatchRequest } from "../api/matchService"
 import { normalizeMatch } from "../api/matchUtils"
 import { formatDate } from "../utils/formatUtils"
 
@@ -13,6 +13,10 @@ export const DashboardPage = () => {
     const { user } = useContext(AuthContext)
     const [profile, setProfile] = useState(null)
     const [matches, setMatches] = useState([])
+    const [editMatch, setEditMatch] = useState(null)
+    const [editMatchForm, setEditMatchForm] = useState({
+        date: "", time: "", location: "", maxPlayers: ""
+    })
 
     const handleCancelMatch = async (matchId) => {
         const confirmCancel = window.confirm("¿Seguro que quieres cancelar este partido?")
@@ -101,6 +105,27 @@ export const DashboardPage = () => {
         } catch (error) {
             console.error(error)
         }
+    }
+    const handleUpdateMatch = async () => {
+        try {
+            await updateMatchRequest(editMatch.id, editMatchForm)
+            const response = await myMatchesRequest()
+            const data = Array.isArray(response?.matches) ? response.matches : []
+            setMatches(data.map(normalizeMatch))
+            setEditMatch(null)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    const openEditMatch = (match) => {
+        setEditMatch(match)
+        setEditMatchForm({
+            date: match.fecha,
+            time: match.hora,
+            location: match.ubicacion,
+            maxPlayers: match.maxJugadores
+        })
     }
 
 
@@ -208,7 +233,15 @@ export const DashboardPage = () => {
                                                 Cancelar partido
                                             </button>
                                         ) : null}
-
+                                        {String(match.creador?.id) === String(summary.currentUser.id) && (
+                                            <button
+                                                className={`btnOne ${style.btnCancelMatch}`}
+                                                type="button"
+                                                onClick={() => openEditMatch(match)}
+                                            >
+                                                Editar partido
+                                            </button>
+                                        )}
                                         {match.participantes?.some(p => String(p.id) === String(summary.currentUser.id)) &&
                                             String(match.creador?.id) !== String(summary.currentUser.id) ? (
                                             <button
@@ -249,6 +282,43 @@ export const DashboardPage = () => {
                                 </Link>
                             </div>
                         </article>
+                    )}
+                    {editMatch && (
+                        <div className={style.deletePopup}>
+                            <div className={style.deletePopupCard}>
+                                <button className={style.btnClose} type="button" onClick={() => setEditMatch(null)}>x</button>
+                                <h2>Editar partido</h2>
+
+                                <div className={style.formGroup}>
+                                    <label>Fecha</label>
+                                    <input className="inputBase" type="date" value={editMatchForm.date}
+                                        onChange={(e) => setEditMatchForm((p) => ({ ...p, date: e.target.value }))} />
+                                </div>
+
+                                <div className={style.formGroup}>
+                                    <label>Hora</label>
+                                    <input className="inputBase" type="time" value={editMatchForm.time}
+                                        onChange={(e) => setEditMatchForm((p) => ({ ...p, time: e.target.value }))} />
+                                </div>
+
+                                <div className={style.formGroup}>
+                                    <label>Ubicación</label>
+                                    <input className="inputBase" type="text" value={editMatchForm.location}
+                                        onChange={(e) => setEditMatchForm((p) => ({ ...p, location: e.target.value }))} />
+                                </div>
+
+                                <div className={style.formGroup}>
+                                    <label>Máximo de jugadores</label>
+                                    <input className="inputBase" type="number" min="2" max="20" value={editMatchForm.maxPlayers}
+                                        onChange={(e) => setEditMatchForm((p) => ({ ...p, maxPlayers: e.target.value }))} />
+                                </div>
+
+                                <div className="groupBtns">
+                                    <button className="btnOne" type="button" onClick={handleUpdateMatch}>Guardar</button>
+                                    <button className="btnTwo" type="button" onClick={() => setEditMatch(null)}>Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
                     )}
                 </section>
             </div>

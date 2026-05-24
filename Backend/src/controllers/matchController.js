@@ -1,4 +1,5 @@
 import { log } from "node:console"
+import { prisma } from "../../lib/db.js"
 
 export const createMatch = async (req, res) => {
     const { date, time, location, maxPlayers, state } = req.body  // quita creatorId
@@ -10,7 +11,7 @@ export const createMatch = async (req, res) => {
                 location,
                 maxPlayers,
                 state,
-                creatorId: req.user.id,  // ← del token
+                creatorId: req.user.id,  
                 participants: {
                     create: {
                         userId: req.user.id
