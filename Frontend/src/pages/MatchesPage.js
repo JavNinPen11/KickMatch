@@ -5,7 +5,7 @@ import { MatchCard } from "../components/forms/matchCard"
 import { AuthContext } from "../context/authContext"
 import { getMatchUser } from "../utils/userMatches"
 import { normalizeMatch } from "../api/matchUtils"
-import { allMatches, createMatchRequest, joinMatchRequest } from "../api/matchService"
+import { allMatches, createMatchRequest, joinMatchRequest, leaveMatchRequest } from "../api/matchService"
 import style from "./stylePages/matchesPage.module.scss"
 
 export default function MatchesPage() {
@@ -23,7 +23,7 @@ export default function MatchesPage() {
                 const data = Array.isArray(response?.matches) ? response.matches : []
 
                 if (Array.isArray(data)) {
-                    const normalizedMatches = data.map(normalizeMatch)
+                    const normalizedMatches = data.map(normalizeMatch).filter((m) => m.estado !== "cancelado" && m.estado !== "finalizado" && m.estado !== "completado")
                     setMatches(normalizedMatches)
                     return
                 }
@@ -54,7 +54,7 @@ export default function MatchesPage() {
             const response = await allMatches()
             const data = Array.isArray(response?.matches) ? response.matches : []
 
-            setMatches(data.map(normalizeMatch))
+            setMatches(data.map(normalizeMatch).filter((m) => m.estado !== "cancelado" && m.estado !== "finalizado" && m.estado !== "completado"))
             setMessage("Partido creado correctamente.")
             setIsFormOpen(false)
         } 
@@ -71,12 +71,23 @@ export default function MatchesPage() {
         const response = await allMatches()
         const data = Array.isArray(response?.matches) ? response.matches : []
 
-        setMatches(data.map(normalizeMatch))
+        setMatches(data.map(normalizeMatch).filter((m) => m.estado !== "cancelado" && m.estado !== "finalizado" && m.estado !== "completado"))
         setMessage("Te has apuntado al partido correctamente.")
     } catch (error) {
         setMessage(error.message || "No se pudo apuntar al partido.")
     }
     }
+    const handleLeaveMatch = async (matchId) => {
+    try {
+        await leaveMatchRequest(matchId)
+        const response = await allMatches()
+        const data = Array.isArray(response?.matches) ? response.matches : []
+        setMatches(data.map(normalizeMatch).filter((m) => m.estado !== "cancelado" && m.estado !== "finalizado"))
+        setMessage("Te has desapuntado correctamente.")
+    } catch (error) {
+        setMessage(error.message || "No se pudo desapuntar.")
+    }
+}
     
 
     return (
@@ -125,6 +136,7 @@ export default function MatchesPage() {
                                 match={match}
                                 user={currentUser}
                                 onJoin={handleJoinMatch}
+                                onLeave={handleLeaveMatch}
                             />
                         ))}
                     </div>

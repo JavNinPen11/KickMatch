@@ -91,7 +91,7 @@ export function getMatchDisplayName(fecha) {
     return `Partido el ${weekdays[matchDate.getDay()]} ${day} de ${months[month - 1]} de ${year}`
 }
 
-export function normalizeMatch(match) {
+export function normalizeMatch(match) {    
     const maxPlayers = Math.min(
         Math.max(Number(match.maxPlayers || match.maxJugadores) || 0, 2),
         20
@@ -106,8 +106,8 @@ export function normalizeMatch(match) {
         }))
         : []
 
-    const participants = Array.isArray(match.participantes)
-        ? match.participantes
+    const participants = Array.isArray(match.participants)
+        ? match.participants
         : backendParticipants
 
     const joinedPlayers = Math.min(
@@ -132,7 +132,7 @@ export function normalizeMatch(match) {
         ubicacion: match.ubicacion || match.location || "",
         maxJugadores: maxPlayers,
         jugadoresApuntados: joinedPlayers,
-        participantes: participants,
+        participantes: backendParticipants,
         creador: {
             id: creator?.id ?? "sin-creador",
             nombre: creator?.nombre ?? creator?.username ?? "Desconocido",

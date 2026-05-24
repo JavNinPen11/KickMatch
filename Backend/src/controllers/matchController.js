@@ -252,3 +252,29 @@ export const joinMatch = async (req, res) => {
         return res.status(500).json({ message: "Error al apuntarse al partido.", error: error.message })
     }
 }
+export const leaveMatch = async (req, res) => {
+    const { id } = req.params
+    const requestingUser = req.user
+
+    try {
+        const participant = await prisma.matchParticipant.findFirst({
+            where: {
+                matchId: Number(id),
+                userId: requestingUser.id
+            }
+        })
+
+        if (!participant) {
+            return res.status(404).json({ message: "No estás apuntado a este partido." })
+        }
+
+        await prisma.matchParticipant.delete({
+            where: { id: participant.id }
+        })
+
+        return res.status(200).json({ message: "Te has desapuntado correctamente." })
+
+    } catch (error) {
+        return res.status(500).json({ message: "Error al desapuntarse.", error: error.message })
+    }
+}
