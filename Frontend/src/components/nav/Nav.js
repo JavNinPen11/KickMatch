@@ -23,8 +23,13 @@ export const Nav = ({ variant = "default" }) => {
                 <div className={style.navLinks}>
                     {isLogged ? (
                         <>
-                            <Link className={style.navLink} to="/profile">
-                                Perfil de {userName}
+                            <Link className={style.userChip} to="/profile">
+                                <span className={style.userAvatar}>
+                                    {userName.charAt(0).toUpperCase()}
+                                </span>
+                                <span className={style.userName}>
+                                    {userName.toUpperCase()} · MI PERFIL
+                                </span>
                             </Link>
 
                             <Link className={style.navLink} to="/">
