@@ -299,14 +299,14 @@ export default function PanelAdmin() {
                         <h2>Usuarios</h2>
 
                         <p>
-                            Listado básico de usuarios registrados.
+                            Listado de usuarios registrados en KickMatch
                         </p>
                     </div>
-                    <div className={style.sectionTop}>
-                        <h2>Usuarios</h2>
+                   <div className={style.adminToolbar}>
                         <button className="btnOne" type="button" onClick={openCreateUser}>
                             Crear usuario
                         </button>
+
                         <input
                             className="inputBase"
                             type="text"
@@ -359,9 +359,14 @@ export default function PanelAdmin() {
                 <section className={`cardBase ${style.matches}`}>
                     <div className={style.sectionTop}>
                         <h2>Partidos</h2>
+                        <p>Listado de partidos creados en KickMatch </p>
+                    </div>
+
+                    <div className={style.adminToolbar}>
                         <button className="btnOne" type="button" onClick={openCreateMatch}>
                             Crear partido
                         </button>
+
                         <input
                             className="inputBase"
                             type="text"
@@ -370,7 +375,6 @@ export default function PanelAdmin() {
                             onChange={(e) => setSearchMatches(e.target.value)}
                         />
                     </div>
-
                     <div className={style.tableBox}>
                         <table className={style.table}>
                             <thead>
@@ -422,6 +426,7 @@ export default function PanelAdmin() {
                 <section className={`cardBase ${style.matches}`}>
                     <div className={style.sectionTop}>
                         <h2>Reservas</h2>
+                        <p>Listado de reservas creadas en KickMatch</p>
                     </div>
 
                     <div className={style.tableBox}>
@@ -443,7 +448,7 @@ export default function PanelAdmin() {
                                             <tr key={linea.id}>
                                                 <td>{reserva.user?.username}</td>
                                                 <td>{linea.field?.nombre}</td>
-                                                <td>{linea.fecha?.split("T")[0]}</td>
+                                                <td>{formatAdminDate(linea.fecha)}</td>
                                                 <td>{linea.horaInicio} - {linea.horaFin}</td>
                                                 <td>{reserva.estado}</td>
                                                 <td>
