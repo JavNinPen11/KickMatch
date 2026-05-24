@@ -93,34 +93,101 @@ export async function adminUpdateUser(req, res) {
     }
 }
 export async function adminDeleteUser(req, res) {
+    const userId = Number(req.params.id)
+
     try {
         const user = await prisma.user.findUnique({
-            where: { id: Number(req.params.id) }
+            where: { id: userId }
         })
 
         if (!user) {
-            return res.status(404).json({ ok: false, message: "Usuario no encontrado." })
+            return res.status(404).json({
+                ok: false,
+                message: "Usuario no encontrado."
+            })
         }
 
-        await prisma.matchParticipant.deleteMany({
-            where: { userId: Number(req.params.id) }
+        const createdMatches = await prisma.match.findMany({
+            where: { creatorId: userId },
+            select: { id: true }
         })
 
-        await prisma.match.deleteMany({
-            where: { creatorId: Number(req.params.id) }
+        const createdMatchIds = createdMatches.map((match) => match.id)
+
+        const userReservas = await prisma.reserva.findMany({
+            where: { userId },
+            select: { id: true }
         })
 
-        await prisma.user.delete({
-            where: { id: Number(req.params.id) }
-        })
+        const userReservaIds = userReservas.map((reserva) => reserva.id)
 
-        return res.json({ ok: true, message: "Usuario eliminado.", data: null })
+        const deleteOperations = []
+
+        if (userReservaIds.length > 0) {
+            deleteOperations.push(
+                prisma.reservaLinea.deleteMany({
+                    where: {
+                        reservaId: {
+                            in: userReservaIds
+                        }
+                    }
+                })
+            )
+        }
+
+        deleteOperations.push(
+            prisma.reserva.deleteMany({
+                where: { userId }
+            })
+        )
+
+        deleteOperations.push(
+            prisma.matchParticipant.deleteMany({
+                where: { userId }
+            })
+        )
+
+        if (createdMatchIds.length > 0) {
+            deleteOperations.push(
+                prisma.matchParticipant.deleteMany({
+                    where: {
+                        matchId: {
+                            in: createdMatchIds
+                        }
+                    }
+                })
+            )
+        }
+
+        deleteOperations.push(
+            prisma.match.deleteMany({
+                where: { creatorId: userId }
+            })
+        )
+
+        deleteOperations.push(
+            prisma.user.delete({
+                where: { id: userId }
+            })
+        )
+
+        await prisma.$transaction(deleteOperations)
+
+        return res.json({
+            ok: true,
+            message: "Usuario eliminado correctamente.",
+            data: null
+        })
 
     } catch (error) {
         console.error("Error adminDeleteUser:", error)
-        return res.status(500).json({ ok: false, message: "Error interno del servidor" })
+        return res.status(500).json({
+            ok: false,
+            message: "Error interno del servidor"
+        })
     }
 }
+
 export const createAdminUser = async (req, res) => {
     const { email, username, nombre, password, rolId } = req.body
 
