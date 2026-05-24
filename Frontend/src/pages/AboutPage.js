@@ -36,19 +36,19 @@ export default function AboutPage() {
 
                     <div className={style.grid}>
                         <article className={`cardBase ${style.featureCard}`}>
-                            <span className={style.icon}>⚽</span>
+                            <span className={style.icon}></span>
                             <h3>Crear partidos</h3>
                             <p className="textBase">Organiza un partido, define la fecha, hora y ubicación y espera a que otros jugadores se apunten.</p>
                         </article>
 
                         <article className={`cardBase ${style.featureCard}`}>
-                            <span className={style.icon}>🤝</span>
+                            <span className={style.icon}></span>
                             <h3>Unirte a partidos</h3>
                             <p className="textBase">Encuentra partidos abiertos cerca de ti y apúntate con un solo clic.</p>
                         </article>
 
                         <article className={`cardBase ${style.featureCard}`}>
-                            <span className={style.icon}>🏟️</span>
+                            <span className={style.icon}></span>
                             <h3>Reservar pistas</h3>
                             <p className="textBase">Consulta los campos disponibles, elige tu horario y confirma tu reserva fácilmente.</p>
                         </article>
