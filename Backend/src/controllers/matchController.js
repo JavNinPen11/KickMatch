@@ -1,7 +1,7 @@
 import { log } from "node:console"
 
 export const createMatch = async (req, res) => {
-    const { date, time, location, maxPlayers, state, creatorId } = req.body
+    const { date, time, location, maxPlayers, state } = req.body  // quita creatorId
     try {
         const match = await prisma.match.create({
             data: {
@@ -10,7 +10,7 @@ export const createMatch = async (req, res) => {
                 location,
                 maxPlayers,
                 state,
-                creatorId,
+                creatorId: req.user.id  // ← del token
             }
         })
         return res.status(201).json({
@@ -164,5 +164,57 @@ export const deleteMatch = async (req, res) => {
 
     } catch (error) {
         return res.status(500).json({ message: "Error al eliminar el partido.", error: error.message })
+    }
+}
+export const joinMatch = async (req, res) => {
+    const { id } = req.params
+    const requestingUser = req.user
+
+    try {
+        const match = await prisma.match.findUnique({
+            where: { id: Number(id) },
+            include: { participants: true }
+        })
+
+        if (!match) {
+            return res.status(404).json({ message: "Partido no encontrado." })
+        }
+
+        if (match.state !== "abierto") {
+            return res.status(400).json({ message: "El partido no está abierto." })
+        }
+
+        if (match.creatorId === requestingUser.id) {
+            return res.status(400).json({ message: "El creador no puede apuntarse a su propio partido." })
+        }
+
+        if (match.participants.length >= match.maxPlayers) {
+            return res.status(400).json({ message: "El partido está completo." })
+        }
+
+        const alreadyJoined = match.participants.some(p => p.userId === requestingUser.id)
+        if (alreadyJoined) {
+            return res.status(400).json({ message: "Ya estás apuntado a este partido." })
+        }
+
+        await prisma.matchParticipant.create({
+            data: {
+                matchId: Number(id),
+                userId: requestingUser.id
+            }
+        })
+
+        // Si se llena, actualiza el estado a completo
+        if (match.participants.length + 1 >= match.maxPlayers) {
+            await prisma.match.update({
+                where: { id: Number(id) },
+                data: { state: "completo" }
+            })
+        }
+
+        return res.status(200).json({ message: "Te has apuntado correctamente." })
+
+    } catch (error) {
+        return res.status(500).json({ message: "Error al apuntarse al partido.", error: error.message })
     }
 }

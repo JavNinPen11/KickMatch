@@ -1,5 +1,5 @@
 import express from "express"
-import {createMatch, myMatches, deleteMatch, getMatches, updateMatch, cancelMatch} from "../controllers/matchController.js"
+import {createMatch, myMatches, deleteMatch, getMatches, updateMatch, cancelMatch, joinMatch} from "../controllers/matchController.js"
 import { verifyToken } from "../middleware/authMiddleware.js"
 
 const router = express.Router()
@@ -10,5 +10,6 @@ router.get("/getMatches", getMatches)
 router.put("/:id", verifyToken, updateMatch)
 router.put("/:id/cancel", verifyToken, cancelMatch)
 router.delete("/:id", verifyToken, deleteMatch)
+router.post("/:id/join", verifyToken, joinMatch)
 
 export default router
