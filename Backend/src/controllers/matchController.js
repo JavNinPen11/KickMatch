@@ -82,7 +82,7 @@ export const updateMatch = async (req, res) => {
         }
 
         const isCreator = match.creatorId === requestingUser.id
-        const isAdmin = requestingUser.rolId === 1  // ajusta según tu rol de admin
+        const isAdmin = requestingUser.role === "admin"
 
         if (!isCreator && !isAdmin) {
             return res.status(403).json({ message: "No tienes permiso para editar este partido." })
@@ -119,7 +119,7 @@ export const cancelMatch = async (req, res) => {
         }
 
         const isCreator = match.creatorId === requestingUser.id
-        const isAdmin = requestingUser.rolId === 1
+        const isAdmin = requestingUser.role === "admin"
 
         if (!isCreator && !isAdmin) {
             return res.status(403).json({ message: "No tienes permiso para cancelar este partido." })
@@ -150,7 +150,7 @@ export const deleteMatch = async (req, res) => {
         }
 
         const isCreator = match.creatorId === requestingUser.id
-        const isAdmin = requestingUser.rolId === 1
+        const isAdmin = requestingUser.role === "admin"
 
         if (!isCreator && !isAdmin) {
             return res.status(403).json({ message: "No tienes permiso para eliminar este partido." })

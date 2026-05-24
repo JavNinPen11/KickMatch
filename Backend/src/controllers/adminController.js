@@ -1,10 +1,18 @@
-const getAllMatches = async (req, res) => {
-    try{
+export const getAllMatches = async (req, res) => {
+    try {
         const matches = await prisma.match.findMany({
-            include:{
-                creator: true
+            include: {
+                creator: {
+                    select: {
+                        id: true,
+                        username: true,
+                        email: true,
+                        nombre: true,
+                        rol: { select: { nombre: true } }
+                    }
+                }
             },
-            orderBy:{
+            orderBy: {
                 date: "asc"
             }
         })
@@ -12,11 +20,8 @@ const getAllMatches = async (req, res) => {
             matches
         })
     }
-    catch(error){
+    catch (error) {
         console.error(error)
-        return res.status(500).json({message: "Error interno del servidor", error})
+        return res.status(500).json({ message: "Error interno del servidor", error })
     }
-}
-export{
-    getAllMatches
 }
