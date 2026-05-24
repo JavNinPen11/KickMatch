@@ -3,7 +3,7 @@ import style from "./styleForms/matchCard.module.scss"
 import { formatMatchDate, getMatchDisplayName } from "../../api/matchUtils.js"
 
 
-export function MatchCard({ match, user, onJoin }) {
+export function MatchCard({ match, user, onJoin, onLeave }) {
     const [showDetails, setShowDetails] = useState(false)
     const full = match.jugadoresApuntados >= match.maxJugadores
     const owner = String(match.creador.id) === String(user.id)
@@ -55,6 +55,15 @@ export function MatchCard({ match, user, onJoin }) {
             >
                 {btnText}
             </button>
+            {joined && !owner && (
+                <button
+                    className={`btnTwo ${style.btnLeave}`}
+                    type="button"
+                    onClick={() => onLeave(match.id)}
+                >
+                    Desapuntarme
+                </button>
+            )}
             {showDetails ? (
                 <div className={style.matchModal}>
                     <article className={`cardBase ${style.matchModalCard}`}>

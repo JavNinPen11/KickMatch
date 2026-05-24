@@ -80,3 +80,17 @@ export async function cancelMatchRequest(matchId) {
 
     return parseResponse(response)
 }
+export async function leaveMatchRequest(matchId) {
+    const token = localStorage.getItem("token")
+    const response = await fetch(`${API_URL}/match/${matchId}/leave`, {
+        method: "DELETE",
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+    if (!response.ok) {
+        const body = await response.json()
+        throw new Error(body.message || "Error al desapuntarse.")
+    }
+    return response.json()
+}
