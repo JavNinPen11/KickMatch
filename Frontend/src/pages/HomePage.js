@@ -6,6 +6,7 @@ import style from "./stylePages/homePage.module.scss"
 import { allMatches } from "../api/matchService"
 import { normalizeMatch } from "../api/matchUtils"
 import { formatDate, formatState } from "../utils/formatUtils"
+import Loading from "../components/forms/Loading"
 
 const howWorks = [
     {
@@ -51,6 +52,8 @@ export default function HomePage() {
 
         loadMatches()
     }, [])
+    
+    if(isLoadingMatches) return <Loading />
 
     return (
         <main className="mainPage">
