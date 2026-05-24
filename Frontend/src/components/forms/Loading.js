@@ -1,6 +1,6 @@
 import style from "../forms/styleForms/loginForm.module.scss"
 
-export function Loading() {
+export default function Loading() {
     return (
         <div className={style.overlay}>
             <img
