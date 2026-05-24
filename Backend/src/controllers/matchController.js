@@ -11,7 +11,7 @@ export const createMatch = async (req, res) => {
                 location,
                 maxPlayers,
                 state,
-                creatorId: req.user.id,  
+                creatorId: req.user.id,
                 participants: {
                     create: {
                         userId: req.user.id
@@ -19,12 +19,26 @@ export const createMatch = async (req, res) => {
                 }
             },
             include: {
-                creator: true,
+                creator: {
+                    select: {
+                        id: true,
+                        username: true,
+                        nombre: true,
+                        email: true,
+                    },
+                },
                 participants: {
                     include: {
-                        user: true
-                    }
-                }
+                        user: {
+                            select: {
+                                id: true,
+                                username: true,
+                                nombre: true,
+                                email: true,
+                            },
+                        },
+                    },
+                },
             }
 
         })
