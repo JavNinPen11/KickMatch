@@ -5,7 +5,7 @@ import { MatchCard } from "../components/forms/matchCard"
 import { AuthContext } from "../context/authContext"
 import { getMatchUser } from "../utils/userMatches"
 import { normalizeMatch } from "../api/matchUtils"
-import { allMatches, createMatchRequest, cancelMatchRequest } from "../api/matchService"
+import { allMatches, createMatchRequest } from "../api/matchService"
 import style from "./stylePages/matchesPage.module.scss"
 
 export default function MatchesPage() {
@@ -63,26 +63,6 @@ export default function MatchesPage() {
             setIsFormOpen(false)
         }
     }
-
-   const handleCancelMatch = async (matchId) => {
-    const confirmCancel = window.confirm("¿Seguro que quieres cancelar este partido?")
-
-    if (!confirmCancel) {
-        return
-    }
-
-    try {
-        await cancelMatchRequest(matchId)
-
-        const response = await allMatches()
-        const data = Array.isArray(response?.matches) ? response.matches : []
-
-        setMatches(data.map(normalizeMatch))
-        setMessage("Partido cancelado correctamente.")
-    } catch (error) {
-        setMessage(error.message || "No se pudo cancelar el partido.")
-    }
-}
 
     const handleJoinMatch = (matchId) => {
         const nextMatches = matches.map((match) => {
@@ -159,7 +139,6 @@ export default function MatchesPage() {
                                 match={match}
                                 user={currentUser}
                                 onJoin={handleJoinMatch}
-                                onCancel={handleCancelMatch}
                             />
                         ))}
                     </div>
