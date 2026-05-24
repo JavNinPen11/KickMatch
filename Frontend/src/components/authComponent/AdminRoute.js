@@ -4,7 +4,7 @@ import { API_URL } from "../../api/authService";
 import { Navigate } from "react-router-dom";
 
 function AdminRoute({children}){
-    const {user, logout} = useContext(AuthContext)
+    const {logout} = useContext(AuthContext)
     const [status, setStatus] = useState("checking")
 
     useEffect(() => {
