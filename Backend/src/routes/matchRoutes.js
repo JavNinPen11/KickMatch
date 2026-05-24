@@ -9,5 +9,6 @@ router.get("/myMatches", verifyToken, myMatches)
 router.get("/getMatches", getMatches)
 router.delete("/deleteMatch", deleteMatch)
 router.put("/:id", verifyToken, updateMatch)
+router.put("/:id/cancel", verifyToken, cancelMatch)
 
 export default router
