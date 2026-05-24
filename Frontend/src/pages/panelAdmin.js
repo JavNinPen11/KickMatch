@@ -448,7 +448,7 @@ export default function PanelAdmin() {
                                             <tr key={linea.id}>
                                                 <td>{reserva.user?.username}</td>
                                                 <td>{linea.field?.nombre}</td>
-                                                <td>{linea.fecha?.split("T")[0]}</td>
+                                                <td>{formatAdminDate(linea.fecha)}</td>
                                                 <td>{linea.horaInicio} - {linea.horaFin}</td>
                                                 <td>{reserva.estado}</td>
                                                 <td>

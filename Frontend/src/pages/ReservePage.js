@@ -25,6 +25,24 @@ export default function ReservePage() {
         fecha: "", horaInicio: "", horaFin: ""
     })
 
+    function formatReserveDate(dateValue) {
+    if (!dateValue) {
+        return "Sin fecha"
+    }
+
+    const date = new Date(dateValue)
+
+    if (Number.isNaN(date.getTime())) {
+        return "Sin fecha"
+    }
+
+    return date.toLocaleDateString("es-ES", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+    })
+}
+
     useEffect(() => {
         const load = async () => {
             try {
@@ -233,7 +251,7 @@ export default function ReservePage() {
                                 {carrito.lineas.map((linea) => (
                                     <div className={style.carritoLinea} key={linea.id}>
                                         <p><strong>{linea.field.nombre}</strong></p>
-                                        <p>{linea.fecha?.split("T")[0]} · {linea.horaInicio} - {linea.horaFin}</p>
+                                       <p>{formatReserveDate(linea.fecha)} · {linea.horaInicio} - {linea.horaFin}</p>
                                         <p>{linea.precio} €</p>
                                         <button className={style.btnCancel} type="button"
                                             onClick={() => handleEliminarLinea(linea.id)}>
@@ -273,7 +291,7 @@ export default function ReservePage() {
                                         reserva.lineas.map((linea) => (
                                             <tr key={linea.id}>
                                                 <td>{linea.field.nombre}</td>
-                                                <td>{linea.fecha?.split("T")[0]}</td>
+                                                <td>{formatReserveDate(linea.fecha)}</td>
                                                 <td>{linea.horaInicio} - {linea.horaFin}</td>
                                                 <td>{linea.precio} €</td>
                                                 <td>{reserva.estado}</td>

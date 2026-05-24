@@ -28,7 +28,7 @@
 
 .steps {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 20px;
 }
 
@@ -86,15 +86,85 @@
     width: fit-content;
 }
 
+.carouselBox {
+    display: grid;
+    gap: 18px;
+}
+
+.carouselContent {
+    overflow: hidden;
+}
+
+.carouselGrid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    animation: carouselFade 0.45s ease;
+}
+
+.carouselActions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+}
+
+.carouselActions span {
+    color: #d2d2d2;
+    font-weight: 700;
+}
+
+.btnArrow {
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgba(242, 187, 45, 0.5);
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.03);
+    color: #f2bb2d;
+    font-size: 1.4rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btnArrow:hover:not(:disabled) {
+    border-color: #f2bb2d;
+    background-color: rgba(242, 187, 45, 0.1);
+    transform: translateY(-2px);
+}
+
+.btnArrow:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+@keyframes carouselFade {
+    from {
+        opacity: 0;
+        transform: translateX(22px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
 @media (max-width: 900px) {
+
+    .carouselGrid {
+        grid-template-columns: 1fr;
+    }
+
     .matchesGrid {
         grid-template-columns: 1fr;
     }
 }
 
-@media (max-width: 1024px) {
+
+@media (max-width: 1100px) {
     .steps {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
@@ -104,5 +174,8 @@
     .cta {
         padding: 22px;
         border-radius: 20px;
+    }
+    .steps {
+        grid-template-columns: 1fr;
     }
 }
