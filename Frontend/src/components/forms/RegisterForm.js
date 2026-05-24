@@ -1,18 +1,31 @@
-import React, {useState} from "react";
+import React, {useState} from "react"
 import style from "./styleForms/registerForm.module.scss"
 
 export const RegisterForm = ({onRegister}) => {
+    const [nombre, setNombre] = useState("")
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("")
 
     const handleSubmitSendForm = (e) => {
         e.preventDefault()
-        onRegister({email, username, password})
+        onRegister({email, username, password, nombre})
     }
     return (
                 <form className={style.registerForm} onSubmit={handleSubmitSendForm}>
             <p>Registro</p>
+            <div className={style.formGroup}>
+                <input
+                    className="inputBase"
+                    placeholder="Nombre"
+                    type="text"
+                    autoComplete="off"
+                    id="txtNombre"
+                    required
+                    value={nombre}
+                    onChange={(e) => setNombre(e.target.value)}
+                />
+            </div>
 
             <div className={style.formGroup}>
                 <input
