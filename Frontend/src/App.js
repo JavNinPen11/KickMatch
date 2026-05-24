@@ -12,12 +12,18 @@ import PanelAdmin from "./pages/panelAdmin"
 import AdminRoute from "./components/authComponent/AdminRoute"
 import ReservePage from "./pages/ReservePage"
 import PanelFields from "./pages/PanelFields"
+import { Footer } from "./components/forms/Footer"
+import AboutPage from "./pages/AboutPage"
+import { ScrollToTop } from "./components/scrollTop/ScrollTop"
+import ContactPage from "./pages/ContactPage"
+import TermsPage from "./pages/TermsPage"
 
 
 function App() {
   return (
     <AuthProvider>
       <Router>
+        <ScrollToTop/>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/register" element={<RegisterPage />} />
@@ -40,9 +46,14 @@ function App() {
               </AdminRoute>
             </PrivateRoute>  
           } />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/terms" element={<TermsPage />} />
         </Routes>
+        <Footer/>
       </Router>
     </AuthProvider>
+    
   );
 }
 
