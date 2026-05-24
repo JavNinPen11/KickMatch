@@ -126,3 +126,25 @@ export async function deleteMe(req, res) {
     })
   }
 }
+export const getAllUsers = async (req, res) => {
+    try {
+        const users = await prisma.user.findMany({
+            select: {
+                id: true,
+                nombre: true,
+                username: true,
+                email: true,
+                creadoEn: true,
+                rol: { select: { nombre: true } }
+            },
+            orderBy: {
+                creadoEn: "asc"
+            }
+        })
+        return res.status(200).json({ users })
+    }
+    catch (error) {
+        console.error(error)
+        return res.status(500).json({ message: "Error interno del servidor", error })
+    }
+}

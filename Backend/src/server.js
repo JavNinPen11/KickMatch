@@ -15,6 +15,7 @@ app.use(express.json())
 app.use("/auth", authRoutes)
 app.use("/match", matchRoutes)
 app.use("/admin", adminRoutes)
+app.use("/users", userRoutes);
 
 app.get("/",(req, res) => {
     res.send("Backend de KickMatch funcionando!!!")
@@ -24,4 +25,4 @@ app.listen(PORT, () => {
     console.log(`servidor corriendo en http://localhost:${PORT}`)
 })
 
-app.use("/users", userRoutes);
+
