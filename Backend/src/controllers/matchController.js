@@ -67,20 +67,6 @@ export const myMatches = async (req, res) => {
         return res.status(500).json({ message: "Error interno del servidor", error })
     }
 }
-const deleteMatch = async (req, res) => {
-    const matchId = req.body.matchId
-    try {
-        await prisma.match.delete({
-            where: {
-                id: parseInt(matchId)
-            }
-        })
-    }
-    catch (error) {
-        console.error(error)
-        return res.status(500).json({ message: "Error interno del servido", error })
-    }
-}
 export const updateMatch = async (req, res) => {
     const { id } = req.params
     const { date, time, location, maxPlayers, state } = req.body
@@ -148,5 +134,35 @@ export const cancelMatch = async (req, res) => {
 
     } catch (error) {
         return res.status(500).json({ message: "Error al cancelar el partido.", error: error.message })
+    }
+}
+export const deleteMatch = async (req, res) => {
+    const { id } = req.params
+    const requestingUser = req.user
+
+    try {
+        const match = await prisma.match.findUnique({
+            where: { id: Number(id) }
+        })
+
+        if (!match) {
+            return res.status(404).json({ message: "Partido no encontrado." })
+        }
+
+        const isCreator = match.creatorId === requestingUser.id
+        const isAdmin = requestingUser.rolId === 1
+
+        if (!isCreator && !isAdmin) {
+            return res.status(403).json({ message: "No tienes permiso para eliminar este partido." })
+        }
+
+        await prisma.match.delete({
+            where: { id: Number(id) }
+        })
+
+        return res.status(200).json({ message: "Partido eliminado correctamente." })
+
+    } catch (error) {
+        return res.status(500).json({ message: "Error al eliminar el partido.", error: error.message })
     }
 }

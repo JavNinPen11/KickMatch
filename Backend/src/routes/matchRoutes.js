@@ -7,8 +7,8 @@ const router = express.Router()
 router.post("/createMatch", verifyToken, createMatch)
 router.get("/myMatches", verifyToken, myMatches)
 router.get("/getMatches", getMatches)
-router.delete("/deleteMatch", deleteMatch)
 router.put("/:id", verifyToken, updateMatch)
 router.put("/:id/cancel", verifyToken, cancelMatch)
+router.delete("/:id", verifyToken, deleteMatch)
 
 export default router
