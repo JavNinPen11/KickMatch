@@ -55,6 +55,18 @@ export default function PanelAdmin() {
     const [createMatchForm, setCreateMatchForm] = useState({
         date: "", time: "", location: "", maxPlayers: "", state: "abierto", creatorId: ""
     })
+    const [searchUsers, setSearchUsers] = useState("")
+    const [searchMatches, setSearchMatches] = useState("")
+
+    const filteredUsers = users.filter((u) =>
+        u.username.toLowerCase().includes(searchUsers.toLowerCase()) ||
+        u.email.toLowerCase().includes(searchUsers.toLowerCase())
+    )
+
+    const filteredMatches = matches.filter((m) =>
+        m.location?.toLowerCase().includes(searchMatches.toLowerCase()) ||
+        m.creator?.username?.toLowerCase().includes(searchMatches.toLowerCase())
+    )
 
     const openEditUser = (user) => {
         setEditUser(user)
@@ -268,6 +280,13 @@ export default function PanelAdmin() {
                         <button className="btnOne" type="button" onClick={openCreateUser}>
                             Crear usuario
                         </button>
+                        <input
+                            className="inputBase"
+                            type="text"
+                            placeholder="Buscar por usuario o email..."
+                            value={searchUsers}
+                            onChange={(e) => setSearchUsers(e.target.value)}
+                        />
                     </div>
 
                     <div className={style.tableBox}>
@@ -282,8 +301,8 @@ export default function PanelAdmin() {
                             </thead>
 
                             <tbody>
-                                {users.length > 0 ? (
-                                    users.map((user) => (
+                                {filteredUsers.length > 0 ? (
+                                    filteredUsers.map((user) => (
                                         <tr key={user.id}>
                                             <td>{user.username}</td>
                                             <td>{user.email}</td>
@@ -316,6 +335,13 @@ export default function PanelAdmin() {
                         <button className="btnOne" type="button" onClick={openCreateMatch}>
                             Crear partido
                         </button>
+                        <input
+                            className="inputBase"
+                            type="text"
+                            placeholder="Buscar por ubicación o creador..."
+                            value={searchMatches}
+                            onChange={(e) => setSearchMatches(e.target.value)}
+                        />
                     </div>
 
                     <div className={style.tableBox}>
@@ -332,9 +358,10 @@ export default function PanelAdmin() {
                             </thead>
 
                             <tbody>
-                                {matches.length > 0 ? (
-                                    matches.map((match) => (
-                                        <tr key={match.id}><td>{formatAdminDate(match.date)}</td>
+                                {filteredMatches.length > 0 ? (
+                                    filteredMatches.map((match) => (
+                                        <tr key={match.id}>
+                                            <td>{formatAdminDate(match.date)}</td>
                                             <td>{formatAdminTime(match.time)}</td>
                                             <td>{match.location}</td>
                                             <td>{match.creator?.username || "Sin creador"}</td>
@@ -357,9 +384,7 @@ export default function PanelAdmin() {
                                 ) : (
                                     <tr>
                                         <td colSpan="6">
-                                            {isLoadingMatches
-                                                ? "Cargando partidos..."
-                                                : "No hay partidos creados todavía."}
+                                            {isLoadingMatches ? "Cargando partidos..." : "No hay partidos creados todavía."}
                                         </td>
                                     </tr>
                                 )}
