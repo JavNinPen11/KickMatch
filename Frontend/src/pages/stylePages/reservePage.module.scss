@@ -185,3 +185,50 @@
         padding: 12px 10px;
     }
 }
+.categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.formGroup label {
+    font-size: 0.88rem;
+    color: #bdbdbd;
+    font-weight: 600;
+}
+
+.carrito {
+    border-top: 1px solid rgba(242, 187, 45, 0.2);
+    padding-top: 18px;
+    display: grid;
+    gap: 14px;
+}
+
+.carrito h3 {
+    margin: 0;
+    color: #f2bb2d;
+}
+
+.carritoLinea {
+    display: grid;
+    gap: 4px;
+    padding: 12px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+.carritoLinea p {
+    margin: 0;
+    color: #d2d2d2;
+}
+
+.carritoLinea strong {
+    color: #fff;
+}

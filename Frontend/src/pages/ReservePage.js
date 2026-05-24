@@ -1,84 +1,128 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Nav } from "../components/nav/Nav"
 import style from "./stylePages/reservePage.module.scss"
-
-const reserveOptions = [
-    {
-        id: 1,
-        name: "Pista Municipal Norte",
-        location: "Polideportivo Municipal",
-        price: 18,
-        date: "2026-06-15",
-        startTime: "18:00",
-        endTime: "19:00",
-        isAvailable: true,
-    },
-    {
-        id: 2,
-        name: "Pista San Vicente",
-        location: "San Vicente",
-        price: 15,
-        date: "2026-06-16",
-        startTime: "19:00",
-        endTime: "20:00",
-        isAvailable: true,
-    },
-    {
-        id: 3,
-        name: "Pista Elche Centro",
-        location: "Elche",
-        price: 20,
-        date: "2026-06-17",
-        startTime: "20:00",
-        endTime: "21:00",
-        isAvailable: false,
-    },
-]
+import {
+    getEscaparateRequest,
+    getCategoriesRequest,
+    getCarritoRequest,
+    addToCarritoRequest,
+    confirmarReservaRequest,
+    eliminarLineaRequest,
+    getMyReservasRequest,
+    cancelarReservaRequest
+} from "../api/reservaService"
 
 export default function ReservePage() {
-    const [selectedReserve, setSelectedReserve] = useState(null)
-    const [reservations, setReservations] = useState([])
+    const [fields, setFields] = useState([])
+    const [categories, setCategories] = useState([])
+    const [selectedCategory, setSelectedCategory] = useState(null)
+    const [carrito, setCarrito] = useState(null)
+    const [reservas, setReservas] = useState([])
+    const [selectedField, setSelectedField] = useState(null)
     const [message, setMessage] = useState("")
 
-    const selectReserve = (reserve) => {
-        if (!reserve.isAvailable) {
-            setMessage("Esta pista no está disponible ahora mismo.")
-            return
-        }
+    const [bookingForm, setBookingForm] = useState({
+        fecha: "", horaInicio: "", horaFin: ""
+    })
 
-        setSelectedReserve(reserve)
+    useEffect(() => {
+        const load = async () => {
+            try {
+                const [fieldsData, categoriesData, carritoData, reservasData] = await Promise.all([
+                    getEscaparateRequest(),
+                    getCategoriesRequest(),
+                    getCarritoRequest(),
+                    getMyReservasRequest()
+                ])
+                setFields(fieldsData)
+                setCategories(categoriesData)
+                setCarrito(carritoData)
+                setReservas(reservasData)
+            } catch (error) {
+                setMessage("No se pudieron cargar los datos.")
+            }
+        }
+        load()
+    }, [])
+
+    const handleCategoryFilter = async (categoryId) => {
+        setSelectedCategory(categoryId)
+        try {
+            const data = await getEscaparateRequest(categoryId)
+            setFields(data)
+        } catch {
+            setMessage("No se pudieron cargar los campos.")
+        }
+    }
+
+    const selectField = (field) => {
+        setSelectedField(field)
+        setBookingForm({ fecha: "", horaInicio: "", horaFin: "" })
         setMessage("")
     }
 
-    const confirmReservation = () => {
-        if (!selectedReserve) {
-            setMessage("Selecciona una pista antes de confirmar la reserva.")
+    const handleAddToCarrito = async () => {
+        if (!selectedField || !bookingForm.fecha || !bookingForm.horaInicio || !bookingForm.horaFin) {
+            setMessage("Completa todos los campos antes de reservar.")
             return
         }
 
-        const newReservation = {
-            id: Date.now(),
-            name: selectedReserve.name,
-            location: selectedReserve.location,
-            price: selectedReserve.price,
-            date: selectedReserve.date,
-            startTime: selectedReserve.startTime,
-            endTime: selectedReserve.endTime,
-            status: "Confirmada",
-            paymentType: "Efectivo",
-        }
+        try {
+            await addToCarritoRequest({
+                fieldId: selectedField.id,
+                fecha: bookingForm.fecha,
+                horaInicio: bookingForm.horaInicio,
+                horaFin: bookingForm.horaFin,
+                cantidad: 1
+            })
 
-        setReservations((prev) => [...prev, newReservation])
-        setSelectedReserve(null)
-        setMessage("Reserva confirmada correctamente.")
+            const carritoData = await getCarritoRequest()
+            setCarrito(carritoData)
+            setSelectedField(null)
+            setMessage("Pista añadida al carrito correctamente.")
+        } catch (error) {
+            setMessage(error.message || "No se pudo añadir al carrito.")
+        }
     }
 
-    const cancelReservation = (reservationId) => {
-        setReservations((prev) =>
-            prev.filter((reservation) => reservation.id !== reservationId)
-        )
+    const handleEliminarLinea = async (lineaId) => {
+        try {
+            await eliminarLineaRequest(lineaId)
+            const carritoData = await getCarritoRequest()
+            setCarrito(carritoData)
+            setMessage("Línea eliminada correctamente.")
+        } catch (error) {
+            setMessage(error.message || "No se pudo eliminar la línea.")
+        }
+    }
 
-        setMessage("Reserva cancelada correctamente.")
+    const handleConfirmar = async () => {
+        if (!carrito || carrito.lineas.length === 0) {
+            setMessage("El carrito está vacío.")
+            return
+        }
+
+        try {
+            await confirmarReservaRequest()
+            const reservasData = await getMyReservasRequest()
+            setReservas(reservasData)
+            setCarrito(null)
+            setMessage("Reserva confirmada correctamente.")
+        } catch (error) {
+            setMessage(error.message || "No se pudo confirmar la reserva.")
+        }
+    }
+
+    const handleCancelarReserva = async (reservaId) => {
+        try {
+            await cancelarReservaRequest(reservaId)
+            setReservas((prev) => prev.map((r) =>
+                r.id === reservaId ? { ...r, estado: "cancelada" } : r
+            ))
+            setMessage("Reserva cancelada correctamente.")
+        } catch (error) {
+            setMessage(error.message || "No se pudo cancelar la reserva.")
+        }
     }
 
     return (
@@ -88,16 +132,30 @@ export default function ReservePage() {
             <div className="content">
                 <section className={style.header}>
                     <span className="labelYellow">Reservas</span>
-
                     <h1>Reservar pista</h1>
-
                     <p className="textBase">
-                        Selecciona una pista disponible, revisa el resumen y confirma tu
-                        reserva. El pago se realiza en efectivo en la instalación.
+                        Selecciona una pista disponible, revisa el resumen y confirma tu reserva.
                     </p>
                 </section>
 
                 {message ? <p className="message">{message}</p> : null}
+
+                <div className={style.categories}>
+                    <button className={`btnTwo ${!selectedCategory ? "btnOne" : ""}`}
+                        type="button" onClick={() => handleCategoryFilter(null)}>
+                        Todas
+                    </button>
+                    {categories.map((cat) => (
+                        <button
+                            key={cat.id}
+                            className={`btnTwo ${selectedCategory === cat.id ? "btnOne" : ""}`}
+                            type="button"
+                            onClick={() => handleCategoryFilter(cat.id)}
+                        >
+                            {cat.nombre}
+                        </button>
+                    ))}
+                </div>
 
                 <section className={style.mainGrid}>
                     <div>
@@ -106,50 +164,26 @@ export default function ReservePage() {
                         </div>
 
                         <div className={style.cards}>
-                            {reserveOptions.map((reserve) => (
-                                <article className={`cardBase ${style.card}`} key={reserve.id}>
+                            {fields.length > 0 ? fields.map((field) => (
+                                <article className={`cardBase ${style.card}`} key={field.id}>
                                     <div className={style.cardTop}>
-                                        <h3>{reserve.name}</h3>
-
-                                        <span
-                                            className={
-                                                reserve.isAvailable
-                                                    ? style.available
-                                                    : style.notAvailable
-                                            }
-                                        >
-                                            {reserve.isAvailable ? "Disponible" : "No disponible"}
-                                        </span>
+                                        <h3>{field.nombre}</h3>
+                                        <span className={style.available}>Disponible</span>
                                     </div>
 
                                     <div className={style.info}>
-                                        <p>
-                                            <strong>Ubicación:</strong> {reserve.location}
-                                        </p>
-
-                                        <p>
-                                            <strong>Fecha:</strong> {reserve.date}
-                                        </p>
-
-                                        <p>
-                                            <strong>Horario:</strong> {reserve.startTime} - {reserve.endTime}
-                                        </p>
-
-                                        <p>
-                                            <strong>Precio:</strong> {reserve.price} €
-                                        </p>
+                                        <p><strong>Categoría:</strong> {field.category?.nombre}</p>
+                                        <p><strong>Descripción:</strong> {field.descripcion}</p>
+                                        <p><strong>Precio:</strong> {field.precio} €/h</p>
                                     </div>
 
-                                    <button
-                                        className="btnOne"
-                                        type="button"
-                                        onClick={() => selectReserve(reserve)}
-                                        disabled={!reserve.isAvailable}
-                                    >
+                                    <button className="btnOne" type="button" onClick={() => selectField(field)}>
                                         Reservar pista
                                     </button>
                                 </article>
-                            ))}
+                            )) : (
+                                <p className="textBase">No hay pistas disponibles.</p>
+                            )}
                         </div>
                     </div>
 
@@ -159,42 +193,58 @@ export default function ReservePage() {
                             <p>Revisa la pista antes de confirmar.</p>
                         </div>
 
-                        {selectedReserve ? (
+                        {selectedField ? (
                             <div className={style.detail}>
-                                <h3>{selectedReserve.name}</h3>
+                                <h3>{selectedField.nombre}</h3>
+                                <p><strong>Precio:</strong> {selectedField.precio} €/h</p>
 
-                                <p>
-                                    <strong>Ubicación:</strong> {selectedReserve.location}
-                                </p>
+                                <div className={style.formGroup}>
+                                    <label>Fecha</label>
+                                    <input className="inputBase" type="date"
+                                        value={bookingForm.fecha}
+                                        onChange={(e) => setBookingForm((p) => ({ ...p, fecha: e.target.value }))} />
+                                </div>
 
-                                <p>
-                                    <strong>Fecha:</strong> {selectedReserve.date}
-                                </p>
+                                <div className={style.formGroup}>
+                                    <label>Hora inicio</label>
+                                    <input className="inputBase" type="time"
+                                        value={bookingForm.horaInicio}
+                                        onChange={(e) => setBookingForm((p) => ({ ...p, horaInicio: e.target.value }))} />
+                                </div>
 
-                                <p>
-                                    <strong>Horario:</strong> {selectedReserve.startTime} - {selectedReserve.endTime}
-                                </p>
+                                <div className={style.formGroup}>
+                                    <label>Hora fin</label>
+                                    <input className="inputBase" type="time"
+                                        value={bookingForm.horaFin}
+                                        onChange={(e) => setBookingForm((p) => ({ ...p, horaFin: e.target.value }))} />
+                                </div>
 
-                                <p>
-                                    <strong>Precio:</strong> {selectedReserve.price} €
-                                </p>
-
-                                <p>
-                                    <strong>Pago:</strong> En efectivo
-                                </p>
-
-                                <button
-                                    className="btnOne"
-                                    type="button"
-                                    onClick={confirmReservation}
-                                >
-                                    Confirmar reserva
+                                <button className="btnOne" type="button" onClick={handleAddToCarrito}>
+                                    Añadir al carrito
                                 </button>
                             </div>
                         ) : (
-                            <p className="textBase">
-                                Todavía no has seleccionado ninguna pista.
-                            </p>
+                            <p className="textBase">Selecciona una pista para reservar.</p>
+                        )}
+
+                        {carrito && carrito.lineas.length > 0 && (
+                            <div className={style.carrito}>
+                                <h3>Carrito</h3>
+                                {carrito.lineas.map((linea) => (
+                                    <div className={style.carritoLinea} key={linea.id}>
+                                        <p><strong>{linea.field.nombre}</strong></p>
+                                        <p>{linea.fecha?.split("T")[0]} · {linea.horaInicio} - {linea.horaFin}</p>
+                                        <p>{linea.precio} €</p>
+                                        <button className={style.btnCancel} type="button"
+                                            onClick={() => handleEliminarLinea(linea.id)}>
+                                            Eliminar
+                                        </button>
+                                    </div>
+                                ))}
+                                <button className="btnOne" type="button" onClick={handleConfirmar}>
+                                    Confirmar reserva
+                                </button>
+                            </div>
                         )}
                     </aside>
                 </section>
@@ -202,7 +252,7 @@ export default function ReservePage() {
                 <section className={`cardBase ${style.myReservations}`}>
                     <div className={style.sectionTop}>
                         <h2>Mis reservas</h2>
-                        <p>Consulta o cancela las reservas creadas durante la sesión.</p>
+                        <p>Consulta o cancela tus reservas.</p>
                     </div>
 
                     <div className={style.tableBox}>
@@ -210,39 +260,37 @@ export default function ReservePage() {
                             <thead>
                                 <tr>
                                     <th>Pista</th>
-                                    <th>Ubicación</th>
                                     <th>Fecha</th>
                                     <th>Horario</th>
-                                    <th>Pago</th>
+                                    <th>Precio</th>
                                     <th>Estado</th>
                                     <th>Opciones</th>
                                 </tr>
                             </thead>
-
                             <tbody>
-                                {reservations.length > 0 ? (
-                                    reservations.map((reservation) => (
-                                        <tr key={reservation.id}>
-                                            <td>{reservation.name}</td>
-                                            <td>{reservation.location}</td>
-                                            <td>{reservation.date}</td>
-                                            <td>{reservation.startTime} - {reservation.endTime}</td>
-                                            <td>{reservation.paymentType}</td>
-                                            <td>{reservation.status}</td>
-                                            <td>
-                                                <button
-                                                    className={style.btnCancel}
-                                                    type="button"
-                                                    onClick={() => cancelReservation(reservation.id)}
-                                                >
-                                                    Cancelar
-                                                </button>
-                                            </td>
-                                        </tr>
+                                {reservas.length > 0 ? (
+                                    reservas.map((reserva) => (
+                                        reserva.lineas.map((linea) => (
+                                            <tr key={linea.id}>
+                                                <td>{linea.field.nombre}</td>
+                                                <td>{linea.fecha?.split("T")[0]}</td>
+                                                <td>{linea.horaInicio} - {linea.horaFin}</td>
+                                                <td>{linea.precio} €</td>
+                                                <td>{reserva.estado}</td>
+                                                <td>
+                                                    {reserva.estado !== "cancelada" && (
+                                                        <button className={style.btnCancel} type="button"
+                                                            onClick={() => handleCancelarReserva(reserva.id)}>
+                                                            Cancelar
+                                                        </button>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        ))
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="7">Aún no tienes reservas.</td>
+                                        <td colSpan="6">Aún no tienes reservas.</td>
                                     </tr>
                                 )}
                             </tbody>
