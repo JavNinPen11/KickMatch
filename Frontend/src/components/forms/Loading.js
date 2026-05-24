@@ -1,11 +1,19 @@
-import style from "../forms/styleForms/loginForm.module.scss"
+import style from "./Loading.module.scss"
 
-function Loading() {
+export function Loading() {
     return (
         <div className={style.overlay}>
-            <div className={style.spinner}></div>
-            <p>Cargando...</p>
+            <img
+                className={style.logo}
+                src="/system/KickMatchLogo.png"
+                alt="KickMatch"
+            />
+            <p className={style.text}>KickMatch</p>
+            <div className={style.dots}>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
     )
 }
-export default Loading
