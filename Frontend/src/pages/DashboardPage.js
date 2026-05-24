@@ -28,8 +28,8 @@ export const DashboardPage = () => {
             const data = Array.isArray(response?.matches) ? response.matches : []
 
             setMatches(data.map(normalizeMatch)
-            .filter()        
-        )
+
+            )
         } catch (error) {
             setMatches([])
         }
@@ -90,7 +90,7 @@ export const DashboardPage = () => {
         { label: "Jugados", value: summary.playedMatches.length },
     ]
 
-    const upcomingMatches = summary.upcomingMatches.slice(0, 3)
+    const upcomingMatches = summary.upcomingMatches
 
     const handleLeaveMatch = async (matchId) => {
         try {
@@ -102,6 +102,7 @@ export const DashboardPage = () => {
             console.error(error)
         }
     }
+
 
     return (
         <main className="mainPage">
