@@ -12,6 +12,7 @@ import {
     deleteAdminCategoryRequest
 } from "../api/adminService"
 import style from "./stylePages/panelAdmin.module.scss"
+import Loading from "../components/forms/Loading"
 
 export default function PanelFields() {
     const [fields, setFields] = useState([])
@@ -29,6 +30,7 @@ export default function PanelFields() {
     const [deleteCategory, setDeleteCategory] = useState(null)
     const [showCreateCategory, setShowCreateCategory] = useState(false)
     const [createCategoryForm, setCreateCategoryForm] = useState({ nombre: "", descripcion: "" })
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
         const load = async () => {
@@ -41,7 +43,7 @@ export default function PanelFields() {
                 setCategories(categoriesData.categories || [])
             } catch (error) {
                 setMessage("No se pudieron cargar los datos.")
-            }
+            }finally { setIsLoading(false) }
         }
         load()
     }, [])
@@ -140,7 +142,7 @@ export default function PanelFields() {
             setMessage(error.message || "No se pudo eliminar la categoría.")
         }
     }
-
+if (isLoading) return <Loading />
     return (
         <main className="mainPage">
             <Nav />

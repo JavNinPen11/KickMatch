@@ -8,6 +8,7 @@ import style from "./stylePages/dashboardPage.module.scss"
 import { myMatchesRequest, cancelMatchRequest, leaveMatchRequest, updateMatchRequest } from "../api/matchService"
 import { normalizeMatch } from "../api/matchUtils"
 import { formatDate } from "../utils/formatUtils"
+import Loading from "../components/forms/Loading"
 
 export const DashboardPage = () => {
     const { user } = useContext(AuthContext)
@@ -17,6 +18,7 @@ export const DashboardPage = () => {
     const [editMatchForm, setEditMatchForm] = useState({
         date: "", time: "", location: "", maxPlayers: ""
     })
+    const [isLoading, setIsLoading] = useState(true)
 
     const handleCancelMatch = async (matchId) => {
         const confirmCancel = window.confirm("¿Seguro que quieres cancelar este partido?")
@@ -65,6 +67,8 @@ export const DashboardPage = () => {
             }
             catch {
                 setMatches([])
+            } finally {
+                setIsLoading(false)
             }
         }
         if (localStorage.getItem("token")) {
@@ -128,7 +132,7 @@ export const DashboardPage = () => {
         })
     }
 
-
+    if (isLoading) return <Loading />
     return (
         <main className="mainPage">
             <Nav />
