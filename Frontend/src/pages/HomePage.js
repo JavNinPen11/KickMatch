@@ -76,7 +76,7 @@ export default function HomePage() {
                             </Link>
 
                             {isLogin ? (
-                                <Link className="btnTwo" to="/my-matches">
+                                <Link className="btnTwo" to="/dashboard#proximos-partidos">
                                     Ver mis partidos
                                 </Link>
                             ) : (

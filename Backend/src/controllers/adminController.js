@@ -179,3 +179,54 @@ export const createAdminMatch = async (req, res) => {
         return res.status(500).json({ ok: false, message: "Error interno del servidor." })
     }
 }
+export const getAdminReservas = async (req, res) => {
+    try {
+        const reservas = await prisma.reserva.findMany({
+            include: {
+                user: { select: { id: true, username: true, email: true } },
+                lineas: { include: { field: true } }
+            },
+            orderBy: { creadoEn: "desc" }
+        })
+        return res.status(200).json({ reservas })
+    } catch (error) {
+        return res.status(500).json({ message: "Error interno del servidor.", error: error.message })
+    }
+}
+
+export const cancelAdminReserva = async (req, res) => {
+    try {
+        const reserva = await prisma.reserva.findUnique({
+            where: { id: Number(req.params.id) }
+        })
+
+        if (!reserva) {
+            return res.status(404).json({ message: "Reserva no encontrada." })
+        }
+
+        const updated = await prisma.reserva.update({
+            where: { id: Number(req.params.id) },
+            data: { estado: "cancelada" }
+        })
+
+        return res.status(200).json({ message: "Reserva cancelada.", reserva: updated })
+    } catch (error) {
+        return res.status(500).json({ message: "Error interno del servidor.", error: error.message })
+    }
+}
+
+export const deleteAdminReserva = async (req, res) => {
+    try {
+        await prisma.reservaLinea.deleteMany({
+            where: { reservaId: Number(req.params.id) }
+        })
+
+        await prisma.reserva.delete({
+            where: { id: Number(req.params.id) }
+        })
+
+        return res.status(200).json({ message: "Reserva eliminada correctamente." })
+    } catch (error) {
+        return res.status(500).json({ message: "Error interno del servidor.", error: error.message })
+    }
+}

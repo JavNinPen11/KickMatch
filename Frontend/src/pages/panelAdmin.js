@@ -3,6 +3,7 @@ import { Nav } from "../components/nav/Nav"
 import { AuthContext } from "../context/authContext"
 import { getAdminMatchesRequest, getAdminUsersRequest, updateAdminUserRequest, deleteAdminUserRequest, cancelAdminMatchRequest, updateAdminMatchRequest, deleteAdminMatchRequest, createAdminUserRequest, createAdminMatchRequest } from "../api/adminService"
 import style from "./stylePages/panelAdmin.module.scss"
+import { getAdminReservasRequest, cancelAdminReservaRequest, deleteAdminReservaRequest } from "../api/adminService"
 
 function formatAdminDate(dateValue) {
     if (!dateValue) {
@@ -57,6 +58,8 @@ export default function PanelAdmin() {
     })
     const [searchUsers, setSearchUsers] = useState("")
     const [searchMatches, setSearchMatches] = useState("")
+    const [reservas, setReservas] = useState([])
+    const [deleteReserva, setDeleteReserva] = useState(null)
 
     const filteredUsers = users.filter((u) =>
         u.username.toLowerCase().includes(searchUsers.toLowerCase()) ||
@@ -91,6 +94,8 @@ export default function PanelAdmin() {
             try {
                 const data = await getAdminMatchesRequest()
                 const usersData = await getAdminUsersRequest(token)
+                const reservasData = await getAdminReservasRequest()
+                setReservas(reservasData.reservas || [])
                 setMatches(data)
                 setUsers(usersData)
                 setMessage("")
@@ -225,6 +230,28 @@ export default function PanelAdmin() {
             closeCreateMatch()
         } catch (error) {
             setMessage(error.message || "No se pudo crear el partido.")
+        }
+    }
+    const handleCancelReserva = async (reservaId) => {
+        try {
+            await cancelAdminReservaRequest(reservaId)
+            setReservas((prev) => prev.map((r) =>
+                r.id === reservaId ? { ...r, estado: "cancelada" } : r
+            ))
+            setMessage("Reserva cancelada correctamente.")
+        } catch (error) {
+            setMessage(error.message || "No se pudo cancelar la reserva.")
+        }
+    }
+
+    const handleDeleteReserva = async () => {
+        try {
+            await deleteAdminReservaRequest(deleteReserva.id)
+            setReservas((prev) => prev.filter((r) => r.id !== deleteReserva.id))
+            setDeleteReserva(null)
+            setMessage("Reserva eliminada correctamente.")
+        } catch (error) {
+            setMessage(error.message || "No se pudo eliminar la reserva.")
         }
     }
     return (
@@ -386,6 +413,59 @@ export default function PanelAdmin() {
                                         <td colSpan="6">
                                             {isLoadingMatches ? "Cargando partidos..." : "No hay partidos creados todavía."}
                                         </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section className={`cardBase ${style.matches}`}>
+                    <div className={style.sectionTop}>
+                        <h2>Reservas</h2>
+                    </div>
+
+                    <div className={style.tableBox}>
+                        <table className={style.table}>
+                            <thead>
+                                <tr>
+                                    <th>Usuario</th>
+                                    <th>Campo</th>
+                                    <th>Fecha</th>
+                                    <th>Horario</th>
+                                    <th>Estado</th>
+                                    <th>Opciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {reservas.length > 0 ? (
+                                    reservas.map((reserva) =>
+                                        reserva.lineas.map((linea) => (
+                                            <tr key={linea.id}>
+                                                <td>{reserva.user?.username}</td>
+                                                <td>{linea.field?.nombre}</td>
+                                                <td>{linea.fecha?.split("T")[0]}</td>
+                                                <td>{linea.horaInicio} - {linea.horaFin}</td>
+                                                <td>{reserva.estado}</td>
+                                                <td>
+                                                    <div className={style.buttons}>
+                                                        {reserva.estado !== "cancelada" && (
+                                                            <button className={style.btnCancel} type="button"
+                                                                onClick={() => handleCancelReserva(reserva.id)}>
+                                                                Cancelar
+                                                            </button>
+                                                        )}
+                                                        <button className={style.btnDelete} type="button"
+                                                            onClick={() => setDeleteReserva(reserva)}>
+                                                            Borrar
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    )
+                                ) : (
+                                    <tr>
+                                        <td colSpan="6">No hay reservas registradas.</td>
                                     </tr>
                                 )}
                             </tbody>
@@ -623,6 +703,19 @@ export default function PanelAdmin() {
                             <div className="groupBtns">
                                 <button className="btnOne" type="button" onClick={handleCreateMatch}>Crear</button>
                                 <button className="btnTwo" type="button" onClick={closeCreateMatch}>Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {deleteReserva && (
+                    <div className={style.deletePopup}>
+                        <div className={style.deletePopupCard}>
+                            <button className={style.btnClose} type="button" onClick={() => setDeleteReserva(null)}>x</button>
+                            <h2>Eliminar reserva</h2>
+                            <p>¿Seguro que quieres eliminar la reserva de <strong>{deleteReserva.user?.username}</strong>?</p>
+                            <div className="groupBtns">
+                                <button className="btnOne" type="button" onClick={handleDeleteReserva}>Confirmar</button>
+                                <button className="btnTwo" type="button" onClick={() => setDeleteReserva(null)}>Cancelar</button>
                             </div>
                         </div>
                     </div>

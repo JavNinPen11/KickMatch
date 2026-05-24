@@ -116,3 +116,122 @@ export async function createAdminMatchRequest(token, formData) {
 
     return parseResponse(response)
 }
+export async function getAdminFieldsRequest() {
+    const token = localStorage.getItem("token")
+    const response = await fetch(`${API_URL}/fields`, {
+        headers: { Authorization: `Bearer ${token}` }
+    })
+    return parseResponse(response)
+}
+
+export async function createAdminFieldRequest(formData) {
+    const token = localStorage.getItem("token")
+    const response = await fetch(`${API_URL}/fields`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(formData)
+    })
+    return parseResponse(response)
+}
+
+export async function updateAdminFieldRequest(fieldId, formData) {
+    const token = localStorage.getItem("token")
+    const response = await fetch(`${API_URL}/fields/${fieldId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(formData)
+    })
+    return parseResponse(response)
+}
+
+export async function toggleAdminFieldRequest(fieldId) {
+    const token = localStorage.getItem("token")
+    const response = await fetch(`${API_URL}/fields/${fieldId}/toggle`, {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${token}` }
+    })
+    return parseResponse(response)
+}
+
+export async function deleteAdminFieldRequest(fieldId) {
+    const token = localStorage.getItem("token")
+    const response = await fetch(`${API_URL}/fields/${fieldId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` }
+    })
+    return parseResponse(response)
+}
+
+export async function getAdminCategoriesRequest() {
+    const token = localStorage.getItem("token")
+    const response = await fetch(`${API_URL}/categories`, {
+        headers: { Authorization: `Bearer ${token}` }
+    })
+    return parseResponse(response)
+}
+
+export async function createAdminCategoryRequest(formData) {
+    const token = localStorage.getItem("token")
+    const response = await fetch(`${API_URL}/categories`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(formData)
+    })
+    return parseResponse(response)
+}
+
+export async function updateAdminCategoryRequest(categoryId, formData) {
+    const token = localStorage.getItem("token")
+    const response = await fetch(`${API_URL}/categories/${categoryId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(formData)
+    })
+    return parseResponse(response)
+}
+
+export async function deleteAdminCategoryRequest(categoryId) {
+    const token = localStorage.getItem("token")
+    const response = await fetch(`${API_URL}/categories/${categoryId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` }
+    })
+    return parseResponse(response)
+}
+export async function getAdminReservasRequest() {
+    const token = localStorage.getItem("token")
+    const response = await fetch(`${API_URL}/admin/reservas`, {
+        headers: { Authorization: `Bearer ${token}` }
+    })
+    return parseResponse(response)
+}
+
+export async function cancelAdminReservaRequest(reservaId) {
+    const token = localStorage.getItem("token")
+    const response = await fetch(`${API_URL}/admin/reservas/${reservaId}/cancelar`, {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${token}` }
+    })
+    return parseResponse(response)
+}
+
+export async function deleteAdminReservaRequest(reservaId) {
+    const token = localStorage.getItem("token")
+    const response = await fetch(`${API_URL}/admin/reservas/${reservaId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` }
+    })
+    return parseResponse(response)
+}

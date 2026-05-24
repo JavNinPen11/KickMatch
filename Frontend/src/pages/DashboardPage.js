@@ -65,6 +65,16 @@ export const DashboardPage = () => {
             loadMatches()
         }
     }, [user])
+    useEffect(() => {
+        if (window.location.hash === "#proximos-partidos") {
+            setTimeout(() => {
+                const el = document.getElementById("proximos-partidos")
+                if (el) {
+                    el.scrollIntoView({ behavior: "smooth", block: "start" })
+                }
+            }, 300)
+        }
+    }, [])
 
     const summary = useMemo(
         () => getUserMatchesSummary(matches, user, profile),
@@ -135,7 +145,7 @@ export const DashboardPage = () => {
                     </div>
                 </section>
 
-                <section className={style.agenda}>
+                <section className={style.agenda} id="proximos-partidos">
                     <div className={style.sectionTop}>
                         <span className="labelYellow">Próximos partidos</span>
                     </div>
