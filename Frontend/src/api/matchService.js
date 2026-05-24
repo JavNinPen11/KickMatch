@@ -94,3 +94,19 @@ export async function leaveMatchRequest(matchId) {
     }
     return response.json()
 }
+export async function updateMatchRequest(matchId, formData) {
+    const token = localStorage.getItem("token")
+    const response = await fetch(`${API_URL}/match/${matchId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(formData)
+    })
+    if (!response.ok) {
+        const body = await response.json()
+        throw new Error(body.message || "Error al actualizar el partido.")
+    }
+    return response.json()
+}

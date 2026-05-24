@@ -1,4 +1,6 @@
 import bcrypt from "bcrypt"
+import { prisma } from "../../lib/db.js"
+
 const userSelect = {
     id: true,
     username: true,
